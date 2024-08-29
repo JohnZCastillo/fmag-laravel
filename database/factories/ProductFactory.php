@@ -21,7 +21,6 @@ class ProductFactory extends Factory
             'description' => fake()->text(100),
             'stock' => fake()->numberBetween(0,100),
             'price' => fake()->randomFloat(2,10,500),
-            'rating' => fake()->randomFloat(0,1,5),
             'image' => fake()->image(storage_path('app/public'), 500, 500, null, false),
             'category_id' => 1,
         ];
