@@ -114,6 +114,11 @@
     </style>
 @endsection
 @section('body')
+
+    @if($errors->any())
+        <h4>{{$errors->first()}}</h4>
+    @endif
+
     <section class="stack-bg">
         <div class="container">
             @foreach($categories as $category)
@@ -154,7 +159,7 @@
                                             <p class="card-text">{{$product->price}}</p>
                                             <div class="d-flex gap-2">
                                                 <button type="button" class="btn btn-success">Buy</button>
-                                                <button type="button" class="btn btn-primary" href="#">Cart</button>
+                                                <button onclick="showCartModal('{{$product->id}}')" type="button" class="btn btn-primary" href="#">Cart</button>
                                             </div>
                                         </div>
                                     </div>
@@ -167,4 +172,89 @@
             @endforeach
         </div>
     </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addToCartModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" id="addToCartForm" action="/cart/1">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Input Product Quantity</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input  type="hidden" value="1" name="productID" class="d-none" id="productId">
+                        <div class="input-group">
+                            <button class="btn btn-outline-secondary" type="button" onclick="decrementCartItemQuantity()">-</button>
+                            <input name="quantity" type="number" id="cartItemQuantity" class="form-control" placeholder="Quantity" min="1" value="1" max="50">
+                            <button class="btn btn-outline-secondary" type="button" onclick="incrementCartItemQuantity()">+</button>
+                        </div>
+                        <p id="remainingStockText">Remaining Stock:
+                            <span id="remainingStockValue">50</span>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">Confirm</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection
+
+@section('javascript')
+
+    <script>
+
+        const addToCartModal = new bootstrap.Modal(document.getElementById('addToCartModal'));
+        const cartItemQuantity = document.querySelector('#cartItemQuantity');
+
+        cartItemQuantity.addEventListener('keypress', (e)=>{
+            console.log(e.key);
+            e.preventDefault();
+        });
+
+        // cartItemQuantity.addEventListener('keydown', (e)=>{
+        //     e.preventDefault();
+        // });
+
+        cartItemQuantity.addEventListener('paste', (e)=>{
+            e.preventDefault();
+        });
+
+        function showCartModal(productID){
+            addToCartModal.show();
+        }
+
+        function decrementCartItemQuantity(){
+            updateInputValue( parseInt(cartItemQuantity.value) - 1);
+        }
+
+
+        function incrementCartItemQuantity(){
+            updateInputValue( parseInt(cartItemQuantity.value) + 1);
+        }
+
+        function updateInputValue(value){
+
+            const newValue =  parseInt(value);
+            const maxValue = parseInt(cartItemQuantity.max);
+            const minValue = parseInt(cartItemQuantity.min);
+
+            if(newValue > maxValue || newValue < minValue){
+                return;
+            }
+
+            cartItemQuantity.value = newValue;
+        }
+
+        function isInRange(){
+
+        }
+
+
+    </script>
 @endsection
