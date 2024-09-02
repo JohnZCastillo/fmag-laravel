@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Enums\OrderState;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -13,7 +14,12 @@ class OrderController extends Controller
     {
         $query = Order::query();
 
-        $query->where('user_id', '=', 1);
+        $query->where('user_id', '=', 1)
+            ->whereIn('state', [
+                OrderState::PROCESSING->value,
+                OrderState::COMPLETED->value,
+                OrderState::PAYMENT->value,
+            ]);
 
         $orders = $query->paginate();
 

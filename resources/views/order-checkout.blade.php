@@ -3,7 +3,8 @@
 @section('body')
 
     <div class="container-fluid py-2 px-4">
-        <form enctype="multipart/form-data" action="/order/checkout/{{$order->id}}" method="POST" id="checkoutForm">
+        <form action="/order/checkout/{{$order->id}}" method="POST" id="checkoutForm">
+            @csrf
             <div id="initialPage" class="row">
                 <div class="col-md-8">
                     <section id="cart">
@@ -64,7 +65,7 @@
 
                         <div class="form-group">
                             <label for="payment">Payment Method:</label>
-                            <select class="form-control" id="payment" name="payment" required>
+                            <select class="form-control" id="payment" name="paymentMethod" required>
                                 @foreach(\App\Enums\PaymentMethod::cases() as $method)
                                     <option value="{{$method->name}}">{{$method->value}}</option>
                                 @endforeach
@@ -78,7 +79,7 @@
 
                         <div class="mt-2 form-group">
                             <label for="total">Total Amount:</label>
-                            <input id="total" readonly value="{{$total}}" class="form-control">
+                            <input name="total" id="total" readonly value="{{$total}}" class="form-control">
                         </div>
 
                         <div class="d-flex align-items-center gap-2 mt-2 ">
@@ -95,6 +96,10 @@
                 </div>
             </div>
         </form>
+
+        @if($errors->any())
+            <span class="text-danger">{{$errors->first()}}</span>
+        @endif
     </div>
 
     <!-- Cancel Confirmation Modal -->
@@ -132,80 +137,70 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No
                     </button>
-                    <button type="submit" class="btn btn-primary">Yes</button>
+                    <button type="submit" onclick="confirmOrder()" class="btn btn-primary">Yes</button>
                 </div>
             </div>
         </div>
     </div>
-
 @endsection
 
-{% block body %}
+@section('javascript')
+    <script>
 
+        const orderConfirmationModal = new bootstrap.Modal(document.getElementById('confirmOrderModal'));
+        const checkoutForm = document.querySelector('#checkoutForm');
 
-{% endblock %}
+        {{--const shippingFeeField = document.querySelector('#shippingFee');--}}
+        {{--const shippingAddress = document.querySelector('#address');--}}
+        {{--const paymentMethod = document.querySelector('#payment');--}}
+        {{--const initialPage = document.querySelector('#initialPage');--}}
+        {{--const gcashPage = document.querySelector('#gcashPage');--}}
+        {{--const totalInput = document.querySelector('#total');--}}
+        {{--const gcashReceiptImgInput = document.querySelector('#gcashReceiptImg');--}}
 
-{% block javascript %}
-<script>
+        {{--shippingAddress.addEventListener('change', updateShippingFee);--}}
 
-    // const orderConfirmationModal = new bootstrap.Modal(document.getElementById('confirmOrderModal'));
-    {{--const checkoutForm = document.querySelector('#checkoutForm');--}}
-    {{--const shippingFeeField = document.querySelector('#shippingFee');--}}
-    {{--const shippingAddress = document.querySelector('#address');--}}
-    {{--const paymentMethod = document.querySelector('#payment');--}}
-    {{--const initialPage = document.querySelector('#initialPage');--}}
-    {{--const gcashPage = document.querySelector('#gcashPage');--}}
-    {{--const totalInput = document.querySelector('#total');--}}
-    {{--const gcashReceiptImgInput = document.querySelector('#gcashReceiptImg');--}}
+        {{--async function updateShippingFee() {--}}
 
-    {{--shippingAddress.addEventListener('change', updateShippingFee);--}}
+        {{--    const result = await fetch(`{{base_path()}}/api/shipping-rate/${shippingAddress.value}`);--}}
+        {{--    const data = await result.json();--}}
 
-    {{--async function updateShippingFee() {--}}
+        {{--    if (result.ok) {--}}
+        {{--        shippingFeeField.value = data.rate;--}}
+        {{--        totalInput.value = parseInt('{{total}}') + data.rate;--}}
+        {{--    } else {--}}
+        {{--        alert("Something went wrong while configuring shipping rate, please try again");--}}
+        {{--    }--}}
+        {{--}--}}
 
-    {{--    const result = await fetch(`{{base_path()}}/api/shipping-rate/${shippingAddress.value}`);--}}
-    {{--    const data = await result.json();--}}
+        {{--checkoutForm.addEventListener('submit', (e) => {--}}
 
-    {{--    if (result.ok) {--}}
-    {{--        shippingFeeField.value = data.rate;--}}
-    {{--        totalInput.value = parseInt('{{total}}') + data.rate;--}}
-    {{--    } else {--}}
-    {{--        alert("Something went wrong while configuring shipping rate, please try again");--}}
-    {{--    }--}}
-    {{--}--}}
+        {{--    e.preventDefault();--}}
 
-    {{--checkoutForm.addEventListener('submit', (e) => {--}}
+        {{--    orderConfirmationModal.hide();--}}
 
-    {{--    e.preventDefault();--}}
+        {{--    if (paymentMethod.value === 'GCASH') {--}}
 
-    {{--    orderConfirmationModal.hide();--}}
+        {{--        initialPage.classList.add('d-none');--}}
+        {{--        gcashPage.classList.remove('d-none');--}}
 
-    {{--    if (paymentMethod.value === 'GCASH') {--}}
+        {{--        document.querySelector('#gcashTotal').innerHTML = totalInput.value;--}}
+        {{--    } else {--}}
+        {{--        checkoutForm.submit();--}}
+        {{--    }--}}
 
-    {{--        initialPage.classList.add('d-none');--}}
-    {{--        gcashPage.classList.remove('d-none');--}}
+        {{--})--}}
 
-    {{--        document.querySelector('#gcashTotal').innerHTML = totalInput.value;--}}
-    {{--    } else {--}}
-    {{--        checkoutForm.submit();--}}
-    {{--    }--}}
+        function confirmOrder() {
+            checkoutForm.submit();
+        }
 
-    {{--})--}}
+        {{--window.addEventListener('load', updateShippingFee);--}}
 
-    {{--function submitForm() {--}}
-    {{--    if (gcashReceiptImgInput.value) {--}}
-    {{--        checkoutForm.submit();--}}
-    {{--        document.querySelector('#gcashReceiptImgError').classList.add('d-none');--}}
-    {{--    } else {--}}
-    {{--        document.querySelector('#gcashReceiptImgError').classList.remove('d-none');--}}
-    {{--    }--}}
-    {{--}--}}
+        {{--function reloadPage() {--}}
+        {{--    location.reload();--}}
+        {{--}--}}
 
-    {{--window.addEventListener('load', updateShippingFee);--}}
+    </script>
+@endsection
 
-    {{--function reloadPage() {--}}
-    {{--    location.reload();--}}
-    {{--}--}}
-
-</script>
-
-{% endblock %}

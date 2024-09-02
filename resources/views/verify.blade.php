@@ -14,6 +14,8 @@
             <h2 class="text-center">Security Check</h2>
             <p>To help keep your account safe, Please Enter the code </p>
             <form method="POST" action="/verify">
+                @csrf
+
                 <div class="mb-2">
                     <label for="code">An email with a verification code was just sent to you</label>
                     <input id="code" type="text" class="form-control" name="code">
@@ -22,8 +24,8 @@
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
 
-                @if(isset($error))
-                    <span class="text-danger">{{$error}}</span>
+                @if($errors->any())
+                    <span class="text-danger">{{$errors->first()}}</span>
                 @endif
 
             </form>

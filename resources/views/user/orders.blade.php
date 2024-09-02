@@ -18,7 +18,7 @@
                         <td>{{$order->reference}}</td>
                         <td><span>{{$order->status->value}}</span>
                         </td>
-                        <td>{{$order->payment_method->value}}</td>
+                        <td>{{$order->payment->payment_method->value}}</td>
                         <td>
                             <div>
                                 <a role="button" href="/order/{{$order->id}}" class="btn btn-primary">view</a>
@@ -55,7 +55,7 @@
                             </li>
                             <li class="list-group-item">
                                 <span class="font-weight-bold">Payment Method:</span>
-                                <span class="float-right">{{$order->payment_method->value}}</span>
+                                <span class="float-right">{{$order->payment->payment_method->value}}</span>
                             </li>
                             <li class="list-group-item">
                                 <a href="/order/{{$order->id}}" class="btn btn-primary">View</a>

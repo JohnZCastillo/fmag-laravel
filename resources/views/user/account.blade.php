@@ -17,22 +17,23 @@
         <hr>
         <div class="row">
             <div class="col-12 col-md-4">
-                <img class="d-block mx-auto" src="" id="profileImage" style="width: 200px; height: 200px">
+                <img class="d-block mx-auto" src="{{\Illuminate\Support\Facades\Storage::url(auth()->user()->profile)}}"
+                     id="profileImage" style="width: 200px; height: 200px">
             </div>
             <div class="col-12 col-md-6">
                 <div class="form-group column align-items-center">
                     <label for="email" class="col-2">Email:</label>
-                    <input readonly type="email" class="col form-control" id="email" placeholder="Enter email"
-                           value="">
+                    <input readonly type="email" class="col form-control" id="email" value="{{auth()->user()->email}}">
                 </div>
                 <div class="form-group column align-items-center">
                     <label for="name" class="col-2">Name:</label>
-                    <input readonly type="text" class="col form-control" id="name" placeholder="Enter your name"
-                           value="">
+                    <input name="name" readonly type="text" class="col form-control" id="name"
+                           value="{{auth()->user()->full_name}}">
                 </div>
                 <div class="form-group column align-items-center">
                     <label for="name" class="col-2">Contact No.</label>
-                    <input readonly type="text" class="col form-control" id="mobile" value="">
+                    <input readonly type="text" class="col form-control" id="mobile"
+                           value="{{auth()->user()->contact_number}}">
                 </div>
                 <div class="mt-2 form-group align-items-center">
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateProfile">Update
@@ -41,11 +42,16 @@
                 </div>
             </div>
         </div>
+
+        @if($errors->any())
+            <span class="text-danger">{{$errors->first()}}</span>
+        @endif
     </div>
 
     <div class="modal fade" id="updateProfile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="/account">
+            <form enctype="multipart/form-data" method="POST" action="/profile">
+                @csrf
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Update Profile</h5>
@@ -58,17 +64,37 @@
                         </div>
                         <div class="form-group column align-items-center">
                             <label for="email" class="col-2">Email:</label>
-                            <input type="email" class="col form-control" id="email" placeholder="Enter email"
-                                   value="">
+                            <input name="email" type="email" class="col form-control" id="email" value="{{auth()->user()->email}}">
                         </div>
-                        <div class="form-group column align-items-center">
-                            <label for="name">Name:</label>
-                            <input type="text" class="col form-control" id="name" placeholder="Enter your name"
-                                   value="">
+
+                        <div class="row mt-2">
+
+                            <div class="col-4 form-group column align-items-center">
+                                <label for="name">First Name:</label>
+                                <input name="name" value="{{auth()->user()->name}}" type="text" class="col form-control" id="name">
+                            </div>
+
+                            <div class="col-4 form-group column align-items-center">
+                                <label for="name">Middle Name:</label>
+                                <input name="middle_name" value="{{auth()->user()->middle_name}}" type="text"
+                                       class="col form-control"
+                                       id="name" placeholder="Optional">
+                            </div>
+
+                            <div class="col-4 form-group column align-items-center">
+                                <label for="name">Last Name:</label>
+                                <input name="last_name" value="{{auth()->user()->last_name}}" type="text"
+                                       class="col form-control"
+                                       id="name">
+                            </div>
+
                         </div>
+
                         <div class="form-group column align-items-center">
                             <label for="name">Contact No.</label>
-                            <input type="text" class="col form-control" id="mobile" value="">
+                            <input name="contact_number" value="{{auth()->user()->contact_number}}" type="text"
+                                   class="col form-control"
+                                   id="mobile" value="">
                         </div>
                     </div>
                     <div class="modal-footer">

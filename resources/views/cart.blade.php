@@ -1,4 +1,3 @@
-
 @extends('layouts.user-index')
 
 @section('title','Cart')
@@ -136,7 +135,8 @@
                                 @forelse($cart->items as $item)
                                     <tr id="product{{$item->product->id}}">
                                         <td>
-                                            <img class="product-img" src="{{\Illuminate\Support\Facades\Storage::url($item->product->image)}}">
+                                            <img class="product-img"
+                                                 src="{{\Illuminate\Support\Facades\Storage::url($item->product->image)}}">
                                         </td>
                                         <td>
                                             {{$item->product->name}}
@@ -146,7 +146,8 @@
                                         <td>
                                             <input id="quantity{{$item->product->id}}"
                                                    onchange="updateQuantity('{{$item->product->id}}'); limitQuantity('{{$item->product->id}}');"
-                                                   type="number" min="1" max="{{$item->product->stock}}" class="form-control"
+                                                   type="number" min="1" max="{{$item->product->stock}}"
+                                                   class="form-control"
                                                    name="quantity"
                                                    value="{{$item->quantity}}">
                                             <p id="stock{{$item->product->id}}" style="display: none;">
@@ -158,28 +159,39 @@
                                             <form method="POST" action="/cart-item/{{$item->id}}">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button  type="submit" class="btn btn-danger">X</button>
+                                                <button type="submit" class="btn btn-danger">X</button>
                                             </form>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td class="text-center" colspan="7" style="height: 200px; vertical-align: middle"></td>
+                                        <td class="text-center" colspan="7"
+                                            style="height: 200px; vertical-align: middle"></td>
                                     </tr>
                                 @endforelse
                                 </tbody>
                             </table>
                         </div>
                         <div class="text-right">
-{{--                            <h3>Total: ₱<span id="totalCart">{{total}}</span></h3>--}}
-{{--                            <form id="cartForm" method="POST" action="{{base_path()}}/cart-checkout">--}}
-{{--                                <button {{disabled}} id="checkoutButton" type="submit" class="btn btn-primary">Checkout</button>--}}
-{{--                            </form>--}}
+                            @if(count($cart->items))
+                                <h3>Total: ₱<span id="totalCart">{{$total}}</span></h3>
+                                <form id="cartForm" method="POST" action="/order/cart-checkout">
+                                    @csrf
+                                    <button id="checkoutButton" type="submit" class="btn btn-primary">
+                                        Checkout
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        @if($errors->any())
+            <span class="text-danger">{{$errors->first()}}</span>
+        @endif
+
     </div>
 @endsection
 

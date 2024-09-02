@@ -22,6 +22,12 @@ return new class extends Migration {
                 \App\Enums\OrderStatus::CANCELLED->value,
                 \App\Enums\OrderStatus::DELIVERY->value,
             ]);
+            $table->enum('state', [
+                \App\Enums\OrderState::PENDING->value,
+                \App\Enums\OrderState::PAYMENT->value,
+                \App\Enums\OrderState::PROCESSING->value,
+                \App\Enums\OrderState::COMPLETED->value,
+            ]);
             $table->timestamps();
         });
     }

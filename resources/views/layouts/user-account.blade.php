@@ -54,7 +54,7 @@
                 <a href="/profile"
                    class="nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-person-circle h4 mb-0"></i>Profile</a>
-                <a href="/settings"
+                <a href="/password"
                    class="nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-shield h4 mb-0"></i>Password</a>
                 <a href="/address"

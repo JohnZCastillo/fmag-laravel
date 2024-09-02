@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('session_id');
             $table->foreignId('user_id')->index()->constrained();
             $table->dateTime('expiration')->default(Carbon::now()->addMinutes(5)->format('Y-m-d H:i'));
+            $table->unique(['code', 'session_id','user_id']);
             $table->timestamps();
         });
     }
