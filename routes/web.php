@@ -67,7 +67,7 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::post('/cart/{cartID}', [CartController::class, 'addCartItem']);
     Route::delete('/cart-item/{item}', [CartItemController::class, 'removeItem']);
 
-    Route::get('/admin/products', [ProductController::class, 'indgitex']);
+    Route::get('/admin/products', [ProductController::class, 'index']);
 
 
 });
