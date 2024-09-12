@@ -19,7 +19,7 @@ class CartController extends Controller
 
             $cart = Cart::with(['items' => function ($query) {
                 $query->with('product');
-            }])->first();
+            }])->where('user_id', Auth::id())->firstOrFail();
 
             $total = CartItem::select(['cart_id', DB::raw('SUM(quantity * price) as total')])
                 ->join('products', 'products.id', '=', 'cart_items.product_id')

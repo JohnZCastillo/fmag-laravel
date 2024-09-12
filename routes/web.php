@@ -1,11 +1,16 @@
 <?php
 
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\SalesController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CartItemController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NotificationController as UserNotification;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
@@ -50,11 +55,13 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::post('/password', [PasswordController::class, 'changePassword']);
 
     Route::get('/orders', [OrderController::class, 'orders']);
+    Route::get('/admin/orders', [AdminOrderController::class, 'orders']);
+    Route::get('/admin/sales', [SalesController::class, 'index']);
     Route::get('/order/{id}', [OrderController::class, 'order']);
 
+    Route::post('/order/cart-checkout', [CheckoutController::class, 'cartCheckout']);
     Route::get('/order/checkout/{orderID}', [CheckoutController::class, 'checkout'])->name('checkout');
     Route::post('/order/checkout/{order}', [CheckoutController::class, 'confirmCheckout']);
-    Route::post('/order/cart-checkout', [CheckoutController::class, 'cartCheckout']);
 
     Route::get('/payments/gcash/{orderID}', [PaymentController::class, 'index'])->name('gcash');
 
@@ -63,11 +70,26 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::get('/user/profile', [UserAccountController::class, 'index']);
     Route::post('/profile', [UserAccountController::class, 'update']);
     Route::get('/address', [UserAddressController::class, 'index']);
+    Route::get('/new-address', [UserAddressController::class, 'newAddressForm']);
+    Route::post('/new-address', [UserAddressController::class, 'registerAddress']);
+
+    Route::get('/notifications', [UserNotification::class, 'index']);
 
     Route::post('/cart/{cartID}', [CartController::class, 'addCartItem']);
     Route::delete('/cart-item/{item}', [CartItemController::class, 'removeItem']);
 
+    Route::get('/product/{productID}', [ProductController::class, 'viewProduct']);
+
     Route::get('/admin/products', [ProductController::class, 'index']);
+    Route::get('/admin/product/{productID}', [ProductController::class, 'getProduct']);
+    Route::patch('/admin/product/{product}', [ProductController::class, 'updateProduct']);
+    Route::delete('/admin/product/{productID}', [ProductController::class, 'archiveProduct']);
 
+    Route::get('/messages', [ChatController::class, 'userChat']);
 
+    Route::post('/api/message/admin', [ChatController::class, 'sendToAdmin']);
+    Route::get('/api/messages/{userID}', [ChatController::class, 'getMessages']);
+    Route::post('/api/messages/{userID}', [ChatController::class, 'addMessage']);
+
+    Route::post('/product/feedback/{productID}', [FeedbackController::class, 'addComment']);
 });

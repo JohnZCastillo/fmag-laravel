@@ -17,10 +17,20 @@
 
     <link rel="stylesheet" href="/bootstrap-icons-1.11.3/fonts/bootstrap-icons.css">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     @yield('files')
 
+    <style>
+        .pristine-error{
+            color: var(--bs-danger);
+            font-size: 14px;
+        }
+    </style>
 
     @yield('style')
+
+
 
 </head>
 
@@ -185,6 +195,7 @@
 {{--{% include '/partials/image-modal.html' %}--}}
 
 
+@yield('script')
 @yield('javascript')
 <script>
 

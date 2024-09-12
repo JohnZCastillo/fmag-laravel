@@ -173,15 +173,15 @@
                             </table>
                         </div>
                         <div class="text-right">
-                            @if(count($cart->items))
-                                <h3>Total: ₱<span id="totalCart">{{$total}}</span></h3>
-                                <form id="cartForm" method="POST" action="/order/cart-checkout">
-                                    @csrf
-                                    <button id="checkoutButton" type="submit" class="btn btn-primary">
-                                        Checkout
-                                    </button>
-                                </form>
-                            @endif
+                                @if(count($cart->items))
+                                    <h3>Total: ₱<span id="totalCart">{{$total}}</span></h3>
+                                    <form id="cartForm" method="POST" action="/order/cart-checkout">
+                                        @csrf
+                                        <button id="checkoutButton" type="submit" class="btn btn-primary">
+                                            Checkout
+                                        </button>
+                                    </form>
+                                @endif
                         </div>
                     </div>
                 </div>

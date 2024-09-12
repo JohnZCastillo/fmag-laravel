@@ -13,6 +13,8 @@
 
     <link rel="stylesheet" href="/bootstrap-icons-1.11.3/fonts/bootstrap-icons.css">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <style>
 
         .nav-link{

@@ -16,6 +16,9 @@
 
     <link rel="stylesheet" href="/bootstrap-icons-1.11.3/fonts/bootstrap-icons.css">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+
     @yield('files')
 
     <style>
@@ -63,7 +66,7 @@
                 <a href="/orders"
                    class="nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-card-checklist h4 mb-0"></i>Orders</a>
-                <a href="/support"
+                <a href="/messages"
                    class="nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-envelope h4 mb-0"></i>Inbox</a>
                 <a href="/notifications"

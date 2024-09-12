@@ -16,7 +16,7 @@ class PaymentController extends Controller
             $order = Order::with('payment')
                 ->findOrFail($orderID);
 
-            if ($order->status != OrderState::PAYMENT) {
+            if ($order->state != OrderState::PAYMENT) {
                 throw new \Exception('Invalid order');
             }
 
@@ -25,7 +25,8 @@ class PaymentController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            return redirect('/shop')->withErrors(['message' => 'Order unavailable']);
+            return  $e->getMessage();
+//            return redirect('/shop')->withErrors(['message' => 'Order unavailable']);
         }
     }
 }

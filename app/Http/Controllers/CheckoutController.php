@@ -60,7 +60,8 @@ class CheckoutController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            return redirect('/')->withErrors(['message' => 'Order unavailable']);
+            return $e->getMessage();
+//            return redirect('/')->withErrors(['message' => 'Order unavailable']);
         }
     }
 
@@ -121,6 +122,10 @@ class CheckoutController extends Controller
 
                 }])
                 ->firstOrFail();
+
+            if($cart->items->isEmpty()){
+                throw new \Exception('cart is empty');
+            }
 
             $order = new Order();
             $order->user_id = Auth::id();

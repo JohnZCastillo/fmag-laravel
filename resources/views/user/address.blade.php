@@ -9,7 +9,7 @@
             @foreach($addresses as $address)
                 <li class="list-group-item d-flex justify-content-between">
                     <p>
-                        <span id="location{{$address->id}}">{{$address->id}}</span>
+                        <span class="text-capitalize" id="location{{$address->id}}">{!! \App\Helper\AddressParser::parseAddress($address) !!}</span>
 
                         @if($address->active)
                             <span class="message-holder badge bg-success">Default</span>

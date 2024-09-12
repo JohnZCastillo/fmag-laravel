@@ -12,7 +12,7 @@
 
             <form class="form w-100 autoSubmitForm" id="searchForm" style="max-width: 400px">
                 <div class="bg-dark p-2 gap-1 rounded-2">
-                    <input value=""
+                    <input value="{{$app->request->search}}"
                            name="search"
                            class="form-control text-white bg-transparent border-0 autoSubmitInput"
                            id="searchBox"
@@ -73,10 +73,11 @@
 
                                 <form class="confirmation"
                                       data-message="Are you sure you want to archive {{$product->name}} ?" method="POST"
-                                      action="/admin/archive-product/{{ $product->id }}">
+                                      action="/admin/product/{{ $product->id }}">
+                                    @csrf
+                                    @method('DELETE')
                                     <button type="submit" class="btn btn-secondary">Archive</button>
                                 </form>
-
                             </div>
                         </td>
                     </tr>

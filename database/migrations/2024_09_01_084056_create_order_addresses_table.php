@@ -12,6 +12,10 @@ return new class extends Migration {
     {
         Schema::create('order_addresses', function (Blueprint $table) {
             $table->id();
+            $table->string('region');
+            $table->string('province');
+            $table->string('city');
+            $table->string('barangay');
             $table->foreignId('order_id')->index()->constrained();
             $table->float('shipping_fee');
             $table->timestamps();

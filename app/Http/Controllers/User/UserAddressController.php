@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserAddressController extends Controller
 {
@@ -19,5 +21,51 @@ class UserAddressController extends Controller
         return view('user.address', [
             'addresses' => $addresses,
         ]);
+    }
+
+    public function newAddressForm()
+    {
+        return view('user.add-address');
+    }
+
+    public function registerAddress(Request $request)
+    {
+
+        try {
+
+            $validated = $request->validate([
+                'region' => 'required|numeric',
+                'province' => 'required|numeric',
+                'city' => 'required|numeric',
+                'barangay' => 'required|numeric',
+                'postal' => 'nullable|numeric',
+                'property' => 'required|string',
+            ]);
+
+            DB::beginTransaction();
+
+            $address = new UserAddress();
+
+            $address->region = $validated['region'];
+            $address->province = $validated['province'];
+            $address->city = $validated['city'];
+            $address->barangay = $validated['barangay'];
+            $address->property = $validated['property'];
+            $address->user_id = Auth::id();
+
+            if (isset($validated['postal'])) {
+                $address->postal = $validated['postal'];
+            }
+
+            $address->save();
+
+            DB::commit();
+
+            return redirect('/address');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['message', $e->getMessage()]);
+        }
     }
 }
