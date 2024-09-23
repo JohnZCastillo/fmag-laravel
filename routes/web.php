@@ -56,6 +56,7 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
 
     Route::get('/orders', [OrderController::class, 'orders']);
     Route::get('/admin/orders', [AdminOrderController::class, 'orders']);
+    Route::get('/admin/orders/{orderID}', [AdminOrderController::class, 'order']);
     Route::get('/admin/sales', [SalesController::class, 'index']);
     Route::get('/order/{id}', [OrderController::class, 'order']);
 
@@ -92,4 +93,7 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::post('/api/messages/{userID}', [ChatController::class, 'addMessage']);
 
     Route::post('/product/feedback/{productID}', [FeedbackController::class, 'addComment']);
+
+    Route::post('/admin/report', [SalesController::class,'getSalesInRange']);
+
 });

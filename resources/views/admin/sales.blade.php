@@ -6,6 +6,8 @@
     <hr>
 
     <form id="salesReportForm" class="mb-2">
+        @csrf
+
         <h2 class="bg-secondary text-white rounded p-2 text-uppercase lead">Generate Sales Report</h2>
 
         <div class="mb-2 row align-items-center mb-2">
@@ -49,28 +51,28 @@
 
 
             @forelse($items as $item)
-{{--                <div class="card mb-2">--}}
-{{--                    <div class="card-body">--}}
-{{--                        <ul class="list-group list-group-flush">--}}
-{{--                            <li class="list-group-item">--}}
-{{--                                <span class="font-weight-bold">Product Name:</span>--}}
-{{--                                <span class="float-right">{{$item->productName}}</span>--}}
-{{--                            </li>--}}
-{{--                            <li class="list-group-item">--}}
-{{--                                <span class="font-weight-bold">Remaining Products:</span>--}}
-{{--                                <span class="float-right">{{$item->productStock}}</span>--}}
-{{--                            </li>--}}
-{{--                            <li class="list-group-item">--}}
-{{--                                <span class="font-weight-bold">Products Sold:</span>--}}
-{{--                                <span class="float-right">{{$item->totalSold}}</span>--}}
-{{--                            </li>--}}
-{{--                            <li class="list-group-item">--}}
-{{--                                <span class="font-weight-bold">Total Sales:</span>--}}
-{{--                                <span class="float-right">{{$item->totalSales|format_currency('PHP')}}</span>--}}
-{{--                            </li>--}}
-{{--                        </ul>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
+                {{--                <div class="card mb-2">--}}
+                {{--                    <div class="card-body">--}}
+                {{--                        <ul class="list-group list-group-flush">--}}
+                {{--                            <li class="list-group-item">--}}
+                {{--                                <span class="font-weight-bold">Product Name:</span>--}}
+                {{--                                <span class="float-right">{{$item->productName}}</span>--}}
+                {{--                            </li>--}}
+                {{--                            <li class="list-group-item">--}}
+                {{--                                <span class="font-weight-bold">Remaining Products:</span>--}}
+                {{--                                <span class="float-right">{{$item->productStock}}</span>--}}
+                {{--                            </li>--}}
+                {{--                            <li class="list-group-item">--}}
+                {{--                                <span class="font-weight-bold">Products Sold:</span>--}}
+                {{--                                <span class="float-right">{{$item->totalSold}}</span>--}}
+                {{--                            </li>--}}
+                {{--                            <li class="list-group-item">--}}
+                {{--                                <span class="font-weight-bold">Total Sales:</span>--}}
+                {{--                                <span class="float-right">{{$item->totalSales|format_currency('PHP')}}</span>--}}
+                {{--                            </li>--}}
+                {{--                        </ul>--}}
+                {{--                    </div>--}}
+                {{--                </div>--}}
             @empty
                 <div class="d-flex align-items-center justify-content-center" style="height: 300px">
                     <h3 class="text-center text-secondary">Empty Result</h3>
@@ -123,32 +125,44 @@
         </div>
     </div>
 
+    <form method="POST" action="/admin/report">
+        @csrf
+        <button type="submit">Check</button>
+    </form>
+
 @endsection
 
 @section('script')
     <script>
 
-        const reportPreviewModal = new bootstrap.Modal(document.getElementById('reportPreviewModal'), {
-            keyboard: false
-        })
-
+        const reportPreviewModal = new bootstrap.Modal(document.getElementById('reportPreviewModal'))
         const generateSalesReportForm = document.querySelector('#salesReportForm');
         const reportPreviewModalBody = document.querySelector('#reportPreviewModalBody');
 
         async function generateSalesReport() {
 
-            const formData = new FormData(generateSalesReportForm);
+            try {
 
-            const result = await fetch("{{base_path()}}/admin/report", {
-                method: 'POST',
-                body: formData,
-            })
 
-            if (result.ok) {
+                const formData = new FormData(generateSalesReportForm);
+
+                const result = await fetch("/admin/report", {
+                    method: 'POST',
+                    body: formData,
+                })
+
+                const data = await result.json();
+
+                if (!result.ok) {
+                    throw new Error(data.message)
+                }
+
                 reportPreviewModalBody.innerHTML = await result.text();
                 reportPreviewModal.show();
-            }
 
+            } catch (error) {
+                console.log(error.message);
+            }
         }
 
     </script>
