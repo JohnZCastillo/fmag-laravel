@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SalesController;
+use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CartItemController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController as UserNotification;
+use App\Http\Controllers\Admin\NotificationController as AdminNotification;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
@@ -100,4 +102,8 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::get('/admin/general-settings', [GeneralSettingController::class,'index']);
     Route::post('/admin/general-settings', [GeneralSettingController::class,'update']);
 
+    Route::get('/admin/notifications', [AdminNotification::class,'index']);
+
+    Route::get('/admin/services', [ServiceController::class,'index']);
+    Route::post('/admin/services', [ServiceController::class,'add']);
 });
