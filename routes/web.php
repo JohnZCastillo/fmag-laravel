@@ -9,6 +9,7 @@ use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController as UserNotification;
 use App\Http\Controllers\PaymentController;
@@ -95,5 +96,8 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::post('/product/feedback/{productID}', [FeedbackController::class, 'addComment']);
 
     Route::post('/admin/report', [SalesController::class,'getSalesInRange']);
+
+    Route::get('/admin/general-settings', [GeneralSettingController::class,'index']);
+    Route::post('/admin/general-settings', [GeneralSettingController::class,'update']);
 
 });
