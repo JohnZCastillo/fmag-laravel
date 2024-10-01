@@ -140,12 +140,14 @@
                                            value="{{$order->payment->payment_method->value}}" readonly>
                                 </div>
 
-                                @if($order->payment->payment_method == \App\Enums\PaymentMethod::GCASH)
+                                @if($order->payment && $order->payment->file)
                                     <div class="col-sm form-group">
                                         <div class="form-group">
                                             <label for="receipt">Payment Proof</label>
-                                            {{--                                        <img onclick="showImageModal('{{receipt}}')" id="receipt" class="img-thumbnail"--}}
-                                            {{--                                             src="{{receipt}}">--}}
+                                            <img
+                                                onclick="showImageModal('{{\Illuminate\Support\Facades\Storage::url($order->payment->file)}}')"
+                                                id="receipt" class="img-thumbnail"
+                                                src="{{\Illuminate\Support\Facades\Storage::url($order->payment->file)}}">
                                         </div>
                                     </div>
                                 @endif
@@ -154,6 +156,17 @@
                         </form>
                     @endif
                 </div>
+
+
+                @if($order->status == \App\Enums\OrderStatus::DELIVERY)
+                    <form method="POST" action="/order/complete/{{$order->id}}">
+                        <button type="submit" class="btn btn-success" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                            Order Complete
+                        </button>
+                    </form>
+                @endif
+
 
                 @if($order->status == \App\Enums\OrderStatus::PENDING)
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -177,35 +190,35 @@
     </div>
 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <form method="POST" action="/order/{{$order->id}}">
+        <form id="denyForm" method="POST" action="/order-cancel/{{$order->id}}">
             @csrf
-            @method('PATCH')
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Select Cancellation Reason</h5>
+                        <h5 class="modal-title">Cancel Order</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Are you sure you want to cancel?
-                            Sorry to see you cancel. Please tell us the reason, and we will try
-                            to make your next shopping experience better! </p>
 
-                        <select id="selectReason" name="reason" class="form-control mb-1">
-                            <option value="1">Don’t want to buy anymore</option>
-                            <option value="2">Need to change Delivery address</option>
-                            <option value="3">Need to modify order (Quantity, Size, etc.)</option>
-                            <option value="0">Other</option>
+                        <input type="hidden" class="d-none" name="reason" id="hiddenReason">
+
+                        <label for="reason">Reason for cancelling</label>
+                        <select id="reason" class="form-control" required>
+                            <option value="Don’t want to buy anymore">Don’t want to buy anymore</option>
+                            <option value="Need to change Delivery address">Need to change Delivery address</option>
+                            <option value="Need to modify order (Quantity, Size, etc.)">Need to modify order (Quantity, Size, etc.)</option>
+                            <option value="others">Others</option>
                         </select>
 
-                        <div class="other-reason d-none">
-                            <label>Other Reason</label>
-                            <textarea rows="6" class="form-control" id="reason" name="otherReason"></textarea>
+                        <div class="d-none mt-2" id="specifyReason">
+                            <label for="others">Please Specify</label>
+                            <textarea rows="4" id="others" class="form-control"></textarea>
                         </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger">Confirm</button>
+                        <button type="submit" class="btn btn-primary">Confirm</button>
                     </div>
                 </div>
             </div>
@@ -213,16 +226,35 @@
     </div>
 @endsection
 
-@section('javascript')
+@section('script')
     <script>
-        const cancelOrder = document.querySelector('#selectReason');
-        const otherReasonHolder = document.querySelector('.other-reason');
 
-        cancelOrder.addEventListener('change', () => {
-            if (Number(cancelOrder.value)) {
-                otherReasonHolder.classList.add('d-none');
+        console.log('hello world');
+
+        const denyForm = document.querySelector('#denyForm');
+        const denyReason = document.querySelector('#reason');
+        const otherReason = document.querySelector('#others');
+        const specifyReason = document.querySelector('#specifyReason');
+        const othersOption = document.querySelector('#othersOption');
+        const hiddenReason = document.querySelector('#hiddenReason');
+
+        denyForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (denyReason.value === 'others') {
+                hiddenReason.value = otherReason.value;
+            }else{
+                hiddenReason.value = denyReason.value;
+            }
+
+            denyForm.submit();
+        })
+
+        denyReason.addEventListener('change', (e) => {
+            if (denyReason.value === 'others') {
+                specifyReason.classList.remove('d-none');
             } else {
-                otherReasonHolder.classList.remove('d-none');
+                specifyReason.classList.add('d-none');
             }
         })
 

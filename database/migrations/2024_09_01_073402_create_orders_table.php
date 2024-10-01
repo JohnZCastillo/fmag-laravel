@@ -28,6 +28,10 @@ return new class extends Migration {
                 \App\Enums\OrderState::PROCESSING->value,
                 \App\Enums\OrderState::COMPLETED->value,
             ]);
+            $table->enum('checkout_type', [
+                \App\Enums\CheckoutType::CART->value,
+                \App\Enums\CheckoutType::PRODUCT->value,
+            ]);
             $table->timestamps();
         });
     }

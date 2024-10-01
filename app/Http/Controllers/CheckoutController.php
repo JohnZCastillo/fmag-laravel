@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CheckoutType;
 use App\Enums\OrderState;
 use App\Enums\PaymentMethod;
 use App\Models\Cart;
@@ -9,6 +10,7 @@ use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderPayment;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -60,8 +62,7 @@ class CheckoutController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            return $e->getMessage();
-//            return redirect('/')->withErrors(['message' => 'Order unavailable']);
+            return redirect('/')->withErrors(['message' => 'Order unavailable']);
         }
     }
 
@@ -76,6 +77,9 @@ class CheckoutController extends Controller
                 'paymentMethod' => 'required',
                 'total' => 'required|numeric',
             ]);
+
+            $cart = Cart::where('user_id',Auth::id())
+                ->firstOrFail();
 
             $paymentMethod = PaymentMethod::valueOf($validated['paymentMethod']);
 
@@ -92,6 +96,25 @@ class CheckoutController extends Controller
             }
 
             $order->save();
+
+            foreach ($order->items as $item) {
+
+                $product = $item->product;
+
+                if ($item->quantity > $product->stock) {
+                    throw new \Exception('insufficient product stock');
+                }
+
+                $product->stock -= $item->quantity;
+                $product->save();
+            }
+
+            if($order->checkout_type == CheckoutType::CART &&  PaymentMethod::CASH){
+                CartItem::where('cart_id',$cart->id)
+                    ->delete();
+            }
+
+            $this->orderCreatedNotification->handle($order);
 
             DB::commit();
 
@@ -117,13 +140,13 @@ class CheckoutController extends Controller
             $cart = Cart::where('user_id', Auth::id())
                 ->with(['items' => function ($query) {
                     $query->with(['product' => function ($query) {
-                        $query->select(['id', 'price']);
+                        $query->select(['id', 'price','stock']);
                     }]);
 
                 }])
                 ->firstOrFail();
 
-            if($cart->items->isEmpty()){
+            if ($cart->items->isEmpty()) {
                 throw new \Exception('cart is empty');
             }
 
@@ -133,16 +156,59 @@ class CheckoutController extends Controller
 
             foreach ($cart->items as $item) {
 
+                $product = $item->product;
+
+                if ($item->quantity > $product->stock) {
+                    throw new \Exception('insufficient product stock');
+                }
+
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item->product->id,
                     'price' => $item->product->price,
                     'quantity' => $item->quantity,
                 ]);
-
             }
 
-            $cart->items()->delete();
+
+            DB::commit();
+
+            return redirect()->route('checkout', ['orderID' => $order->id]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['message' => $e->getMessage()]);
+        }
+    }
+
+    public function productCheckout(Request $request)
+    {
+
+        try {
+
+            $validated = $request->validate([
+                'product_id' => 'required',
+                'quantity' => 'required',
+            ]);
+
+            DB::beginTransaction();
+
+            $order = new Order();
+            $order->user_id = Auth::id();
+            $order->save();
+
+            $product = Product::findOrFail($validated['product_id']);
+
+            if($validated['quantity'] > $product->stock){
+                throw new \Exception('insufficient product stock');
+            }
+
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $product->id,
+                'price' => $product->price,
+                'quantity' => $validated['quantity'],
+            ]);
 
             DB::commit();
 

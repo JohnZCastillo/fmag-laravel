@@ -43,11 +43,11 @@ class SalesController extends Controller
                 ->join('orders', 'orders.id', '=', 'order_items.order_id')
                 ->when($request->input('from'), function ($query) use ($request) {
                     $from = Carbon::parse($request->input('from'))->startOfDay()->format('Y-m-d H:i');
-                    $query->where('created_at', '>=', $from);
+                    $query->where('orders.created_at', '>=', $from);
                 })
                 ->when($request->input('to'), function ($query) use ($request) {
                     $to = Carbon::parse($request->input('to'))->startOfDay()->format('Y-m-d H:i');
-                    $query->where('created_at', '<=', $to);
+                    $query->where('orders.created_at', '<=', $to);
                 })
                 ->where('orders.status', OrderStatus::COMPLETED->value)
                 ->groupBy('products.id', 'products.name', 'products.stock','order_items.price')
@@ -58,60 +58,14 @@ class SalesController extends Controller
                 ->join('orders', 'orders.id', '=', 'order_items.order_id')
                 ->when($request->input('from'), function ($query) use ($request) {
                     $from = Carbon::parse($request->input('from'))->startOfDay()->format('Y-m-d H:i');
-                    $query->where('created_at', '>=', $from);
+                    $query->where('orders.created_at', '>=', $from);
                 })
                 ->when($request->input('to'), function ($query) use ($request) {
                     $to = Carbon::parse($request->input('to'))->startOfDay()->format('Y-m-d H:i');
-                    $query->where('created_at', '<=', $to);
+                    $query->where('orders.created_at', '<=', $to);
                 })
                 ->where('orders.status', OrderStatus::COMPLETED->value)
                 ->value('total_sales');
-
-
-//            $items = OrderItem::whereHas('order', function ($query) use ($request) {
-//                $query->where('status', OrderStatus::COMPLETED->value)
-//                    ->withSum('items', 'quantity')
-//                    ->with(['items' => function ($query) {
-//
-//                    }])
-//                    ->when($request->input('from'), function ($query) use ($request) {
-//                        $from = Carbon::parse($request->input('from'))->startOfDay()->format('Y-m-d H:i');
-//                        $query->where('created_at', '>=', $from);
-//                    })
-//                    ->when($request->input('to'), function ($query) use ($request) {
-//                        $to = Carbon::parse($request->input('to'))->startOfDay()->format('Y-m-d H:i');
-//                        $query->where('created_at', '<=', $to);
-//                    });
-//            })
-//                ->sum(DB::raw('SUM(quantity * price)'))
-////                ->groupBy('product')
-//                ->get();
-
-//            $items = Order::where('status', OrderStatus::COMPLETED->value)
-//                ->withSum('items', 'quantity')
-//                ->with(['items' => function ($query) {
-//                    $query->select(['order_id', DB::raw('SUM(quantity * price)')])
-//                        ->groupBy('order_id', 'id');
-//                }])
-//                ->when($request->input('from'), function ($query) use ($request) {
-//                    $from = Carbon::parse($request->input('from'))->startOfDay()->format('Y-m-d H:i');
-//                    $query->where('created_at', '>=', $from);
-//                })
-//                ->when($request->input('to'), function ($query) use ($request) {
-//                    $to = Carbon::parse($request->input('to'))->startOfDay()->format('Y-m-d H:i');
-//                    $query->where('created_at', '<=', $to);
-//                })->get();
-
-//            $query->select(['products.name', 'stock',  DB::raw('SUM(order_items.quantity) as sold'), DB::raw('SUM(order_items.quantity * order_items.price) as sales')])
-//                ->when($request->input('from'), function ($query) use ($request) {
-//                    $from = Carbon::parse($request->input('from'))->startOfDay()->format('Y-m-d H:i');
-//                    $query->where('orders.created_at', '>=', $from);
-//                })
-//                ->when($request->input('to'), function ($query) use ($request) {
-//                    $to = Carbon::parse($request->input('to'))->startOfDay()->format('Y-m-d H:i');
-//                    $query->where('orders.created_at', '<=', $to);
-//                })
-//                ->groupBy('products.id', 'products.name', 'products.stock');
 
             return view('admin.report-preview', [
                 'items' => $items,
@@ -121,5 +75,7 @@ class SalesController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
+
     }
+
 }

@@ -1,5 +1,8 @@
 @extends('layouts.admin-index')
 
+@section('files')
+    <script src="/js/html2pdf.js"></script>
+@endsection
 @section('body')
 
     <h4>Sales</h4>
@@ -10,15 +13,15 @@
 
         <h2 class="bg-secondary text-white rounded p-2 text-uppercase lead">Generate Sales Report</h2>
 
-        <div class="mb-2 row align-items-center mb-2">
+        <div class="mb-2 row align-items-center mb-2 text-dark">
 
             <div class="form-group col-sm col-md-5">
                 <label for="from">From</label>
-                <input class="form-control" id="from" name="from" type="date" required>
+                <input class="form-control text-dark" id="from" name="from" type="date" required>
             </div>
             <div class="form-group col-sm col-md-5">
                 <label for="to">To</label>
-                <input class="form-control" id="to" name="to" type="date" required>
+                <input class="form-control text-dark" id="to" name="to" type="date" required>
             </div>
 
             <div class="form-group col-sm col-md-2 pt-3">
@@ -51,28 +54,28 @@
 
 
             @forelse($items as $item)
-                {{--                <div class="card mb-2">--}}
-                {{--                    <div class="card-body">--}}
-                {{--                        <ul class="list-group list-group-flush">--}}
-                {{--                            <li class="list-group-item">--}}
-                {{--                                <span class="font-weight-bold">Product Name:</span>--}}
-                {{--                                <span class="float-right">{{$item->productName}}</span>--}}
-                {{--                            </li>--}}
-                {{--                            <li class="list-group-item">--}}
-                {{--                                <span class="font-weight-bold">Remaining Products:</span>--}}
-                {{--                                <span class="float-right">{{$item->productStock}}</span>--}}
-                {{--                            </li>--}}
-                {{--                            <li class="list-group-item">--}}
-                {{--                                <span class="font-weight-bold">Products Sold:</span>--}}
-                {{--                                <span class="float-right">{{$item->totalSold}}</span>--}}
-                {{--                            </li>--}}
-                {{--                            <li class="list-group-item">--}}
-                {{--                                <span class="font-weight-bold">Total Sales:</span>--}}
-                {{--                                <span class="float-right">{{$item->totalSales|format_currency('PHP')}}</span>--}}
-                {{--                            </li>--}}
-                {{--                        </ul>--}}
-                {{--                    </div>--}}
-                {{--                </div>--}}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <span class="font-weight-bold">Product Name:</span>
+                                <span class="float-right">{{$item->name}}</span>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="font-weight-bold">Remaining Products:</span>
+                                <span class="float-right">{{$item->stock}}</span>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="font-weight-bold">Products Sold:</span>
+                                <span class="float-right">{{$item->sold}}</span>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="font-weight-bold">Total Sales:</span>
+                                <span class="float-right">{{$item->sales}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             @empty
                 <div class="d-flex align-items-center justify-content-center" style="height: 300px">
                     <h3 class="text-center text-secondary">Empty Result</h3>
@@ -119,16 +122,17 @@
                     <h5 class="modal-title" id="exampleModalLabel">Report Preview</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div id="reportPreviewModalBody" class="modal-body">
+                <div id="reportContent" class="modal-body">
+                    <h2>Sales Report</h2>
+                    <div id="reportPreviewModalBody"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-secondary">Close</button>
+                    <button type="button" onclick="downloadPdf()" class="btn btn-primary">Download</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <form method="POST" action="/admin/report">
-        @csrf
-        <button type="submit">Check</button>
-    </form>
 
 @endsection
 
@@ -138,20 +142,21 @@
         const reportPreviewModal = new bootstrap.Modal(document.getElementById('reportPreviewModal'))
         const generateSalesReportForm = document.querySelector('#salesReportForm');
         const reportPreviewModalBody = document.querySelector('#reportPreviewModalBody');
+        const reportContent = document.querySelector('#reportContent');
 
         async function generateSalesReport() {
 
             try {
-
 
                 const formData = new FormData(generateSalesReportForm);
 
                 const result = await fetch("/admin/report", {
                     method: 'POST',
                     body: formData,
+                    headers: {
+                        "X-CSRF-Token": "{{ csrf_token() }}"
+                    }
                 })
-
-                const data = await result.json();
 
                 if (!result.ok) {
                     throw new Error(data.message)
@@ -161,8 +166,20 @@
                 reportPreviewModal.show();
 
             } catch (error) {
-                console.log(error.message);
+                console.log(error)
             }
+        }
+
+        function downloadPdf() {
+            var opt = {
+                margin: 0,
+                filename: 'report.pdf',
+                image: {type: 'jpeg', quality: 0.98},
+                html2canvas: {scale: 2},
+                jsPDF: {unit: 'in', format: 'A4', orientation: 'portrait'}
+            };
+
+            html2pdf().set(opt).from(reportContent).save();
         }
 
     </script>

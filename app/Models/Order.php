@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\CheckoutType;
 use App\Enums\OrderState;
 use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,9 +15,19 @@ class Order extends Model
 {
     use HasFactory;
 
+    protected  $fillable = [
+        'status',
+        'state',
+        'checkout_type',
+        'user_id',
+        'reference',
+        'refunded'
+    ];
+
     protected $casts = [
         'status' => OrderStatus::class,
         'state' => OrderState::class,
+        'checkout_type' => CheckoutType::class,
     ];
 
     public function user(): BelongsTo

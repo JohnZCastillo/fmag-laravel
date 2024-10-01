@@ -1,7 +1,5 @@
-{{--<p>Report Coverage: {{$from->format('M d Y')}} - {{$to->format('M d Y')}}</p>--}}
-
 <div class="table-responsive">
-    <table class="table table-bordered">
+    <table class="table table-bordered text-dark">
         <thead>
         <tr>
             <th>Item Name</th>
@@ -27,10 +25,3 @@
         </tbody>
     </table>
 </div>
-
-{{--<div class="modal-footer">--}}
-{{--    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>--}}
-{{--    <form method="POST" action="/admin/download-report/{{from}}/{{to}}">--}}
-{{--        <button type="submit" class="btn btn-primary">Download</button>--}}
-{{--    </form>--}}
-{{--</div>--}}

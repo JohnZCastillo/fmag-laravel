@@ -40,13 +40,17 @@
 
     <div class="card">
 
-        <div class="card-body text-dark">
-
+        @if($errors->any())
             @if($order->status == \App\Enums\OrderStatus::COMPLETED)
-                <div class="alert alert-success mt-2" role="alert">
-                    Transaction Completed
+                <div class="container-fluid mt-2">
+                    <div class="alert alert-danger" role="alert">
+                        A simple danger alert—check it out!
+                    </div>
                 </div>
             @endif
+        @endif
+
+        <div class="card-body text-dark">
 
             @if($order->status == \App\Enums\OrderStatus::FAILED)
                 <div class="alert alert-danger mt-2" role="alert">
@@ -64,19 +68,19 @@
                     {{--                    <p class="card-text">Shipping Address: {{$order->user.getActiveAddress().getLocation()}}</p>--}}
                 </div>
 
-                {{--                {% if $order->status|lower == 'failed' %}--}}
-                {{--                <div class="mt-2 mt-md-0 col-sm">--}}
-                {{--                    <h2>Order has been Rejected!</h2>--}}
-                {{--                    <p><strong>Reason:</strong> {{$order->reason}}</p>--}}
-                {{--                </div>--}}
-                {{--                {% endif %}--}}
+                @if($order->status == \App\Enums\OrderStatus::FAILED)
+                    <div class="mt-2 mt-md-0 col-sm">
+                        <h2>Order has been Rejected!</h2>
+                        <p><strong>Reason:</strong> {{$order->reason}}</p>
+                    </div>
+                @endif
 
-                {{--                {% if $order->status|lower == 'cancelled' %}--}}
-                {{--                <div class="mt-2 mt-md-0 col-sm">--}}
-                {{--                    <h2>Order has been Cancelled!</h2>--}}
-                {{--                    <p><strong>Reason:</strong> {{$order->reason}}</p>--}}
-                {{--                </div>--}}
-                {{--                {% endif %}--}}
+                @if($order->status == \App\Enums\OrderStatus::CANCELLED)
+                    <div class="mt-2 mt-md-0 col-sm">
+                        <h2>Order has been Cancelled!</h2>
+                        <p><strong>Reason:</strong> {{$order->reason}}</p>
+                    </div>
+                @endif
 
             </div>
 
@@ -99,127 +103,144 @@
                         <td>{{$item->total}}</td>
                     </tr>
                 @endforeach
-
-{{--                <tr>--}}
-{{--                    <td colspan="3">Shipping Fee</td>--}}
-{{--                    <td>{{$order->shippingFee|format_currency('PHP')}}</td>--}}
-{{--                </tr>--}}
-
                 <tr>
-                    <td colspan="3">Total</td>
-                    <td>{{$total}}</td>
+                    <td colspan="3">Shipping Fee</td>
+                    <td>100</td>
                 </tr>
                 </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="3">Total</td>
+                    <td>{{$order->total}}</td>
+                </tr>
+                </tfoot>
             </table>
 
-{{--            <div class="row">--}}
-{{--                <form class="col-sm p-2 bg-light" id="deliveryForm" method="POST"--}}
-{{--                      action="{{base_path()}}/admin/order/delivery/{{$order->id}}">--}}
-{{--                    <h2>Delivery Information</h2>--}}
-{{--                    <span class="small text-success" id="deliverySuccessMessage"></span>--}}
-{{--                    <span class="small text-danger" id="deliveryErrorMessage"></span>--}}
-{{--                    <input name="orderId" type="text" class="d-none" value="{{$order->id}}" required>--}}
-{{--                    <div class="form-group">--}}
-{{--                        <label for="logisticCompany">Logistic Company</label>--}}
-{{--                        <input type="text" class="form-control" id="logisticCompany" name="logisticCompany"--}}
-{{--                               placeholder="Enter Logistic Company" value="{{$order->logistic}}" required--}}
-{{--                               oninput="allowLettersAndSpaces(event)">--}}
-{{--                    </div>--}}
-{{--                    <div class="form-group">--}}
-{{--                        <label for="trackingNumber">Tracking Number</label>--}}
-{{--                        <input type="text" class="form-control" id="trackingNumber" name="trackingNumber"--}}
-{{--                               placeholder="Enter Tracking Number" value="{{$order->trackingNumber}}" required--}}
-{{--                               oninput="allowNumbersWithSpaces(event)">--}}
-{{--                    </div>--}}
+            <div class="row">
+                <form class="col-sm p-2 bg-light" id="deliveryForm" method="POST" action="/admin/order/delivery">
+                    @csrf
+                    <h2>Delivery Information</h2>
+                    <input name="order_id" type="hidden" class="d-none" value="{{$order->id}}" required>
+                    <div class="form-group">
+                        <label for="logisticCompany">Logistic Company</label>
 
-{{--                    {% if $order->status|lower == "pending" %}--}}
-{{--                    <button type="submit" id="updateBtn" class="btn btn-primary mt-2">Update</button>--}}
-{{--                    <p class="mb-0 small ">Click Update to Enable the Completed button</p>--}}
-{{--                    {% endif %}--}}
-
-{{--                </form>--}}
+                        @if($order->delivery && $order->delivery->logistic)
+                            <input type="text" class="form-control" id="logisticCompany" name="logistic" placeholder="Enter Logistic Company" value="{{$order->delivery->logistic}}" required>
+                        @else
+                            <input type="text" class="form-control" id="logisticCompany" name="logistic" placeholder="Enter Logistic Company" required>
+                        @endif
 
 
-{{--                <form class="col-sm pt-2 bg-light" id="paymentForm">--}}
+                    </div>
+                    <div class="form-group">
+                        <label for="trackingNumber">Tracking Number</label>
 
-{{--                    <h2>Payment Details</h2>--}}
+                        @if($order->delivery && $order->delivery->logistic)
+                            <input type="text" class="form-control" id="trackingNumber" name="tracking" placeholder="Enter Tracking Number" value="{{$order->delivery->tracking}}" required>
+                        @else
+                            <input type="text" class="form-control" id="trackingNumber" name="tracking" placeholder="Enter Tracking Number" required>
+                        @endif
 
-{{--                    <div class="row">--}}
-{{--                        <div class="col-sm form-group mb-2">--}}
-{{--                            <label for="paymentMethod">Payment Method</label>--}}
-{{--                            <input class="form-control" id="paymentMethod" name="paymentMethod"--}}
-{{--                                   value="{{$order->paymentMethod}}" readonly>--}}
-{{--                        </div>--}}
+                    </div>
 
-{{--                        {% if $order->paymentMethod|lower == 'gcash' %}--}}
+                    @if($order->status == \App\Enums\OrderStatus::PENDING && !$order->delivery)
+                        <button type="submit" id="updateBtn" class="btn btn-primary mt-2">Update</button>
+                        <p class="mb-0 small ">Click Update to Enable the Completed button</p>
+                    @endif
 
-{{--                        {% set receipt = base_path() ~ '/uploads/' ~ $order->receiptImg %}--}}
-{{--                        <div class="col-sm form-group">--}}
-{{--                            <div class="form-group">--}}
-{{--                                <label for="receipt">Payment Proof</label>--}}
-{{--                                <img onclick="showImageModal('{{receipt}}')" id="receipt" class="img-thumbnail"--}}
-{{--                                     src="{{receipt}}">--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        {% endif %}--}}
-{{--                    </div>--}}
-{{--                </form>--}}
+                </form>
+
+                <form class="col-sm pt-2 bg-light" id="paymentForm">
+
+                    <h2>Payment Details</h2>
+
+                    <div class="row">
+
+                        @if($order->payment && $order->payment->payment_method)
+                            <div class="col-sm form-group mb-2">
+                                <label for="paymentMethod">Payment Method</label>
+                                <input class="form-control text-dark" id="paymentMethod" name="paymentMethod"
+                                       value="{{$order->payment->payment_method}}" readonly>
+
+                                @if($order->payment->message)
+                                    <label class="mt-2">message</label>
+                                    <textarea class="form-control text-dark" readonly>{{$order->payment->message}}</textarea>
+                                @endif
+
+                            </div>
+                        @endif
+
+                        @if($order->payment && $order->payment->file)
+                            <div class="col-sm form-group">
+                                <div class="form-group">
+                                    <label for="receipt">Payment Proof</label>
+                                    <img id="receipt" class="img-thumbnail"
+                                         src="{{\Illuminate\Support\Facades\Storage::url($order->payment->file)}}">
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </form>
+            </div>
+
+            <div class="mt-2 d-flex gap-2">
+
+                @if($order->status == \App\Enums\OrderStatus::DELIVERY)
+                    <form class="confirmation" data-message="Are you sure you want to mark this order as completed?"
+                          method="POST" action="/order-complete/{$order->id}}">
+                        @csrf
+                        <button class="btn btn-success" type="submit">Mark as Completed</button>
+                    </form>
+                @endif
+
+                @if($order->status == \App\Enums\OrderStatus::PENDING || $order->status == \App\Enums\OrderStatus::DELIVERY)
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Mark as Denied
+                    </button>
+                @endif
 
 
-{{--            </div>--}}
-
-{{--            <div class="mt-2 d-flex gap-2 {{completed}}">--}}
-
-{{--                {% if $order->status|lower == "delivery"%}--}}
-{{--                <form class="confirmation" data-message="Are you sure you want to mark this order as completed?"--}}
-{{--                      method="POST" action="{{base_path()}}/admin/complete-order/{{$order->id}}">--}}
-{{--                    <button class="btn btn-success" type="submit">Mark as Completed</button>--}}
-{{--                </form>--}}
-{{--                {% endif %}--}}
-
-{{--                {% if $order->status|lower == "pending" or $order->status|lower == "delivery"%}--}}
-{{--                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">--}}
-{{--                    Mark as Denied--}}
-{{--                </button>--}}
-{{--                {% endif %}--}}
-
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+            </div>
+        </div>
+    </div>
 
 
-{{--    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">--}}
-{{--        <form id="denyForm" method="POST" action="{{base_path()}}/admin/deny-order/{{$order->id}}">--}}
-{{--            <div class="modal-dialog">--}}
-{{--                <div class="modal-content">--}}
-{{--                    <div class="modal-header">--}}
-{{--                        <h5 class="modal-title">Deny Order</h5>--}}
-{{--                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>--}}
-{{--                    </div>--}}
-{{--                    <div class="modal-body">--}}
-{{--                        <label for="reason">Reason for denying order</label>--}}
-{{--                        <select id="reason" class="form-control" name="reason" required>--}}
-{{--                            <option value="" disabled selected> -- Select --</option>--}}
-{{--                            <option value="Chosen payment method Failed">Chosen payment method Failed</option>--}}
-{{--                            <option value="Exceed Product Limit">Exceed Product Limit</option>--}}
-{{--                            <option value="Your account has been Limited">Your account has been Limited</option>--}}
-{{--                            <option value="Out of Stock">Out of Stock</option>--}}
-{{--                            <option id="othersOption" value="others">Others</option>--}}
-{{--                        </select>--}}
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <form id="denyForm" method="POST" action="/order-failed/{{$order->id}}">
+            @csrf
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Deny Order</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
 
-{{--                        <div class="d-none mt-2" id="specifyReason">--}}
-{{--                            <label for="others">Please Specify</label>--}}
-{{--                            <textarea rows="4" id="others" class="form-control"></textarea>--}}
-{{--                        </div>--}}
+                        <input type="hidden" class="d-none" name="reason" id="hiddenReason">
 
-{{--                    </div>--}}
-{{--                    <div class="modal-footer">--}}
-{{--                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>--}}
-{{--                        <button type="submit" class="btn btn-primary">Confirm</button>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </form>--}}
+                        <label for="reason">Reason for denying order</label>
+                        <select id="reason" class="form-control" required>
+                            <option value="" disabled selected> -- Select --</option>
+                            <option value="Chosen payment method Failed">Chosen payment method Failed</option>
+                            <option value="Exceed Product Limit">Exceed Product Limit</option>
+                            <option value="Your account has been Limited">Your account has been Limited</option>
+                            <option value="Out of Stock">Out of Stock</option>
+                            <option id="othersOption" value="others">Others</option>
+                        </select>
+
+                        <div class="d-none mt-2" id="specifyReason">
+                            <label for="others">Please Specify</label>
+                            <textarea rows="4" id="others" class="form-control"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 
 @endsection
@@ -232,14 +253,15 @@
         const otherReason = document.querySelector('#others');
         const specifyReason = document.querySelector('#specifyReason');
         const othersOption = document.querySelector('#othersOption');
+        const hiddenReason = document.querySelector('#hiddenReason');
 
         denyForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            console.log(denyReason.value);
-
             if (denyReason.value === 'others') {
-                othersOption.value = otherReason.value;
+                hiddenReason.value = otherReason.value;
+            }else{
+                hiddenReason.value = denyReason.value;
             }
 
             denyForm.submit();

@@ -23,6 +23,7 @@
         <ol class="list-group">
             <li class="list-group-item d-flex justify-content-between align-items-start">
                 <form class="ms-auto" method="POST" action="/read-all-notifications">
+                    @csrf
                     <button type="submit" class="btn btn-secondary">Mark all read</button>
                 </form>
             </li>
@@ -37,7 +38,7 @@
                         <a href="/view-notification-link/{{$notification->id}}"
                            class="btn btn-primary rounded"
                            style="width: max-content">View Details</a>
-                        <small class="text-secondary">{{$notification->created_at|date('F j, Y')}}</small>
+                        <small class="text-secondary">{{$notification->created_at->format('F j, Y')}}</small>
                     </div>
                 </li>
             @empty

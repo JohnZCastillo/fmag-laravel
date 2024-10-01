@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,19 +39,38 @@ class CartController extends Controller
         }
     }
 
-    public function addCartItem(Request $request, $cartID)
+    public function addCartItem(Request $request)
     {
 
         DB::beginTransaction();
 
         try {
 
-            $item = CartItem::firstOrCreate([
-                'product_id' => $request->input('productID'),
-                'cart_id' => $cartID
+            $validated = $request->validate([
+                'product_id' => 'required',
+                'quantity' => 'required|min:1'
             ]);
 
-            $item->quantity = ($item->quantity ?? 0) + $request->input('quantity');
+            $cart = Cart::select(['id'])
+                ->where('user_id', Auth::id())
+                ->firstOrFail();
+
+            $product = Product::select(['id', 'stock'])
+                ->firstOrFail($validated['product_id']);
+
+            $item = CartItem::firstOrCreate([
+                'cart_id' => $cart->id,
+                'product_id' => $validated['product_id'],
+
+            ], [
+                'quantity' => $validated['quantity']
+            ]);
+
+            $item->quantity =  $validated['quantity'];
+
+            if ($item->quantity > $product->stock) {
+                $item->quantity = $product->stock;
+            }
 
             $item->save();
 

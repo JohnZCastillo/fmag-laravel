@@ -57,4 +57,21 @@ class NotificationController extends Controller
             return redirect()->back()->withErrors(['message' => 'error occurred while viewing notification ']);
         }
     }
+
+    public function countUnreadNotifications()
+    {
+
+        try {
+
+            $count = Notification::select([DB::raw('COUNT(id) as count')])
+                ->where('user_id', Auth::id())
+                ->where('read', false)
+                ->value('count');
+
+            return response()->json(['count' => $count]);
+
+        } catch (\Exception $e) {
+            return response()->json(['unread' => 0], 500);
+        }
+    }
 }

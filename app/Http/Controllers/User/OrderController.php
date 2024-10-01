@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\User;
 
 use App\Enums\OrderState;
+use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -27,6 +30,99 @@ class OrderController extends Controller
             'orders' => $orders,
         ]);
 
+    }
+
+    public function orderComplete($orderID)
+    {
+
+        try {
+
+            DB::beginTransaction();
+
+            $order = Order::findOrFail($orderID);
+            $order->status = OrderStatus::COMPLETED;
+            $order->save();
+
+            $this->orderCompletedNotification->handle($order);
+
+            DB::commit();
+
+            return redirect()->back()->with(['message' => 'order completed!']);
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['message' => 'order update failed!']);
+        }
+    }
+
+    public function orderFailed(Request $request, $orderID)
+    {
+
+        try {
+
+            DB::beginTransaction();
+
+            $validated = $request->validate([
+                'reason' => 'required|string',
+            ]);
+
+            $order = Order::findOrFail($orderID);
+            $order->status = OrderStatus::FAILED;
+            $order->reason = $validated['reason'];
+
+
+            if($order->payment->payment_method == PaymentMethod::GCASH){
+                $order->refunded = true;
+            }
+
+            $order->save();
+
+            $this->orderFailedNotification->handle($order);
+
+            DB::commit();
+
+            return redirect()->back()->with(['message' => 'order updated']);
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['message' => 'order update failed!']);
+        }
+    }
+
+    public function cancelOrder(Request $request, $orderID)
+    {
+
+        try {
+
+            DB::beginTransaction();
+
+            $validated = $request->validate([
+                'reason' => 'required|string',
+            ]);
+
+            $order = Order::findOrFail($orderID);
+            $order->status = OrderStatus::CANCELLED;
+            $order->reason = $validated['reason'];
+
+            if($order->payment->payment_method == PaymentMethod::GCASH){
+                $order->refunded = true;
+            }
+
+            $order->save();
+
+            $this->orderCancelledNotification->handle($order);
+
+            DB::commit();
+
+            return redirect()->back()->with(['message' => 'order updated']);
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return  $request->all();
+
+//            return  $exception->getMessage();
+//            return redirect()->back()->withErrors(['message' => 'order update failed!']);
+        }
     }
 
     public function order($orderID)

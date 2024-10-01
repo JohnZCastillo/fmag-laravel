@@ -12,8 +12,9 @@ return new class extends Migration {
     {
         Schema::create('order_payments', function (Blueprint $table) {
             $table->id();
-            $table->float('amount')->default(0);
             $table->foreignId('order_id')->index()->constrained();
+            $table->string('file')->nullable();
+            $table->string('message')->nullable();
             $table->boolean('verified')->default(false);
             $table->enum('payment_method', [
                 \App\Enums\PaymentMethod::CASH->value,

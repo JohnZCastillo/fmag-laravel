@@ -12,13 +12,21 @@
                     <img src="/resources/qr.jpg" class="img-fluid d-block mx-auto"
                          style="width: 300px; height: 300px" alt="GCash QR Code">
                 </div>
-                <form class="col-12 col-md-6" enctype="multipart/form-data" id="gcashReceiptForm" method="POST"
-                      action="/gcash-checkout/{{$order->id}}">
+                <form  class="col-12 col-md-6" enctype="multipart/form-data" id="gcashReceiptForm" method="POST"
+                      action="/payments/gcash/{{$order->id}}">
+                    @csrf
+
                     <div class="form-group">
                         <label for="gcashReceiptImg">Upload your Gcash proof of payment</label>
-                        <input type="file" id="gcashReceiptImg" name="gcashReceiptImg" class="form-control"
+                        <input type="file" id="gcashReceiptImg" name="image" class="form-control"
                                accept="image/*" required>
                     </div>
+
+                    <div class="form-group mt-2">
+                        <label for="message">Message</label>
+                        <textarea class="form-control" id="message" name="message" maxlength="50" placeholder="Optional message"></textarea>
+                    </div>
+
                     <div class="d-flex gap-2">
                         <button onclick="backReload()" type="button" class="btn btn-secondary mt-2">Back</button>
                         <button type="submit" class="btn btn-primary mt-2 d-block">Confirm</button>

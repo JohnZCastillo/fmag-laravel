@@ -88,7 +88,7 @@
                             {{--                            <span class="float-right">{{$order->paymentMethod|upper}}</span>--}}
                         </li>
                         <li class="list-group-item">
-                            <a href="/admin/order/{{$order->id}}" class="btn btn-primary">Manage</a>
+                            <a href="/admin/orders/{{$order->id}}" class="btn btn-primary">Manage</a>
                         </li>
                     </ul>
                 </div>
@@ -132,10 +132,10 @@
                     </td>
                     <td>
                         <div class="d-flex gap-2">
-                            <a href="/admin/support/{{$order->user->id}}">
+                            <a href="/admin/messages/{{$order->user->id}}">
                                 <img style="width: 27px; height: 27px" src="/assets/bot.svg" alt="">
                             </a>
-                            <a href="/admin/order/{{$order->id}}" class="btn btn-primary">Manage</a>
+                            <a href="/admin/orders/{{$order->id}}" class="btn btn-primary">Manage</a>
                         </div>
                     </td>
                 </tr>

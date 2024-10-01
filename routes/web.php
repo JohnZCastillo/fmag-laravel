@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SalesController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\User\UserAddressController;
 use App\Http\Middleware\ProfileComplete;
 use App\Http\Middleware\VerifiedUser;
 use App\Mail\MyTestEmail;
+use App\Http\Controllers\ServiceController as UserServiceController;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +40,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'viewRegisterPage']);
 Route::post('/register', [AuthController::class, 'register']);
 
+
 Route::get('/mail', function () {
     Mail::to('johnzunigacastillo@gmail.com')->send(new MyTestEmail());
 });
@@ -45,14 +48,23 @@ Route::get('/mail', function () {
 Route::get('/verify', [AuthController::class, 'verifyPage']);
 Route::post('/verify', [AuthController::class, 'verifyCode']);
 
+Route::get('/view-notification-link/{notificationID}', [\App\Http\Controllers\NotificationController::class, 'viewNotification']);
+Route::post('/read-all-notifications', [\App\Http\Controllers\NotificationController::class, 'readAllNotification']);
+Route::get('/api/unread-notifications', [\App\Http\Controllers\NotificationController::class, 'countUnreadNotifications']);
+
 Route::get('/complete-profile', [AuthController::class, 'completeProfilePage']);
 Route::post('/complete-profile', [AuthController::class, 'completeProfile']);
 
 Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(function () {
 
+    Route::post('/order-cancel/{orderID}', [OrderController::class, 'cancelOrder']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::get('/profile', [ProfileController::class, 'index']);
+
+    Route::get('/services/{service}', [UserServiceController::class, 'index']);
+    Route::post('/inquire/{service}', [InquiryController::class, 'inquire']);
 
     Route::get('/password', [PasswordController::class, 'index']);
     Route::post('/password', [PasswordController::class, 'changePassword']);
@@ -63,11 +75,16 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::get('/admin/sales', [SalesController::class, 'index']);
     Route::get('/order/{id}', [OrderController::class, 'order']);
 
+    Route::post('/order-complete/{orderID}', [OrderController::class, 'orderComplete']);
+    Route::post('/order-failed/{orderID}', [OrderController::class, 'orderFailed']);
+
+    Route::post('/order/product-checkout', [CheckoutController::class, 'productCheckout']);
     Route::post('/order/cart-checkout', [CheckoutController::class, 'cartCheckout']);
     Route::get('/order/checkout/{orderID}', [CheckoutController::class, 'checkout'])->name('checkout');
     Route::post('/order/checkout/{order}', [CheckoutController::class, 'confirmCheckout']);
 
     Route::get('/payments/gcash/{orderID}', [PaymentController::class, 'index'])->name('gcash');
+    Route::post('/payments/gcash/{order}', [PaymentController::class, 'confirm']);
 
     Route::get('/cart', [CartController::class, 'index']);
 
@@ -79,7 +96,7 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
 
     Route::get('/notifications', [UserNotification::class, 'index']);
 
-    Route::post('/cart/{cartID}', [CartController::class, 'addCartItem']);
+    Route::post('/cart', [CartController::class, 'addCartItem']);
     Route::delete('/cart-item/{item}', [CartItemController::class, 'removeItem']);
 
     Route::get('/product/{productID}', [ProductController::class, 'viewProduct']);
@@ -106,4 +123,21 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
 
     Route::get('/admin/services', [ServiceController::class,'index']);
     Route::post('/admin/services', [ServiceController::class,'add']);
+    Route::patch('/admin/services', [ServiceController::class,'update']);
+    Route::get('/admin/services/{serviceID}', [ServiceController::class,'getService']);
+    Route::delete('/admin/services/{serviceID}', [ServiceController::class,'archived']);
+
+    Route::delete('/admin/inquiries/{serviceInquiry}', [InquiryController::class,'viewInquiry']);
+
+    Route::get('/admin/inquiries', [InquiryController::class,'index']);
+    Route::get('/admin/messages', [\App\Http\Controllers\Admin\ChatController::class,'index']);
+    Route::get('/admin/messages/{userID}', [\App\Http\Controllers\Admin\ChatController::class,'userChat']);
+
+    Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\DashboardController::class,'index']);
+
+    Route::post('/admin/order/delivery', [\App\Http\Controllers\DeliveryController::class, 'updateDelivery']);
+
+    Route::get('/admin/api/messages/{userID}', [\App\Http\Controllers\Admin\ChatController::class, 'messages']);
+    Route::post('/admin/api/messages/{userID}', [\App\Http\Controllers\Admin\ChatController::class, 'addMessage']);
+
 });

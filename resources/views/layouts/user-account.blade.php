@@ -215,6 +215,7 @@
 
 </script>
 
+@yield('script')
 @yield('javascript')
 
 </body>

@@ -184,18 +184,17 @@
                 <a href="/home" class="nav-link">Home</a>
             </div>
 
-{{--            <div class="nav-item dropdown dropstart">--}}
-{{--                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"--}}
-{{--                   data-bs-toggle="dropdown">--}}
-{{--                    Services--}}
-{{--                </a>--}}
-{{--                <div class="dropdown-menu" aria-labelledby="navbarDropdown">--}}
-{{--                    {% for service in services %}--}}
-{{--                    <a class="dropdown-item" href="/service/{{service.id}}">{{service.acronym}} ---}}
-{{--                        {{service.name}}</a>--}}
-{{--                    {% endfor %}--}}
-{{--                </div>--}}
-{{--            </div>--}}
+            <div class="nav-item dropdown dropstart">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+                   data-bs-toggle="dropdown">
+                    Services
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    @foreach($services as $service)
+                        <a class="dropdown-item" href="/services/{{$service->id}}">{{$service->acronym}} - {{$service->title}}</a>
+                    @endforeach
+                </div>
+            </div>
             <div class="nav-item">
                 <a href="/shop " class="nav-link">Shop</a>
             </div>
@@ -312,6 +311,7 @@
 
 </script>
 
+@yield('script')
 @yield('javascript')
 </body>
 </html>

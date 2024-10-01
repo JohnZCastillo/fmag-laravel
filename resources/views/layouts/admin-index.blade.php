@@ -29,6 +29,7 @@
     </style>
 
     @yield('style')
+    @yield('styles')
 
 
 
@@ -68,13 +69,13 @@
                 <a href="/admin/services"
                    class="nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-card-checklist"></i>Services</a>
-                <a href="/admin/inquire"
+                <a href="/admin/inquiries"
                    class="nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-chat-square-dots"></i>Inquire</a>
-                <a href="/admin/support"
+                <a href="/admin/messages"
                    class="nav-item nav-link d-flex align-items-center">
                     <i class="bi bi-headset"></i>User Support</a>
-                <a href="" class="nav-item nav-link d-flex align-items-center"><i
+                <a href="/admin/notifications" class="nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-bell"></i>Notification
                     <span class="message ms-1 px-2 bg-danger rounded-circle text-light" id="notificationCounter">
                     </span>

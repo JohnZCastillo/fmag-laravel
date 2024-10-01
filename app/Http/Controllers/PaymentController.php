@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Enums\OrderState;
 use App\Models\Order;
+use App\Models\OrderPayment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
@@ -25,8 +27,50 @@ class PaymentController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            return  $e->getMessage();
-//            return redirect('/shop')->withErrors(['message' => 'Order unavailable']);
+            return redirect('/shop')->withErrors(['message' => 'Order unavailable']);
         }
     }
+
+    public function confirm(Request $request, Order $order)
+    {
+        try {
+
+            DB::beginTransaction();
+
+            $validated = $request->validate([
+                'image' => 'required|mimes:jpg,jpeg,png',
+                'message' => 'nullable|string|max:20'
+            ]);
+
+            $payment = new OrderPayment();
+
+            if($request->hasFile('image')){
+                $filename = $request->file('image')->store('public');
+
+                if(!$filename){
+                    throw new \Exception('Unable to upload image');
+                }
+
+                $payment->file = $filename;
+            }
+
+            if(isset($validated['message'])){
+                $payment->message = $validated['message'];
+            }
+
+            $payment->order_id = $order->id;
+            $payment->payment_method = $order->payment->payment_method;
+
+            $payment->save();
+
+            DB::commit();
+
+            return redirect('/shop');
+
+        }catch (\Exception $e){
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
+
 }
