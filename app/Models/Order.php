@@ -30,6 +30,14 @@ class Order extends Model
         'checkout_type' => CheckoutType::class,
     ];
 
+    protected static function booted()
+    {
+        static::created(function ($request) {
+            $request->reference = 'ORDR'. '-' . str_pad($request->id, 3, "0", STR_PAD_LEFT);;
+            $request->save();
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
