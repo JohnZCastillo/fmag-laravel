@@ -24,18 +24,31 @@
 
                     <div class="form-group mt-2">
                         <label for="message">Message</label>
-                        <textarea class="form-control" id="message" name="message" maxlength="50" placeholder="Optional message"></textarea>
+                        <textarea class="form-control" id="message" name="message" maxlength="50" minlength="10" placeholder="Optional message"></textarea>
+                        <span id="messageCounter">0/50</span>
                     </div>
 
                     <div class="d-flex gap-2">
                         <button onclick="backReload()" type="button" class="btn btn-secondary mt-2">Back</button>
                         <button type="submit" class="btn btn-primary mt-2 d-block">Confirm</button>
                     </div>
-
-                    {{--                    <p class="text-danger text-center">{{errorMessage}}</p>--}}
                 </form>
             </div>
             <p class="text-center">Your order would take up to 3-7 Working days.</p>
         </div>
     </div>
+@endsection
+
+@section('script')
+<script>
+
+    const messageCounter = document.querySelector('#messageCounter');
+    const message = document.querySelector('#message');
+
+    message.addEventListener('input',()=>{
+        const count = message.value.length;
+        messageCounter.innerText = `${count}/50`
+    })
+
+</script>
 @endsection

@@ -19,6 +19,9 @@ class OrderController extends Controller
         $query = Order::query();
 
         $query->where('user_id', Auth::id())
+            ->with([
+                'payment',
+            ])
             ->whereIn('state', [
                 OrderState::PROCESSING->value,
                 OrderState::COMPLETED->value,
@@ -132,8 +135,7 @@ class OrderController extends Controller
 
         $query = Order::query();
 
-        $query->where('id', '=', $orderID)
-            ->with(
+        $query->with(
                 [
                     'items' => function ($query) {
 
@@ -150,13 +152,11 @@ class OrderController extends Controller
                     'payment',
                     'delivery',
                 ]
-            );
+            )
+            ->withSum('items as total',DB::raw('(quantity * price)'))
+            ->findOrFail($orderID);
 
-        $total = OrderItem::select(['order_id', DB::raw('SUM(quantity * price) as total')])
-            ->where('order_id', '=', $orderID)
-            ->groupBy('order_id')
-            ->get()
-            ->value('total');
+        $total = 0;
 
         return view('user.order', [
             'order' => $query->first(),

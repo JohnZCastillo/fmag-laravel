@@ -21,7 +21,6 @@ class OrderPayment extends Model
         'message',
     ];
 
-
     protected $casts = [
         'payment_method' => PaymentMethod::class
     ];

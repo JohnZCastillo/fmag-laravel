@@ -83,9 +83,9 @@ class CheckoutController extends Controller
 
             $paymentMethod = PaymentMethod::valueOf($validated['paymentMethod']);
 
+
             OrderPayment::create([
                 'payment_method' => $paymentMethod->value,
-                'amount' => $validated['total'],
                 'order_id' => $order->id,
             ]);
 

@@ -18,7 +18,11 @@
                         <td>{{$order->reference}}</td>
                         <td><span>{{$order->status->value}}</span>
                         </td>
-                        <td>{{$order->payment->payment_method->value}}</td>
+                        <td>
+                            @if($order->payment && $order->payment->payment_method)
+                                {{$order->payment->payment_method->value}}
+                            @endif
+                        </td>
                         <td>
                             <div>
                                 <a role="button" href="/order/{{$order->id}}" class="btn btn-primary">view</a>

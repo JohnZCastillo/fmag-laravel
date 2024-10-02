@@ -73,7 +73,7 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::get('/admin/orders', [AdminOrderController::class, 'orders']);
     Route::get('/admin/orders/{orderID}', [AdminOrderController::class, 'order']);
     Route::get('/admin/sales', [SalesController::class, 'index']);
-    Route::get('/order/{id}', [OrderController::class, 'order']);
+    Route::get('/order/{orderID}', [OrderController::class, 'order']);
 
     Route::post('/order-complete/{orderID}', [OrderController::class, 'orderComplete']);
     Route::post('/order-failed/{orderID}', [OrderController::class, 'orderFailed']);

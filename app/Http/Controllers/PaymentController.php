@@ -39,12 +39,14 @@ class PaymentController extends Controller
 
             $validated = $request->validate([
                 'image' => 'required|mimes:jpg,jpeg,png',
-                'message' => 'nullable|string|max:20'
+                'message' => 'nullable|string|max:50|min:10'
             ]);
 
-            $payment = new OrderPayment();
+            $payment = OrderPayment::where('order_id',$order->id)
+                ->firstOrFail();
 
             if($request->hasFile('image')){
+
                 $filename = $request->file('image')->store('public');
 
                 if(!$filename){
@@ -57,9 +59,6 @@ class PaymentController extends Controller
             if(isset($validated['message'])){
                 $payment->message = $validated['message'];
             }
-
-            $payment->order_id = $order->id;
-            $payment->payment_method = $order->payment->payment_method;
 
             $payment->save();
 

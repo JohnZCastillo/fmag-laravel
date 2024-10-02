@@ -134,7 +134,7 @@ class AuthController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return view('verify')->withErrors(['error' => $e->getMessage()]);
+            return view('verify')->withErrors(['error' => 'invalid code']);
         }
 
     }
