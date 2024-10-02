@@ -25,8 +25,7 @@
                                             <div class="mt-1 row ">
                                                 <div class="col-sm">
                                                     <label>Quantity:</label>
-                                                    <input type="number" class="form-control quantity"
-                                                           value="{{$item->quantity}}">
+                                                    <input readonly type="number" class="form-control quantity" value="{{$item->quantity}}">
                                                 </div>
                                                 <div class="col-sm">
                                                     <label for="subTotal">Sub total:</label>
@@ -56,9 +55,9 @@
 
                         <div class="form-group">
                             <label for="address">Address:</label>
-                            <select class="form-control" id="address" name="address">
+                            <select  class="form-control text-capitalize" id="address" name="address">
                                 @foreach($user->addresses as $address)
-                                    <option value="{{$address->id}}">{{$address->location}}</option>
+                                    <option class="text-capitalize" value="{{$address->id}}">{{ \App\Helper\AddressParser::parseAddress($address) }}</option>
                                 @endforeach
                             </select>
                         </div>
