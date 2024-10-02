@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\SendVerificationEmail;
+use App\Models\Cart;
 use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\Verification;
@@ -89,6 +90,10 @@ class AuthController extends Controller
 
             $user->save();
             $address->save();
+
+            Cart::create([
+                'user_id' => $user->id
+            ]);
 
             DB::commit();
 
