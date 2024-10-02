@@ -1,6 +1,11 @@
 @extends('layouts.user-index')
 
 @section('title',$product->name)
+
+@section('files')
+    <script src="/js/quantity.js"></script>
+@endsection
+
 @section('style')
     <style>
         .rating {
@@ -89,27 +94,16 @@
                             <p>{{$product->price}}</p>
                             <p class="card-text">{{$product->description}}</p>
 
-                            {{--                            <div class="d-flex align-items-center mt-2 gap-1">--}}
-
-                            {{--                                {% set rating = getProductRating(product.id) %}--}}
-
-                            {{--                                {% if rating > 0 %}--}}
-                            {{--                                {% for i in 1..rating %}--}}
-                            {{--                                <h6 class="text-warning">★</h6>--}}
-                            {{--                                {% endfor %}--}}
-                            {{--                                {% endif %}--}}
-                            {{--                            </div>--}}
+                            <div class="d-flex align-items-center mt-2 gap-1">
+                                @for ($i = 0; $i < $product->rating; $i++)
+                                    <h6 class="text-warning">★</h6>
+                                @endfor
+                            </div>
 
                             @if($product->stock)
                                 <div class="d-flex gap-2">
-                                    <button onclick="checkoutProduct('{{$product->id}}')" type="button"
-                                            class="btn btn-success">
-                                        Buy
-                                    </button>
-                                    <button class="rounded-pill btn btn-primary" href="#"
-                                            onclick="addToCart({{$product->id}})">
-                                        Add to Cart
-                                    </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#inputModal{{$product->id}}" type="button" class="btn btn-success">Buy</button>
+                                    <button data-bs-toggle="modal" data-bs-target="#inputCartModal{{$product->id}}" type="button" class="btn btn-primary">Cart</button>
                                 </div>
                             @else
                                 <div class="d-flex gap-2">
@@ -141,10 +135,12 @@
                             <div class="d-flex">
                                 @foreach($feedback->attachments as $attachment)
                                     @if($attachment->type == 'image')
-                                        <img src="{{\Illuminate\Support\Facades\Storage::url($attachment->file)}}" style="width: 320px; height: 240px" class="img-fluid">
+                                        <img src="{{\Illuminate\Support\Facades\Storage::url($attachment->file)}}"
+                                             style="width: 320px; height: 240px" class="img-fluid">
                                     @else
                                         <video class="img-fluid" width="320" height="240" controls>
-                                            <source src="{{\Illuminate\Support\Facades\Storage::url($attachment->file)}}">
+                                            <source
+                                                src="{{\Illuminate\Support\Facades\Storage::url($attachment->file)}}">
                                             Your browser does not support the video tag.
                                         </video>
                                     @endif
@@ -197,8 +193,9 @@
                         </section>
                         <div class="form-group mb-2">
                             <label for="message">Content</label>
-                            <textarea required name="content" id="message" rows="3" class="form-control"
+                            <textarea minlength="10" maxlength="100" required name="content" id="message" rows="3" class="form-control"
                                       style="resize: none;"></textarea>
+                            <small id="contentLength">0/100</small>
                         </div>
 
                         <div class="form-group mb-2">
@@ -221,51 +218,32 @@
     </section>
 
     <!-- Modal -->
-    {{--    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"--}}
-    {{--         aria-hidden="true">--}}
-    {{--        <div class="modal-dialog">--}}
-    {{--            <form method="POST" id="addToCartForm">--}}
-    {{--                <div class="modal-content">--}}
-    {{--                    <div class="modal-header">--}}
-    {{--                        <h5 class="modal-title" id="exampleModalLabel">Input Product Quantity</h5>--}}
-    {{--                        <button type="button" class="btn-close" data-bs-dismiss="modal"--}}
-    {{--                                aria-label="Close"></button>--}}
-    {{--                    </div>--}}
-    {{--                    <div class="modal-body">--}}
-    {{--                        <input type="text" name="productId" class="d-none" id="productId">--}}
-    {{--                        <div class="input-group">--}}
-    {{--                            <button class="btn btn-outline-secondary" type="button" onclick="decrementQuantity()">---}}
-    {{--                            </button>--}}
-    {{--                            <input name="quantity" type="number" id="quantityInput" class="form-control"--}}
-    {{--                                   placeholder="Quantity" min="1" value="1">--}}
-    {{--                            <button class="btn btn-outline-secondary" type="button" onclick="incrementQuantity()">+--}}
-    {{--                            </button>--}}
-    {{--                        </div>--}}
-    {{--                        <p id="remainingStockText">Remaining Stock:--}}
-    {{--                            <span id="remainingStockValue">{{product.stock}}</span>--}}
-    {{--                        </p>--}}
-    {{--                    </div>--}}
-    {{--                    <div class="modal-footer">--}}
-    {{--                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close--}}
-    {{--                        </button>--}}
-    {{--                        <button type="submit" class="btn btn-primary">Confirm</button>--}}
-    {{--                    </div>--}}
-    {{--                </div>--}}
-    {{--            </form>--}}
-    {{--        </div>--}}
-    {{--    </div>--}}
+    <x-input-quantity :id="$product->id" :max="$product->stock" :stock="$product->stock" />
+
+    <!-- cart -->
+    <x-input-cart :id="$product->id" :max="$product->stock" :stock="$product->stock" />
 
 @endsection
 
-@section('javascript')
+@section('script')
     <script>
 
+        const contentLength = document.querySelector('#contentLength');
+        const message = document.querySelector('#message');
         const attachment = document.querySelector('#attachment');
 
-        attachment.addEventListener('change',(e)=>{
+        console.log('yawa');
+
+        message.addEventListener('input',()=>{
+        console.log('yawa');
+            const length = message.value.length ?? 0;
+            contentLength.innerText = `${length}/100`;
+        })
+
+        attachment.addEventListener('change', (e) => {
 
             if (attachment.files.length <= 5) {
-               return
+                return
             }
 
             alert('You can only upload a maximum of 5 files.');

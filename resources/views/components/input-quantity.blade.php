@@ -14,9 +14,9 @@
                     <input value="{{$id}}" type="hidden" name="product_id" class="d-none" id="productId{{$id}}">
 
                     <div class="input-group">
-                        <button class="btn btn-outline-secondary" type="button" onclick="decrementCartItemQuantity('{{$id}}')">-</button>
+                        <button class="btn btn-outline-secondary" type="button" onclick="updateInputValue('#quantityInput{{$id}}',false)">-</button>
                         <input readonly name="quantity" type="number" id="quantityInput{{$id}}" class="form-control bg-white border-dark text-dark" placeholder="Quantity" min="{{$min}}" max="{{$max}}" value="1">
-                        <button class="btn btn-outline-secondary" type="button" onclick="incrementCartItemQuantity('{{$id}}')">+</button>
+                        <button class="btn btn-outline-secondary" type="button" onclick="updateInputValue('#quantityInput{{$id}}')">+</button>
                     </div>
                     <p id="remainingStockText">Remaining Stock:
                         <span id="remainingStockValue">{{$stock}}</span>

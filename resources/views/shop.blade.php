@@ -2,6 +2,12 @@
 
 @section('title','Shop')
 
+@section('files')
+    <script src="/js/quantity.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.js" integrity="sha512-EC3CQ+2OkM+ZKsM1dbFAB6OGEPKRxi6EDRnZW9ys8LghQRAq6cXPUgXCCujmDrXdodGXX9bqaaCRtwj4h4wgSQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.css" integrity="sha512-eG8C/4QWvW9MQKJNw2Xzr0KW7IcfBSxljko82RuSs613uOAg/jHEeuez4dfFgto1u6SRI/nXmTr9YPCjs1ozBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+@endsection
+
 @section('style')
     <style>
         .wrapper {
@@ -111,6 +117,18 @@
             font-size: medium;
             white-space: nowrap;
         }
+
+        .product-image{
+            width: 300px;
+            height: 300px;
+            object-position: center;
+            object-fit: contain;
+        }
+
+        .pointer{
+            cursor: pointer;
+        }
+
     </style>
 @endsection
 @section('body')
@@ -128,12 +146,11 @@
                         <div class="row align-items-stretch">
                             @foreach($category->products as $product)
                                 <div class="col-sm-6 col-md-4 col-lg-3 py-2" id="2">
-                                    <div class="card mb-4 pb-2 h-100" data-stock="0">
+                                    <div class="card mb-4 pb-2 h-100 text-dark" data-stock="0">
                                         <div class="wrapper">
-                                            <a href="/product/{{$product->id}}">
-                                                <img src="/uploads/1719907403336.jpeg" class="card-img-top"
-                                                     style="height: 240px">
-                                            </a>
+                                            <div class="images pointer">
+                                                <img src="{{\Illuminate\Support\Facades\Storage::url($product->image)}}" class="card-img-top product-image">
+                                            </div>
                                             <div class="inside">
                                                 <div class="icon">Info</div>
                                                 <div class="contents">
@@ -155,7 +172,9 @@
                                             </div>
                                         </div>
                                         <div class="card-body" style="height: 150px;">
-                                            <h5 class="card-title">{{$product->name}}</h5>
+                                            <a href="/product/{{$product->id}}">
+                                                <h5 class="card-title text-truncate" style="max-width: 20ch">{{$product->name}}</h5>
+                                            </a>
                                             <p class="card-text">{{$product->price}}</p>
                                             <div class="d-flex gap-2">
                                                 <button data-bs-toggle="modal" data-bs-target="#inputModal{{$product->id}}" type="button" class="btn btn-success">Buy</button>
@@ -186,38 +205,11 @@
 
     <script>
 
-        function getQuantity(id){
-            return parseInt(document.querySelector(`#quantityInput${id}`).value);
-        }
+        const images = document.querySelectorAll('.images');
 
-        function getMaxQuantity(id){
-            return parseInt(document.querySelector(`#quantityInput${id}`).max);
-        }
-
-        function getMinQuantity(id){
-            return parseInt(document.querySelector(`#quantityInput${id}`).min);
-        }
-
-        function decrementCartItemQuantity(id){
-            updateInputValue(id,getQuantity(id) - 1);
-        }
-
-        function incrementCartItemQuantity(id){
-            updateInputValue(id,  getQuantity(id) + 1);
-        }
-
-        function updateInputValue(id,value){
-
-            const newValue =  parseInt(value);
-            const maxValue = getMaxQuantity(id)
-            const minValue = getMinQuantity(id);
-
-            if(newValue > maxValue || newValue < minValue){
-                return;
-            }
-
-            document.querySelector(`#quantityInput${id}`).value = newValue;
-        }
+        images.forEach(image =>{
+            const viewer = new Viewer(image);
+        });
 
     </script>
 @endsection

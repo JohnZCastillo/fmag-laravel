@@ -8,6 +8,7 @@ use App\Enums\PaymentMethod;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -17,7 +18,7 @@ class OrderController extends Controller
     {
         $query = Order::query();
 
-        $query->where('user_id', '=', 1)
+        $query->where('user_id', Auth::id())
             ->whereIn('state', [
                 OrderState::PROCESSING->value,
                 OrderState::COMPLETED->value,
@@ -41,6 +42,7 @@ class OrderController extends Controller
 
             $order = Order::findOrFail($orderID);
             $order->status = OrderStatus::COMPLETED;
+            $order->state = OrderState::COMPLETED;
             $order->save();
 
             $this->orderCompletedNotification->handle($order);

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatus;
 use App\Models\FeedbackAttachment;
+use App\Models\Order;
 use App\Models\ProductFeedback;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,15 +16,32 @@ class FeedbackController extends Controller
     public function addComment(Request $request, $productID)
     {
         try {
+            DB::beginTransaction();
 
             $validated = $request->validate([
-                'content' => 'required|string',
-                'rating' => 'required|numeric',
+                'content' => 'required|string|max:100|min:10',
+                'rating' => 'required|numeric|min:1|max:5',
                 'files.*' => 'file|mimes:jpeg,jpg,png,mp4',
                 'files' => 'array|max:5',
             ]);
 
-            DB::beginTransaction();
+            $orderTotal = Order::select([DB::raw('count(id) as total')])
+                ->where('status', OrderStatus::COMPLETED->value)
+                ->where('user_id',Auth::id())
+                ->whereHas(
+                    'items', function ($query) use ($productID) {
+                        $query->where('id', $productID);
+                    }
+                )->value('total');
+
+            $commentTotal = ProductFeedback::select([DB::raw('count(id) as total')])
+                ->where('product_id',$productID)
+                ->where('user_id',Auth::id())
+                ->value('total');
+
+//            if($orderTotal == $commentTotal){
+//                throw new \Exception('you haven\'t bought this item, please order first to comment');
+//            }
 
             $feedback = ProductFeedback::create([
                 'product_id' => $productID,
@@ -31,19 +50,21 @@ class FeedbackController extends Controller
                 'comment' => $validated['content'],
             ]);
 
-            foreach ($request->file('files') as $file) {
-                $filename = $file->store('public');
+            if($request->hasFile('files')){
+                foreach ($request->file('files') as $file) {
+                    $filename = $file->store('public');
 
-                $attachment = new FeedbackAttachment();
+                    $attachment = new FeedbackAttachment();
 
-                $attachment->file = $filename;
-                $attachment->feedback_id = $feedback->id;
+                    $attachment->file = $filename;
+                    $attachment->feedback_id = $feedback->id;
 
-                if ($file->extension() == 'mp4') {
-                    $attachment->type = 'video';
+                    if ($file->extension() == 'mp4') {
+                        $attachment->type = 'video';
+                    }
+
+                    $attachment->save();
                 }
-
-                $attachment->save();
             }
 
             DB::commit();
@@ -52,7 +73,8 @@ class FeedbackController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withErrors(['message' => 'something went wrong while submitting feedback']);
+         return   $e->getMessage();
+//            return redirect()->back()->withErrors(['message' => 'something went wrong while submitting feedback']);
         }
     }
 }

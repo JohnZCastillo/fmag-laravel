@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -56,17 +55,21 @@ class CartController extends Controller
                 ->firstOrFail();
 
             $product = Product::select(['id', 'stock'])
-                ->firstOrFail($validated['product_id']);
+                ->findOrFail($validated['product_id']);
 
-            $item = CartItem::firstOrCreate([
-                'cart_id' => $cart->id,
-                'product_id' => $validated['product_id'],
+            $item = CartItem::where('product_id',$validated['product_id'])
+                ->where('cart_id',$cart->id)
+                ->first();
 
-            ], [
-                'quantity' => $validated['quantity']
-            ]);
-
-            $item->quantity =  $validated['quantity'];
+            if ($item) {
+                $item->quantity = $item->quantity + $validated['quantity'];
+            } else {
+                $item = CartItem::create([
+                    'cart_id' => $cart->id,
+                    'product_id' => $validated['product_id'],
+                    'quantity' => $validated['quantity']
+                ]);
+            }
 
             if ($item->quantity > $product->stock) {
                 $item->quantity = $product->stock;
@@ -76,7 +79,7 @@ class CartController extends Controller
 
             DB::commit();
 
-            return redirect()->back();
+            return redirect()->back()->with(['message' => 'added to cart']);
 
         } catch (\Exception $exception) {
             DB::rollBack();

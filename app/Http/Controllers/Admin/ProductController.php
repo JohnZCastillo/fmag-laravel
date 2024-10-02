@@ -50,7 +50,6 @@ class ProductController extends Controller
             $qb->with([
                 'user', 'product', 'attachments'
             ]);
-
         }])->findOrFail($productID);
 
         return view('product', [
