@@ -79,7 +79,7 @@
 
 @section('body')
 
-    <section class="stack-bg">
+    <section class="stack-bg text-dark">
         <div class="container mx-auto bg-light">
             <div class="mb-3">
                 <div class="row g-0">
@@ -91,7 +91,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{$product->name}} <span class="text-secondary text-lowercase">({{$product->category->name}})</span>
                             </h5>
-                            <p>{{$product->price}}</p>
+                            <p>{{\App\Helper\CurrencyHelper::currency($product->price)}}</p>
                             <p class="card-text">{{$product->description}}</p>
 
                             <div class="d-flex align-items-center mt-2 gap-1">

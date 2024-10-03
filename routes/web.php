@@ -99,7 +99,8 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::post('/cart', [CartController::class, 'addCartItem']);
     Route::delete('/cart-item/{item}', [CartItemController::class, 'removeItem']);
 
-    Route::get('/product/{productID}', [ProductController::class, 'viewProduct']);
+    Route::get('/product/{productID}', [ProductController::class, 'viewProduct'])
+        ->withoutMiddleware(['auth',VerifiedUser::class,ProfileComplete::class]);
 
     Route::get('/admin/products', [ProductController::class, 'index']);
     Route::get('/admin/product/{productID}', [ProductController::class, 'getProduct']);

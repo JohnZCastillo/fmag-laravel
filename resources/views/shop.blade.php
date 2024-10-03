@@ -175,7 +175,7 @@
                                             <a href="/product/{{$product->id}}">
                                                 <h5 class="card-title text-truncate" style="max-width: 20ch">{{$product->name}}</h5>
                                             </a>
-                                            <p class="card-text">{{$product->price}}</p>
+                                            <p class="card-text">{{\App\Helper\CurrencyHelper::currency($product->price) }}</p>
                                             <div class="d-flex gap-2">
                                                 <button data-bs-toggle="modal" data-bs-target="#inputModal{{$product->id}}" type="button" class="btn btn-success">Buy</button>
                                                 <button data-bs-toggle="modal" data-bs-target="#inputCartModal{{$product->id}}" type="button" class="btn btn-primary">Cart</button>
