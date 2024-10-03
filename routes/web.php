@@ -40,7 +40,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'viewRegisterPage']);
 Route::post('/register', [AuthController::class, 'register']);
 
-
 Route::get('/mail', function () {
     Mail::to('johnzunigacastillo@gmail.com')->send(new MyTestEmail());
 });
@@ -60,6 +59,8 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::post('/order-cancel/{orderID}', [OrderController::class, 'cancelOrder']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::post('/api/cart-item/{cartItem}', [CartController::class, 'updateItemQuantity']);
 
     Route::get('/profile', [ProfileController::class, 'index']);
 

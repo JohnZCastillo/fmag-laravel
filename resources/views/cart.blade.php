@@ -142,16 +142,16 @@
                                             {{$item->product->name}}
                                             <p>Stock: {{$item->product->stock}}</p>
                                         </td>
-                                        <td>{{$item->product->price}}</td>
+                                        <td>{{\App\Helper\CurrencyHelper::currency($item->product->price)}}</td>
                                         <td>
                                             <input id="quantity{{$item->product->id}}"
-                                                   onchange="updateQuantity('{{$item->product->id}}'); limitQuantity('{{$item->product->id}}');"
-                                                   type="number" min="1" max="{{$item->product->stock}}"
+                                                   onchange="updateQuantity('{{$item->product->id}}')"
+                                                   type="number"
+                                                   min="1"
+                                                   max="{{$item->product->stock}}"
                                                    class="form-control"
                                                    name="quantity"
                                                    value="{{$item->quantity}}">
-                                            <p id="stock{{$item->product->id}}" style="display: none;">
-                                                {{$item->product->stock}}</p>
                                         </td>
                                         <td id="subTotal{{$item->product->id}}">{{$item->product->price * $item->quantity}}
                                         </td>
@@ -173,15 +173,15 @@
                             </table>
                         </div>
                         <div class="text-right">
-                                @if(count($cart->items))
-                                    <h3>Total: ₱<span id="totalCart">{{$total}}</span></h3>
-                                    <form id="cartForm" method="POST" action="/order/cart-checkout">
-                                        @csrf
-                                        <button id="checkoutButton" type="submit" class="btn btn-primary">
-                                            Checkout
-                                        </button>
-                                    </form>
-                                @endif
+                            @if(count($cart->items))
+                                <h3 id="cartTotal">Total: {{\App\Helper\CurrencyHelper::currency($total)}}</h3>
+                                <form id="cartForm" method="POST" action="/order/cart-checkout">
+                                    @csrf
+                                    <button id="checkoutButton" type="submit" class="btn btn-primary">
+                                        Checkout
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -197,31 +197,36 @@
 
 @section('script')
     <script>
-        {{--const cart = document.querySelector('#cartForm');--}}
-        {{--const total = document.querySelector('#totalCart');--}}
 
-        {{--async function updateQuantity(productId) {--}}
+        const cart = document.querySelector('#cartForm');
+        const total = document.querySelector('#cartTotal');
 
-        {{--    const subTotal = document.querySelector("#subTotal" + productId);--}}
-        {{--    let quantity = document.querySelector("#quantity" + productId);--}}
+        async function updateQuantity(productId) {
 
-        {{--    const formData = new FormData();--}}
-        {{--    formData.append("quantity", quantity.value);--}}
+            const subTotal = document.querySelector("#subTotal" + productId);
+            let quantity = document.querySelector("#quantity" + productId);
 
-        {{--    const result = await fetch('{{base_path()}}/api/cart/update/' + productId, {--}}
-        {{--        method: "POST",--}}
-        {{--        body: formData,--}}
-        {{--    })--}}
+            const formData = new FormData();
 
-        {{--    const data = await result.json();--}}
+            formData.append("quantity", quantity.value);
 
-        {{--    if (result.ok) {--}}
-        {{--        total.innerHTML = data.total;--}}
-        {{--        subTotal.innerHTML = data.subtotal;--}}
-        {{--    } else {--}}
-        {{--        quantity.value = data.stock;--}}
-        {{--    }--}}
+            const result = await fetch(`/api/cart-item/${productId}`, {
+                method: "POST",
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}',
+                }
+            })
 
-        {{--}--}}
+            const data = await result.json();
+
+            if (result.ok) {
+                total.innerHTML = data.total;
+                subTotal.innerHTML = data.sub_total;
+            } else {
+                quantity.value = data.stock;
+            }
+
+        }
     </script>
 @endsection

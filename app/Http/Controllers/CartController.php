@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\CurrencyHelper;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
@@ -19,13 +20,13 @@ class CartController extends Controller
 
             $cart = Cart::with(['items' => function ($query) {
                 $query->with('product');
-            }])->where('user_id', Auth::id())->firstOrFail();
+            }])
+                ->where('user_id', Auth::id())
+                ->firstOrFail();
 
-            $total = CartItem::select(['cart_id', DB::raw('SUM(quantity * price) as total')])
+            $total = CartItem::select([DB::raw('SUM(cart_items.quantity * products.price) as total')])
                 ->join('products', 'products.id', '=', 'cart_items.product_id')
-                ->where('cart_id', '=', $cart->id)
-                ->groupBy('cart_id')
-                ->get()
+                ->where('cart_id', $cart->id)
                 ->value('total');
 
             return view('cart', [
@@ -84,6 +85,45 @@ class CartController extends Controller
         } catch (\Exception $exception) {
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => $exception->getMessage()]);
+        }
+    }
+
+    public function updateItemQuantity(Request $request, CartItem $cartItem)
+    {
+
+        DB::beginTransaction();
+
+        try {
+
+            $validated = $request->validate([
+                'quantity' => 'required|integer|min:0',
+            ]);
+
+            $product = Product::findOrFail($cartItem->product_id);
+
+            if($validated['quantity'] > $product->stock ) {
+                throw new \Exception('insufficient stock');
+            }
+
+            $cartItem->quantity = $validated['quantity'];
+
+            $cartItem->save();
+
+            $total  = CartItem::select([DB::raw('SUM(cart_items.quantity * products.price) as total')])
+                ->join('products', 'products.id', '=', 'cart_items.product_id')
+                ->where('cart_id', $cartItem->cart_id)
+                ->value('total');
+
+            DB::commit();
+
+            return response()->json([
+                'sub_total' => CurrencyHelper::currency($cartItem->sub_total),
+                'total' => CurrencyHelper::currency($total),
+            ]);
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return response()->json(['message' => $exception->getMessage()],500);
         }
     }
 

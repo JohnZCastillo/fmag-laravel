@@ -39,9 +39,9 @@ class FeedbackController extends Controller
                 ->where('user_id',Auth::id())
                 ->value('total');
 
-//            if($orderTotal == $commentTotal){
-//                throw new \Exception('you haven\'t bought this item, please order first to comment');
-//            }
+            if($commentTotal >= $orderTotal){
+                throw new \Exception('you haven\'t bought this item, please order first to comment');
+            }
 
             $feedback = ProductFeedback::create([
                 'product_id' => $productID,
@@ -73,8 +73,7 @@ class FeedbackController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-         return   $e->getMessage();
-//            return redirect()->back()->withErrors(['message' => 'something went wrong while submitting feedback']);
+            return redirect()->back()->withErrors(['message' => 'something went wrong while submitting feedback']);
         }
     }
 }

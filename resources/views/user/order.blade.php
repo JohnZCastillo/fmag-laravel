@@ -37,7 +37,7 @@
 @section('body')
     <div class="admin-content bg-white h-100 text-dark">
 
-        <a onclick="back()" role="button" class="btn btn-primary mb-2">Back</a>
+        <a href="/orders" role="button" class="btn btn-primary mb-2">Back</a>
 
         <div class="card h-100">
 
@@ -159,9 +159,9 @@
 
 
                 @if($order->status == \App\Enums\OrderStatus::DELIVERY)
-                    <form method="POST" action="/order/complete/{{$order->id}}">
-                        <button type="submit" class="btn btn-success" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
+                    <form method="POST" action="/order-complete/{{$order->id}}">
+                        @csrf
+                        <button type="submit" class="btn btn-success">
                             Order Complete
                         </button>
                     </form>
