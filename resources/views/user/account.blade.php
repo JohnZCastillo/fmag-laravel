@@ -71,7 +71,7 @@
 
                             <div class="col-4 form-group column align-items-center">
                                 <label for="name">First Name:</label>
-                                <input name="name" value="{{auth()->user()->name}}" type="text" class="col form-control" id="name">
+                                <input name="name" value="{{auth()->user()->name}}" type="text" class="col form-control" id="name" required>
                             </div>
 
                             <div class="col-4 form-group column align-items-center">
@@ -85,7 +85,7 @@
                                 <label for="name">Last Name:</label>
                                 <input name="last_name" value="{{auth()->user()->last_name}}" type="text"
                                        class="col form-control"
-                                       id="name">
+                                       id="name" required>
                             </div>
 
                         </div>
@@ -94,7 +94,7 @@
                             <label for="name">Contact No.</label>
                             <input name="contact_number" value="{{auth()->user()->contact_number}}" type="text"
                                    class="col form-control"
-                                   id="mobile" value="">
+                                   id="mobile" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -111,6 +111,16 @@
 @section('javascript')
 
     <script>
+
+        $('#updateProfile').find('#mobile').on('input', function() {
+            let value = $(this).val();
+            value = value.replace(/[^0-9()+\-\s]/g, '');
+            const plusIndex = value.lastIndexOf('+');
+            if (value.split('+').length - 1 > 1) {
+                value = value.slice(0, plusIndex) + value.slice(plusIndex + 1);
+            }
+            $(this).val(value);
+        });
 
         const profileImage = document.querySelector("#profileImage");
         const inputProfile = document.querySelector("#changePicture");

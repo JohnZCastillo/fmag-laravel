@@ -11,6 +11,7 @@
         }
 
         .unread {
+            color: var(--bs-light);
             background-color: var(--bs-secondary);
         }
     </style>
@@ -48,4 +49,7 @@
             @endforelse
         </ol>
     </section>
+    <div class="container-fluid">
+        {{$notifications->links()}}
+    </div>
 @endsection

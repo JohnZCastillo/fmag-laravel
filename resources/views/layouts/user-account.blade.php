@@ -32,7 +32,7 @@
         }
     </style>
 
-    @yield('style')
+    @yield('styles')
 
 </head>
 
@@ -146,10 +146,10 @@
                         Services
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {% for service in services %}
-                        <a class="text-light bg-white dropdown-item text-dark"
-                           href="/service/"></a>
-                        {% endfor %}
+                        @foreach($services as $service)
+                            <a class="text-light bg-white dropdown-item text-dark"
+                               href="/service/{{$service->id}}">{{$service->title}}</a>
+                        @endforeach
                     </div>
                 </div>
 
@@ -183,8 +183,6 @@
     </div>
 </div>
 
-<!-- JavaScript Libraries -->
-<!-- JavaScript Libraries -->
 <script src="/js/jquery-3.4.1.min.js"></script>
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script src="/js/main.js"></script>
