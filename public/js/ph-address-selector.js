@@ -33,35 +33,111 @@
  * @license https://opensource.org/licenses/MIT MIT License
  */
 
-function phAddress({regionSelector, provinceSelector, citySelector, brgySelector}) {
+function phAddress({regionSelector, provinceSelector, citySelector, brgySelector, regionCode = 0,
+                       provinceCode = 0,
+                       cityCode = 0,
+                       brgyCode = 0}) {
 
     const region = document.querySelector(regionSelector);
     const province = document.querySelector(provinceSelector);
     const city = document.querySelector(citySelector);
     const brgy = document.querySelector(brgySelector);
 
-    region.addEventListener('change', async () => {
-
+    async function updateRegion() {
         try {
 
-            const response = await fetch('/address/regions')
+            const response = await fetch('/api/regions')
 
             if (!response.ok) {
                 throw new Error('Cant find region');
             }
 
+            region.innerHTML = null;
+
             const regions = await response.json();
 
-            region.innerHTML = '';
+            const selected = regionCode === regions.region_code;
 
             regions.forEach(region => {
-                addSelection(regionSelector, region.code, region.name)
+                addSelection(regionSelector, region.region_code, region.region_name, selected);
             })
 
         } catch (error) {
             console.error(error.message);
         }
-    });
+    }
+
+    async function updateProvince(regionCode) {
+        try {
+
+            const response = await fetch(`/api/provinces/${regionCode}`)
+
+            if (!response.ok) {
+                throw new Error('Cant find provinces');
+            }
+
+            province.innerHTML = null;
+
+            const provinces = await response.json();
+
+            const selected = provinceCode === provinces.province_code;
+
+            provinces.forEach(province => {
+                addSelection(provinceSelector, province.province_code, province.province_name, selected);
+            })
+
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+
+    async function updateCity(provinceCode) {
+        try {
+
+            const response = await fetch(`/api/cities/${provinceCode}`)
+
+            if (!response.ok) {
+                throw new Error('Cant find cities');
+            }
+
+            city.innerHTML = null;
+
+            const cities = await response.json();
+
+            const selected = cityCode === cities.city_code;
+
+            cities.forEach(city => {
+                addSelection(citySelector, city.city_code, city.city_name, selected);
+            })
+
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+
+    async function updateBarangay(cityCode) {
+        try {
+
+            const response = await fetch(`/api/barangays/${cityCode}`)
+
+            if (!response.ok) {
+                throw new Error('Cant find barangay');
+            }
+
+            city.innerHTML = null;
+
+            const cities = await response.json();
+
+            const selected = cityCode === cities.city_code;
+
+            cities.forEach(city => {
+                addSelection(citySelector, city.city_code, city.city_name, selected);
+            })
+
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
 
     function addSelection(selector, value, name, selected = false) {
         const selection = document.querySelector(selector);
@@ -75,6 +151,23 @@ function phAddress({regionSelector, provinceSelector, citySelector, brgySelector
 
         selection.appendChild(option);
     }
+
+    region.addEventListener('change', async () => {
+        updateProvince(region.value);
+        city.innerHTML = null;
+        brgy.innerHTML = null;
+    });
+
+    province.addEventListener('change', async () => {
+        updateCity(province.value);
+        brgy.innerHTML = null;
+    });
+
+    city.addEventListener('change', async () => {
+        updateBarangay(city.value);
+    });
+
+    updateRegion();
 }
 
 // var my_handlers = {

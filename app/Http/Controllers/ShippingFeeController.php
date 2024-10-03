@@ -15,29 +15,30 @@ class ShippingFeeController extends Controller
 
         try {
 
-            $validated = [
-                'order_id' => 'required',
+            $validated = $request->validate([
+//                'order_id' => 'required',
                 'address_id' => 'required',
-            ];
+            ]);
 
-            $total = OrderItem::select(['order_id', DB::raw('SUM(quantity * price) as total')])
-                ->where('order_id', '=', $validated['order_id'])
-                ->groupBy('order_id')
-                ->get()
-                ->value('total');
+//            $total = OrderItem::select(['order_id', DB::raw('SUM(quantity * price) as total')])
+//                ->where('order_id', '=', $validated['order_id'])
+//                ->groupBy('order_id')
+//                ->get()
+//                ->value('total');
 
             $address = UserAddress::select(['province'])
                 ->findOrFail($validated['address_id']);
 
-            $shipping = $shippingFee($address->province);
+            $shipping = $shippingFee->handle($address->province);
 
             return response()->json([
-                'total' => $total,
+//                'total' => $total,
                 'shipping' => $shipping,
             ]);
 
         }catch (\Exception $e){
-            return response()->json(['message' => 'something went wrong'], 500);
+            return response()->json(['message' => $e->getMessage()], 500);
+//            return response()->json(['message' => 'something went wrong'], 500);
         }
     }
 }

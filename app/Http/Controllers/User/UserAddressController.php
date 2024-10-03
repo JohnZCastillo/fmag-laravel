@@ -14,8 +14,8 @@ class UserAddressController extends Controller
 
     public function index()
     {
-        $addresses = UserAddress::where('user_id', '=', Auth::id())
-            ->orderBy('active')
+        $addresses = UserAddress::where('user_id', Auth::id())
+            ->orderBy('active','DESC')
             ->paginate(10);
 
         return view('user.address', [
@@ -67,5 +67,29 @@ class UserAddressController extends Controller
             DB::rollBack();
             return redirect()->back()->withErrors(['message', $e->getMessage()]);
         }
+
     }
+
+    public function setDefaultAddress(UserAddress $userAddress){
+
+        try {
+
+            DB::beginTransaction();
+
+            UserAddress::where('user_id', Auth::id())
+                ->update(['active' => false]);
+
+            $userAddress->active  = true;
+            $userAddress->save();
+
+            DB::commit();
+
+            return redirect('/address');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['message', $e->getMessage()]);
+        }
+    }
+
 }

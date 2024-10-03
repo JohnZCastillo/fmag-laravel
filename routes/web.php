@@ -96,6 +96,7 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::get('/address', [UserAddressController::class, 'index']);
     Route::get('/new-address', [UserAddressController::class, 'newAddressForm']);
     Route::post('/new-address', [UserAddressController::class, 'registerAddress']);
+    Route::post('/default-address/{userAddress}', [UserAddressController::class, 'setDefaultAddress']);
 
     Route::get('/notifications', [UserNotification::class, 'index']);
 
@@ -143,5 +144,41 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
 
     Route::get('/admin/api/messages/{userID}', [\App\Http\Controllers\Admin\ChatController::class, 'messages']);
     Route::post('/admin/api/messages/{userID}', [\App\Http\Controllers\Admin\ChatController::class, 'addMessage']);
+
+
+    Route::get('/api/regions', function () {
+        $regions = \App\Models\Address\Region::select(['region_name','region_code'])
+            ->get();
+
+        return  response()->json($regions);
+    });
+
+    Route::get('/api/provinces/{region}', function ($region) {
+
+        $provinces = \App\Models\Address\Province::select(['province_name','province_code'])
+            ->where('region_code',$region)
+            ->get();
+
+        return  response()->json($provinces);
+    });
+
+    Route::get('/api/cities/{province}', function ($province) {
+
+        $cities = \App\Models\Address\City::select(['city_name','city_code'])
+            ->where('province_code',$province)
+            ->get();
+
+        return  response()->json($cities);
+    });
+
+    Route::get('/api/barangay/{city}', function ($city) {
+
+        $barangays = \App\Models\Address\Barangay::select(['brgy_name','brgy_code'])
+            ->where('city_code',$city)
+            ->get();
+
+        return  response()->json($barangays);
+    });
+
 
 });

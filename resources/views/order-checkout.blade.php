@@ -155,13 +155,18 @@
 
         addressSelection.addEventListener('change',async ()=>{
 
-            const response = await fetch('/api/shipping-fee');
+            const address_id = addressSelection.value;
+
+            const response = await fetch(`/api/shipping-fee?address_id=${address_id}`);
+            const data = await response.json();
 
             if(!response.ok){
+
+                console.log(data);
+
                 return;
             }
 
-            const data = await response.json();
 
             console.log(data);
         })
