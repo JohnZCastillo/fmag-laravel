@@ -11,7 +11,7 @@
 
         <div class="container pb-4">
             <h2 class="text-center">Personal Information</h2>
-            <form id="detailsForm" method="POST" action="/complete-profile">
+            <form id="detailsForm" method="POST" action="/complete-profile" onsubmit="removeStorage()">
                 @csrf
                 <div class="row">
                     <div class="col-sm col-md-4">
@@ -102,6 +102,57 @@
 
 @section('javascript')
     <script>
+
+        function removeStorage() {
+            window.localStorage.removeItem('firstName');
+            window.localStorage.removeItem('middleName');
+            window.localStorage.removeItem('lastName');
+            window.localStorage.removeItem('mobile');
+        }
+
+        $(window).on('load', function() {
+            if (window.localStorage.getItem('firstName')) {
+                $('#firstName').val(window.localStorage.getItem('firstName'));
+            }
+
+            if (window.localStorage.getItem('middleName')) {
+                $('#middleName').val(window.localStorage.getItem('middleName'));
+            }
+
+            if (window.localStorage.getItem('lastName')) {
+                $('#lastName').val(window.localStorage.getItem('lastName'));
+            }
+
+            if (window.localStorage.getItem('mobile')) {
+                $('#mobile').val(window.localStorage.getItem('mobile'));
+            }
+        })
+
+        $('#firstName').on('change', function() {
+            window.localStorage.setItem('firstName', $(this).val());
+        });
+
+        $('#middleName').on('change', function() {
+            window.localStorage.setItem('middleName', $(this).val());
+        });
+
+        $('#lastName').on('change', function() {
+            window.localStorage.setItem('lastName', $(this).val());
+        });
+
+        $('#mobile').on('change', function() {
+            window.localStorage.setItem('mobile', $(this).val());
+        });
+
+        $('#mobile').on('input', function() {
+            let value = $(this).val();
+            value = value.replace(/[^0-9()+\-\s]/g, '');
+            const plusIndex = value.lastIndexOf('+');
+            if (value.split('+').length - 1 > 1) {
+                value = value.slice(0, plusIndex) + value.slice(plusIndex + 1);
+            }
+            $(this).val(value);
+        });
 
         // load provinces
         $('#region').on('change', my_handlers.fill_provinces);

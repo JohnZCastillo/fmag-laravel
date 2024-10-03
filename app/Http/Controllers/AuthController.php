@@ -51,7 +51,7 @@ class AuthController extends Controller
             'firstName' => 'required|string',
             'middleName' => 'nullable|string',
             'lastName' => 'required|string',
-            'contactNumber' => 'required|numeric',
+            'contactNumber' => 'required|string',
             'region' => 'required|numeric',
             'province' => 'required|numeric',
             'city' => 'required|numeric',
