@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ShippingFee;
 use App\Enums\CheckoutType;
 use App\Enums\OrderState;
 use App\Enums\PaymentMethod;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Order;
+use App\Models\OrderAddress;
 use App\Models\OrderItem;
 use App\Models\OrderPayment;
 use App\Models\Product;
+use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -66,7 +69,7 @@ class CheckoutController extends Controller
         }
     }
 
-    public function confirmCheckout(Request $request, Order $order)
+    public function confirmCheckout(Request $request, Order $order, ShippingFee $shippingFee)
     {
 
         try {
@@ -76,6 +79,7 @@ class CheckoutController extends Controller
             $validated = $request->validate([
                 'paymentMethod' => 'required',
                 'total' => 'required|numeric',
+                'address_id' => 'required|integer'
             ]);
 
             $cart = Cart::where('user_id',Auth::id())
@@ -113,6 +117,20 @@ class CheckoutController extends Controller
                 CartItem::where('cart_id',$cart->id)
                     ->delete();
             }
+
+            $address = UserAddress::findOrFail($validated['address_id']);
+
+            $fee = $shippingFee->handle($address->province_id);
+
+            OrderAddress::create([
+                'region' => $address->region_id,
+                'province' => $address->province_id,
+                'city' => $address->city_id,
+                'barangay' => $address->barangay_id,
+                'order_id' => $order->id,
+                'shipping_fee' => $fee,
+                ]);
+
 
             $this->orderCreatedNotification->handle($order);
 

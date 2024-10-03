@@ -61,6 +61,7 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::post('/api/cart-item/{cartItem}', [CartController::class, 'updateItemQuantity']);
+    Route::post('/api/shipping-fee/{add}', [CartController::class, 'updateItemQuantity']);
 
     Route::get('/profile', [ProfileController::class, 'index']);
 
