@@ -142,11 +142,29 @@
     </div>
 @endsection
 
-@section('javascript')
+@section('script')
     <script>
 
         const orderConfirmationModal = new bootstrap.Modal(document.getElementById('confirmOrderModal'));
         const checkoutForm = document.querySelector('#checkoutForm');
+        const addressSelection = document.querySelector('#address');
+
+        function confirmOrder() {
+            checkoutForm.submit();
+        }
+
+        addressSelection.addEventListener('change',async ()=>{
+
+            const response = await fetch('/api/shipping-fee');
+
+            if(!response.ok){
+                return;
+            }
+
+            const data = await response.json();
+
+            console.log(data);
+        })
 
         {{--const shippingFeeField = document.querySelector('#shippingFee');--}}
         {{--const shippingAddress = document.querySelector('#address');--}}
@@ -155,7 +173,6 @@
         {{--const gcashPage = document.querySelector('#gcashPage');--}}
         {{--const totalInput = document.querySelector('#total');--}}
         {{--const gcashReceiptImgInput = document.querySelector('#gcashReceiptImg');--}}
-
         {{--shippingAddress.addEventListener('change', updateShippingFee);--}}
 
         {{--async function updateShippingFee() {--}}
@@ -189,9 +206,7 @@
 
         {{--})--}}
 
-        function confirmOrder() {
-            checkoutForm.submit();
-        }
+
 
         {{--window.addEventListener('load', updateShippingFee);--}}
 
