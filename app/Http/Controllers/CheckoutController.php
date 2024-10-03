@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\DB;
 class CheckoutController extends Controller
 {
 
-    public function checkout($orderID)
+    public function checkout($orderID, ShippingFee $shippingFee)
     {
 
         try {
@@ -58,10 +58,18 @@ class CheckoutController extends Controller
                 ->get()
                 ->value('total');
 
+            $activeAddress = UserAddress::select(['province'])
+                ->where('user_id', '=', Auth::id())
+                ->where('active',true)
+                ->firstOrFail();
+
+            $shipping = $shippingFee->handle($activeAddress->province);
+
             return view('order-checkout', [
                 'total' => $total,
                 'order' => $order,
                 'user' => Auth::user(),
+                'shipping' => 150
             ]);
 
         } catch (\Exception $e) {
@@ -86,7 +94,6 @@ class CheckoutController extends Controller
                 ->firstOrFail();
 
             $paymentMethod = PaymentMethod::valueOf($validated['paymentMethod']);
-
 
             OrderPayment::create([
                 'payment_method' => $paymentMethod->value,
@@ -123,14 +130,13 @@ class CheckoutController extends Controller
             $fee = $shippingFee->handle($address->province_id);
 
             OrderAddress::create([
-                'region' => $address->region_id,
-                'province' => $address->province_id,
-                'city' => $address->city_id,
-                'barangay' => $address->barangay_id,
+                'region' => $address->region,
+                'province' => $address->province,
+                'city' => $address->city,
+                'barangay' => $address->barangay,
                 'order_id' => $order->id,
                 'shipping_fee' => $fee,
                 ]);
-
 
             $this->orderCreatedNotification->handle($order);
 

@@ -49,15 +49,14 @@
 
                         <div class="form-group">
                             <label for="name">Name:</label>
-                            <input type="text" class="form-control" id="name" name="name" required
-                                   value="{{$user->name}}" readonly>
+                            <input type="text" class="form-control" id="name" name="name" required value="{{$user->name}}" readonly>
                         </div>
 
                         <div class="form-group">
                             <label for="address">Address:</label>
                             <select  class="form-control text-capitalize" id="address" name="address">
                                 @foreach($user->addresses as $address)
-                                    <option class="text-capitalize" value="{{$address->id}}">{{ \App\Helper\AddressParser::parseAddress($address) }}</option>
+                                    <option name="address_id" class="text-capitalize" value="{{$address->id}}">{{ \App\Helper\AddressParser::parseAddress($address) }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -73,7 +72,7 @@
 
                         <div class="mt-2 form-group">
                             <label for="shippingFee">Shipping Fee:</label>
-                            <input name="shippingFee" id="shippingFee" readonly class="form-control">
+                            <input value="{{$shipping}}" name="shippingFee" id="shippingFee" readonly class="form-control">
                         </div>
 
                         <div class="mt-2 form-group">
