@@ -58,7 +58,8 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
 
     Route::post('/order-cancel/{orderID}', [OrderController::class, 'cancelOrder']);
 
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout'])
+        ->withoutMiddleware(['auth',VerifiedUser::class,ProfileComplete::class]);
 
     Route::post('/api/cart-item/{cartItem}', [CartController::class, 'updateItemQuantity']);
     Route::get('/api/shipping-fee', [\App\Http\Controllers\ShippingFeeController::class, 'getShippingFee']);
