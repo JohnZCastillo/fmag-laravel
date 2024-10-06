@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserRole;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -51,6 +52,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
             'verified' => 'boolean',
             'completed' => 'boolean',
+            'role' => UserRole::class
         ];
     }
 
