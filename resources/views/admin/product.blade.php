@@ -4,6 +4,17 @@
     <script src="/js/pristine.min.js"></script>
 @endsection
 
+@section('style')
+    <style>
+        .products{
+            color: var(--primary) !important;
+            background: #FFFFFF !important;
+            border-color: var(--primary) !important;
+        }
+    </style>
+@endsection
+
+
 @section('body')
     <h4>Edit Product Details</h4>
     <div>

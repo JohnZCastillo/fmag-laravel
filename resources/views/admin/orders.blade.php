@@ -6,6 +6,17 @@
 
 @section('style')
     <style>
+        .orders{
+            color: var(--primary) !important;
+            background: #FFFFFF !important;
+            border-color: var(--primary) !important;
+        }
+    </style>
+@endsection
+
+
+@section('style')
+    <style>
 
         .pending {
             background-color: var(--bs-secondary);
@@ -68,7 +79,7 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
                             <span class="font-weight-bold">Order ID:</span>
-                            <span class="float-right">ORDR{{$order->id}}</span>
+                            <span class="float-right">{{$order->reference}}</span>
                         </li>
                         <li class="list-group-item">
                             <span class="font-weight-bold">Status:</span>
@@ -81,11 +92,15 @@
                         </li>
                         <li class="list-group-item">
                             <span class="font-weight-bold">Address:</span>
-                            {{--                            <span class="float-right">{{$order->address.location}}</span>--}}
+                            @if($order->address)
+                                <span class="float-right">{{\App\Helper\AddressParser::parseAddress($order->address)}}</span>
+                            @endif
                         </li>
                         <li class="list-group-item">
                             <span class="font-weight-bold">Payment Method:</span>
-                            {{--                            <span class="float-right">{{$order->paymentMethod|upper}}</span>--}}
+                            @if($order->payment)
+                                {{$order->payment->payment_method->name}}
+                            @endif
                         </li>
                         <li class="list-group-item">
                             <a href="/admin/orders/{{$order->id}}" class="btn btn-primary">Manage</a>
@@ -116,7 +131,7 @@
             <tbody class="infScroll">
             @forelse($orders as $order)
                 <tr>
-                    <td>ORDR{{$order->id}}</td>
+                    <td>{{$order->reference}}</td>
                     <td><span class="badge {{$order->status}}">{{$order->status->name}}</span>
                     </td>
                     <td>{{$order->user->name}}</td>

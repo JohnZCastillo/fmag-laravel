@@ -1,5 +1,15 @@
 @extends('layouts.admin-index')
 
+@section('style')
+    <style>
+        .dashboard {
+            color: var(--primary) !important;
+            background: #FFFFFF !important;
+            border-color: var(--primary) !important;
+        }
+    </style>
+@endsection
+
 @section('body')
     <div class="container-fluid pt-1 px-4">
         <div class="row g-4">
@@ -46,29 +56,28 @@
                 <table class="table text-start align-middle table-bordered table-hover mb-0">
                     <thead>
 
-                    {{--                    @foreach($products as $product)--}}
-                    {{--                        <tr class="text-dark">--}}
-                    {{--                        <tr>--}}
-                    {{--                            <th>Name</th>--}}
-                    {{--                            <th>{{sales.productName}}</th>--}}
-                    {{--                        </tr>--}}
+                    @foreach($salesData as $sales)
+                        <tr class="text-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>{{$sales->product}}</th>
+                        </tr>
 
-                    {{--                        <tr>--}}
-                    {{--                            <th>Price</th>--}}
-                    {{--                            <th>{{sales.productPrice|peso}}</th>--}}
-                    {{--                        </tr>--}}
+                        <tr>
+                            <th>Price</th>
+                            <th>{{$sales->pice}}</th>
+                        </tr>
 
-                    {{--                        <tr>--}}
-                    {{--                            <th>Sold</th>--}}
-                    {{--                            <th>{{sales.totalSold}}</th>--}}
-                    {{--                        </tr>--}}
+                        <tr>
+                            <th>Sold</th>
+                            <th>{{$sales->sold}}</th>
+                        </tr>
 
-                    {{--                        <tr>--}}
-                    {{--                            <th>Sales</th>--}}
-                    {{--                            <th>{{sales.totalSales|peso}}</th>--}}
-                    {{--                        </tr>--}}
-                    {{--                        </tr>--}}
-                    {{--                    @endforeach--}}
+                        <tr>
+                            <th>Sales</th>
+                            <th>{{$sales->total}}</th>
+                        </tr>
+                    @endforeach
                     </thead>
                 </table>
             </div>
@@ -86,7 +95,7 @@
                     <tbody>
                     @foreach($salesData as $sales)
                         <tr>
-                            <td>{{$sales->product}}</td>
+                            <td>{{$sales->name}}</td>
                             <td>{{$sales->price}}</td>
                             <td>{{$sales->sold}}</td>
                             <td>{{$sales->total}}</td>
@@ -111,6 +120,7 @@
                     labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
                     datasets: [{
                         label: "Monthly Sales",
+                        data: @json($monthlySales),
                         {{--data: ["{{yearlySales.Jan}}", "{{yearlySales.Feb}}", "{{yearlySales.Mar}}", "{{yearlySales.Apr}}", "{{yearlySales.May}}", "{{yearlySales.Jun}}", "{{yearlySales.Jul}}", "{{yearlySales.Aug}}", "{{yearlySales.Sep}}", "{{yearlySales.Oct}}", "{{yearlySales.Nov}}", "{{yearlySales.Dec}}"],--}}
                         backgroundColor: "rgba(0, 156, 255, .7)"
                     },]

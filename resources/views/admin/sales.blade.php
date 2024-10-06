@@ -3,6 +3,17 @@
 @section('files')
     <script src="/js/html2pdf.js"></script>
 @endsection
+
+@section('style')
+    <style>
+        .sales{
+            color: var(--primary) !important;
+            background: #FFFFFF !important;
+            border-color: var(--primary) !important;
+        }
+    </style>
+@endsection
+
 @section('body')
 
     <h4>Sales</h4>

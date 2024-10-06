@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\OrderStatus;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
@@ -27,7 +26,6 @@ use App\Http\Middleware\ProfileComplete;
 use App\Http\Middleware\VerifiedUser;
 use App\Mail\MyTestEmail;
 use App\Http\Controllers\ServiceController as UserServiceController;
-use App\Models\Order;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
@@ -115,6 +113,7 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::get('/admin/product/{productID}', [ProductController::class, 'getProduct']);
     Route::patch('/admin/product/{product}', [ProductController::class, 'updateProduct']);
     Route::delete('/admin/product/{productID}', [ProductController::class, 'archiveProduct']);
+    Route::post('/admin/product', [ProductController::class, 'addProduct']);
 
     Route::get('/messages', [ChatController::class, 'userChat']);
 

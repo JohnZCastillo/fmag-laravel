@@ -7,6 +7,12 @@
             outline: none !important;
             box-shadow: none !important;
         }
+
+        .messages{
+            color: var(--primary) !important;
+            background: #FFFFFF !important;
+            border-color: var(--primary) !important;
+        }
     </style>
 @endsection
 

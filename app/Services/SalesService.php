@@ -6,6 +6,7 @@ use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Carbon\Carbon;
+use Carbon\Month;
 use Illuminate\Support\Facades\DB;
 
 class SalesService
@@ -20,11 +21,26 @@ class SalesService
             ->join('products', 'products.id', '=', 'order_items.product_id')
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
             ->where(function ($query) use ($from, $to) {
-                $query->where('orders.created_at', '>=', $from)
-                    ->where('orders.created_at', '<=', $to)
+                $query->where('orders.updated_at', '>=', $from)
+                    ->where('orders.updated_at', '<=', $to)
                     ->where('orders.status', OrderStatus::COMPLETED->value);
             })
             ->value('total_sales') ?? 0;
+    }
+
+    public function getMonthlySales(Month $month):float
+    {
+        $start = Carbon::now()->setMonth($month)
+            ->startOfMonth()
+            ->startOfDay()
+            ->format('Y-m-d H:i');
+
+        $end = Carbon::now()->setMonth($month)
+            ->endOfMonth()
+            ->endOfDay()
+            ->format('Y-m-d H:i');
+
+        return $this->getSales($start,$end);
     }
 
     public function countTodayOrders(): float
@@ -37,7 +53,7 @@ class SalesService
             ->where('status', OrderStatus::COMPLETED->value)
             ->where('created_at', '>=', $start)
             ->where('created_at', '<=', $end)
-            ->where('created_at', OrderStatus::COMPLETED->value)
+            ->where('status', OrderStatus::PENDING->value)
             ->value('orders') ?? 0;
 
     }

@@ -11,6 +11,13 @@
         .unread {
             background-color: var(--bs-secondary);
         }
+
+        .notifications{
+            color: var(--primary) !important;
+            background: #FFFFFF !important;
+            border-color: var(--primary) !important;
+        }
+
     </style>
 @endsection
 

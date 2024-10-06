@@ -1,5 +1,15 @@
 @extends('layouts.admin-index')
 
+@section('style')
+    <style>
+        .inquiries{
+            color: var(--primary) !important;
+            background: #FFFFFF !important;
+            border-color: var(--primary) !important;
+        }
+    </style>
+@endsection
+
 @section('body')
     <h4>Services Inquire</h4>
     <div>

@@ -31,8 +31,6 @@
     @yield('style')
     @yield('styles')
 
-
-
 </head>
 
 <body>
@@ -55,27 +53,26 @@
             </a>
             <div class="navbar-nav w-100" style="height: calc(100vh - 100px) ">
                 <a href="/admin/dashboard"
-                   class="nav-item nav-link d-flex align-items-center "><i
+                   class="nav-item nav-link d-flex align-items-center dashboard"><i
                         class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                <a href="/admin/sales"
-                   class="nav-item nav-link d-flex align-items-center"><i
+                <a href="/admin/sales" class="sales nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-graph-up-arrow"></i>Sales</a>
                 <a href="/admin/products"
-                   class="nav-item nav-link d-flex align-items-center"><i
+                   class="products nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-basket"></i>Products</a>
                 <a href="/admin/orders"
-                   class="nav-item nav-link d-flex align-items-center"><i
+                   class="orders nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-box-seam-fill"></i>Orders</a>
                 <a href="/admin/services"
-                   class="nav-item nav-link d-flex align-items-center"><i
+                   class="services nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-card-checklist"></i>Services</a>
                 <a href="/admin/inquiries"
-                   class="nav-item nav-link d-flex align-items-center"><i
+                   class="inquiries nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-chat-square-dots"></i>Inquire</a>
                 <a href="/admin/messages"
-                   class="nav-item nav-link d-flex align-items-center">
+                   class="messages nav-item nav-link d-flex align-items-center">
                     <i class="bi bi-headset"></i>User Support</a>
-                <a href="/admin/notifications" class="nav-item nav-link d-flex align-items-center"><i
+                <a href="/admin/notifications" class="notifications nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-bell"></i>Notification
                     <span class="message ms-1 px-2 bg-danger rounded-circle text-light" id="notificationCounter">
                     </span>
@@ -84,7 +81,6 @@
                 <a href="/admin/general-settings"
                    class="nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-gear-fill"></i>Settings</a>
-
 
                 <form class="d-block d-md-none" method="POST" action="/logout" style="padding-inline: 25px">
                     <button type="submit" class="bg-transparent border-0 d-flex align-items-center gap-3">
@@ -142,35 +138,37 @@
                        class="text-light side-link nav-link">Cart</a>
                 </div>
 
-
                 <div class="d-none d-md-block nav-item dropdown align-items-center">
 
                     <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown">
                         <img class="rounded-circle me-lg-2 bg-white"
-                             src="/public/resources/default-profile.svg" alt=""
+                             src="/assetss/default-profile.svg" alt=""
                              style="width: 40px; height: 40px;">
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-end bg-primary border-0 rounded-0 rounded-bottom m-0">
                         <form method="POST" action="/logout">
+                            @csrf
                             <button type="submit" class="dropdown-item">Log Out</button>
                         </form>
                     </div>
                 </div>
 
+
                 <div class="d-block d-md-none nav-item">
-                    <a href="/shop"
-                       class="text-light nav-link side-link"></a>
+                    <a href="/shop" class="text-light nav-link side-link">Shop</a>
+                </div>
+
+                <div class="d-block d-md-none nav-item">
                     <div class="d-block d-md-none nav-item dropdown">
                         <a class="text-light nav-link dropdown-toggle side-link" href="#" id="navbarDropdown"
                            data-bs-toggle="dropdown">
                             Services
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            {% for service in services %}
-                            <a class="text-light bg-white dropdown-item text-dark"
-                               href="/service/"></a>
-                            {% endfor %}
+                            @foreach($services as $service)
+                                <a class="text-light bg-white dropdown-item text-dark" href="/services/{{$service->id}}">{{$service->acronym}}</a>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -184,6 +182,8 @@
     </div>
 
 </div>
+
+@include('partials.confirmation-modal')
 
 <script src="/js/jquery-3.4.1.min.js"></script>
 <script src="/js/bootstrap.bundle.min.js"></script>

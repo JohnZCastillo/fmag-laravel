@@ -4,6 +4,16 @@
     <script src="/js/InputOnChangeSubmit.js"></script>
 @endsection
 
+@section('style')
+    <style>
+        .orders{
+            color: var(--primary) !important;
+            background: #FFFFFF !important;
+            border-color: var(--primary) !important;
+        }
+    </style>
+@endsection
+
 @section('styles')
     <style>
         /* Mobile view */

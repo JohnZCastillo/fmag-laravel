@@ -34,10 +34,17 @@ class ProductController extends Controller
             });
         });
 
-        $products = $query->paginate();
+
+        $query->where('archived', false);
+
+        $products = $query->paginate(8)->appends($request->except('page'));
+
+        $categories = ProductCategory::select(['name', 'id'])
+            ->get();
 
         return view('admin.products', [
-            'products' => $products
+            'products' => $products,
+            'categories' => $categories,
         ]);
     }
 
@@ -96,7 +103,7 @@ class ProductController extends Controller
 
             if ($request->file('image') && $request->file('image')->isValid()) {
 
-                if(Storage::exists($product->image)){
+                if (Storage::exists($product->image)) {
                     Storage::delete($product->image);
                 }
 
@@ -113,6 +120,45 @@ class ProductController extends Controller
             DB::rollBack();
             return $e->getMessage();
 //            return redirect()->back()->withErrors(['message' => 'Product update failed!']);
+        }
+    }
+
+    public function addProduct(Request $request)
+    {
+
+        try {
+            DB::beginTransaction();
+
+            $validated = $request->validate([
+                'name' => 'required|string',
+                'description' => 'required|string',
+                'price' => 'required|numeric',
+                'stock' => 'required|numeric',
+                'category_id' => 'required|numeric',
+                'image' => 'required|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png',
+            ]);
+
+            $product = new Product();
+
+            $product->fill($validated);
+
+            $filename = $request->file('image')->store('public');
+
+            if (!$filename) {
+                throw new \Exception('Unable to upload product image');
+            }
+
+            $product->image = $filename;
+
+            $product->save();
+
+            DB::commit();
+
+            return redirect()->back();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['message' => 'Product add failed!']);
         }
     }
 
