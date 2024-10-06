@@ -238,37 +238,30 @@
 
                         <div class="col-6 col-sm-6 col-md-3">
                             <ul class="list-unstyled">
-{{--                                {% for i in 0..5 %}--}}
-{{--                                {% if services[i] is not empty %}--}}
-{{--                                <li>--}}
-{{--                                    <a class="text-secondary" href="/service/{{services[i].id}}">{{services[i].acronym}}</a>--}}
-{{--                                </li>--}}
-{{--                                {% endif %}--}}
-{{--                                {% endfor %}--}}
+                                @foreach($services as $service)
+                                    <a class="text-secondary" href="/services/{{$service->id}}">{{$service->acronym}}</a>
+                                @endforeach
                             </ul>
                         </div>
 
                         <div class="col-6 col-sm-6 col-md-3">
                             <ul class="list-unstyled">
 
-{{--                                {% for i in 0..5 %}--}}
-{{--                                {% if products[i] is not empty %}--}}
-{{--                                <li>--}}
-{{--                                    <a class="text-secondary" href="/product/{{products[i].id}}">{{products[i].name}}</a>--}}
-{{--                                </li>--}}
-{{--                                {% endif %}--}}
-{{--                                {% endfor %}--}}
-
+                                @foreach($topProducts as $product)
+                                    <li>
+                                        <a class="text-secondary" href="/product/{{$product->id}}">{{$product->name}}</a>
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
 
                         <div class="col-6 col-sm-6 col-md-3">
-{{--                            <smal>Contact Us</smal>--}}
-{{--                            <ul class="list-unstyled">--}}
-{{--                                <li><a class="text-secondary" href="{{settings.fb}}"><i class="bi bi-facebook"></i> Fb</a></li>--}}
-{{--                                <li><a  class="text-secondary" href="mailto:{{settings.email}}"><i class="bi bi-envelope-at-fill"></i> Email</a></li>--}}
-{{--                                <li><a class="text-secondary" href="#"><i class="bi bi-telephone-fill"></i> {{settings.mobile}}</a></li>--}}
-{{--                            </ul>--}}
+                            <small>Contact Us</small>
+                            <ul class="list-unstyled">
+                                <li><a class="text-secondary" href="{{$settings->fb}}"><i class="bi bi-facebook"></i> Fb</a></li>
+                                <li><a  class="text-secondary" href="mailto:{{$settings->email}}"><i class="bi bi-envelope-at-fill"></i> Email</a></li>
+                                <li><a class="text-secondary" href="#"><i class="bi bi-telephone-fill"></i> {{$settings->mobile}}</a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>

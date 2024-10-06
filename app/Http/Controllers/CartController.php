@@ -99,7 +99,7 @@ class CartController extends Controller
                 'quantity' => 'required|integer|min:0',
             ]);
 
-            $product = Product::findOrFail($cartItem->product_id);
+            $product = $cartItem->product;
 
             if($validated['quantity'] > $product->stock ) {
                 throw new \Exception('insufficient stock');
@@ -123,7 +123,11 @@ class CartController extends Controller
 
         } catch (\Exception $exception) {
             DB::rollBack();
-            return response()->json(['message' => $exception->getMessage()],500);
+            return response()->json(
+                [
+                    'message' => $exception->getMessage(),
+                    'quantity' => $cartItem->quantity,
+                ],500);
         }
     }
 

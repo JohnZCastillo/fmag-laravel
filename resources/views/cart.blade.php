@@ -144,8 +144,8 @@
                                         </td>
                                         <td>{{\App\Helper\CurrencyHelper::currency($item->product->price)}}</td>
                                         <td>
-                                            <input id="quantity{{$item->product->id}}"
-                                                   onchange="updateQuantity('{{$item->product->id}}')"
+                                            <input id="quantity{{$item->id}}"
+                                                   onchange="updateQuantity('{{$item->id}}')"
                                                    type="number"
                                                    min="1"
                                                    max="{{$item->product->stock}}"
@@ -153,7 +153,7 @@
                                                    name="quantity"
                                                    value="{{$item->quantity}}">
                                         </td>
-                                        <td id="subTotal{{$item->product->id}}">{{$item->product->price * $item->quantity}}
+                                        <td id="subTotal{{$item->id}}">{{$item->product->price * $item->quantity}}
                                         </td>
                                         <td>
                                             <form method="POST" action="/cart-item/{{$item->id}}">
@@ -203,8 +203,8 @@
 
         async function updateQuantity(productId) {
 
-            const subTotal = document.querySelector("#subTotal" + productId);
-            let quantity = document.querySelector("#quantity" + productId);
+            const subTotal = document.querySelector(`#subTotal${productId}`);
+            let quantity = document.querySelector(`#quantity${productId}`);
 
             const formData = new FormData();
 
@@ -224,7 +224,7 @@
                 total.innerHTML = data.total;
                 subTotal.innerHTML = data.sub_total;
             } else {
-                quantity.value = data.stock;
+                quantity.value = data.quantity;
             }
 
         }
