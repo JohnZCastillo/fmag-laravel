@@ -6,10 +6,11 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-intl": "*",
         "laravel/framework": "^11.9",
+        "laravel/reverb": "^1.0",
         "laravel/tinker": "^2.9",
-        "lorisleiva/laravel-actions": "^2.8",
-      "ext-intl": "*"
+        "lorisleiva/laravel-actions": "^2.8"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",

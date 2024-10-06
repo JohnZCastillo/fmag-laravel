@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\OrderStatus;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
@@ -26,6 +27,7 @@ use App\Http\Middleware\ProfileComplete;
 use App\Http\Middleware\VerifiedUser;
 use App\Mail\MyTestEmail;
 use App\Http\Controllers\ServiceController as UserServiceController;
+use App\Models\Order;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
@@ -91,7 +93,10 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
 
     Route::get('/cart', [CartController::class, 'index']);
 
-    Route::get('/user/profile', [UserAccountController::class, 'index']);
+    Route::middleware([\App\Http\Middleware\User::class])->group(function () {
+        Route::get('/user/profile', [UserAccountController::class, 'index']);
+    });
+
     Route::post('/profile', [UserAccountController::class, 'update']);
     Route::get('/address', [UserAddressController::class, 'index']);
     Route::get('/new-address', [UserAddressController::class, 'newAddressForm']);
@@ -179,6 +184,27 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
 
         return  response()->json($barangays);
     });
+});
+
+Route::get('/forgot-password', [
+    \App\Http\Controllers\ForgotPasswordController::class,
+    'index'
+]);
+
+Route::post('/forgot-password', [
+    \App\Http\Controllers\ForgotPasswordController::class,
+    'sendPin'
+]);
+
+Route::post('/verify-pin', [
+    \App\Http\Controllers\ForgotPasswordController::class,
+    'verifyPin'
+]);
 
 
+Route::get('/test', function (){
+    \App\Models\User::where('email','johnzunigacastillo@gmail.com')
+        ->update([
+            'password' => bcrypt('password')
+        ]);
 });

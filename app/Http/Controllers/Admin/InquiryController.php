@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\InquiryEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Inquiry;
 use App\Models\Product;
@@ -38,10 +39,9 @@ class InquiryController extends Controller
                 'user_id' => Auth::id()
             ]);
 
-            $this->inquiryChat->handle($serviceInquiry);
-            $this->inquiryEmail->handle($serviceInquiry);
-
             DB::commit();
+
+            InquiryEvent::dispatch($serviceInquiry);
 
             return redirect()->back()->with(['message' => 'inquiry success']);
 

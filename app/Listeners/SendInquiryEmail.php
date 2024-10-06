@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Actions\InquiryChat;
+use App\Actions\InquiryEmail;
 use App\Events\InquiryEvent;
 use App\Models\Chat;
 use App\Models\ServiceInquiry;
@@ -10,17 +11,17 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Auth;
 
-class SendInquiryNotification implements ShouldQueue
+class SendInquiryEmail implements ShouldQueue
 {
 
-    protected InquiryChat $inquiryChat;
+    protected InquiryEmail $inquiryEmail;
 
     /**
      * Create the event listener.
      */
-    public function __construct(InquiryChat $inquiryChat)
+    public function __construct(InquiryEmail $inquiryEmail)
     {
-        $this->inquiryChat = $inquiryChat;
+        $this->inquiryEmail = $inquiryEmail;
     }
 
     /**
@@ -28,6 +29,6 @@ class SendInquiryNotification implements ShouldQueue
      */
     public function handle(InquiryEvent $inquiryEvent): void
     {
-        $this->inquiryChat->handle($inquiryEvent->getInquiry());
+        $this->inquiryEmail->handle($inquiryEvent->getInquiry());
     }
 }
