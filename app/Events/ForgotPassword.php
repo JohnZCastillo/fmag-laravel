@@ -13,17 +13,24 @@ class ForgotPassword
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     protected Verification $verification;
+    protected User $user;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Verification $verification)
+    public function __construct(Verification $verification, User $user)
     {
         $this->verification = $verification;
+        $this->user = $user;
     }
 
     public function getVerification(): Verification
     {
         return  $this->verification;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
     }
 }

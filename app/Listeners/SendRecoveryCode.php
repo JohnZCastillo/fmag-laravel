@@ -19,8 +19,8 @@ class SendRecoveryCode implements ShouldQueue
     {
 
         $verification  = $forgotPassword->getVerification();
+        $user = $forgotPassword->getUser();
 
-        $user = $verification->user;
         $code = $verification->code;
 
         Mail::to($user->email)->send(new RecoveryEmail($code));

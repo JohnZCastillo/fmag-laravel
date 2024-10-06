@@ -46,9 +46,9 @@ class ForgotPasswordController extends Controller
 
             DB::commit();
 
-            ForgotPassword::dispatch($verification);
+            ForgotPassword::dispatch($verification,$user);
 
-            return view('verify-pin');
+            return view('verify-pin', ['email' => $validated['email']]);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -63,24 +63,24 @@ class ForgotPasswordController extends Controller
             DB::beginTransaction();
 
             $validated = $request->validate([
-                'pin' => 'required|numeric'
+                'pin' => 'required|numeric',
+                'email' => 'required|email'
             ]);
 
             Verification::where('session_id', Session::getId())
-                ->where('user_id', Auth::id())
-                ->where('pin', $validated['pin'])
+                ->whereHas('user', function ($query) use ($validated){
+                    $query->where('email', $validated['email']);
+                })
+                ->where('code', $validated['pin'])
                 ->where('expiration', '>', Carbon::now()->format('Y-m-d H:i'))
                 ->firstOrFail();
 
-            $user = User::findOrFail(Auth::id());
-
             $rawPassword = Str::password(8);
 
-            $user->password =  bcrypt($rawPassword);
+            User::where('email',$validated['email'])
+                ->update(['password' =>  bcrypt($rawPassword) ]);
 
-            $user->save();
-
-            Mail::to($user->email)->send(new TemporaryPassword($rawPassword));
+            Mail::to($validated['email'])->send(new TemporaryPassword($rawPassword));
 
             DB::commit();
 

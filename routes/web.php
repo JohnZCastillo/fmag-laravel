@@ -198,11 +198,3 @@ Route::post('/verify-pin', [
     \App\Http\Controllers\ForgotPasswordController::class,
     'verifyPin'
 ]);
-
-
-Route::get('/test', function (){
-    \App\Models\User::where('email','johnzunigacastillo@gmail.com')
-        ->update([
-            'password' => bcrypt('password')
-        ]);
-});
