@@ -54,7 +54,7 @@
 
                         <div class="form-group">
                             <label for="address">Address:</label>
-                            <select  class="form-control text-capitalize" id="address" name="address">
+                            <select  class="form-control text-capitalize" id="address" name="address_id">
                                 @foreach($user->addresses as $address)
                                     <option name="address_id" class="text-capitalize" value="{{$address->id}}">{{ \App\Helper\AddressParser::parseAddress($address) }}</option>
                                 @endforeach

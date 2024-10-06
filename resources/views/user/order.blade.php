@@ -49,6 +49,21 @@
                     </div>
                 @endif
 
+                @if($order->status == \App\Enums\OrderStatus::FAILED)
+                    <div class="mt-2 mt-md-0 col-sm">
+                        <h2 class="text-danger">Order has been Rejected!</h2>
+                        <p><strong>Reason:</strong> {{$order->reason}}</p>
+                    </div>
+                @endif
+
+                @if($order->status == \App\Enums\OrderStatus::CANCELLED)
+                    <div class="mt-2 mt-md-0 col-sm">
+                        <h2 class="text-danger">Order has been Cancelled!</h2>
+                        <p><strong>Reason:</strong> {{$order->reason}}</p>
+                    </div>
+                @endif
+
+
                 <div class="row">
 
                     <div class="col-sm mb-2">
@@ -86,14 +101,14 @@
                         <tr>
                             <td>{{ $item->product->name }}</td>
                             <td>{{ $item->quantity }}</td>
-                            <td>{{ $item->price }}</td>
-                            <td>{{ $item->total }}</td>
+                            <td>{{ \App\Helper\CurrencyHelper::currency($item->price) }}</td>
+                            <td>{{ \App\Helper\CurrencyHelper::currency($item->total) }}</td>
                         </tr>
                     @endforeach
                     <tr>
                         <td colspan="3">Shipping Fee</td>
                         @if($order->address)
-                            <td>{{ $order->address->shipping_fee }}</td>
+                            <td>{{ \App\Helper\CurrencyHelper::currency($order->address->shipping_fee) }}</td>
                         @else
                             <td></td>
                         @endif
@@ -101,11 +116,7 @@
 
                     <tr>
                         <td colspan="3">Total</td>
-                        @if($order->address)
-                            <td>{{ $order->address->shipping_fee + $total}}</td>
-                        @else
-                            <td>{{ $total }}</td>
-                        @endif
+                        <td>{{ \App\Helper\CurrencyHelper::currency($total) }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -206,7 +217,9 @@
                         <select id="reason" class="form-control" required>
                             <option value="Don’t want to buy anymore">Don’t want to buy anymore</option>
                             <option value="Need to change Delivery address">Need to change Delivery address</option>
-                            <option value="Need to modify order (Quantity, Size, etc.)">Need to modify order (Quantity, Size, etc.)</option>
+                            <option value="Need to modify order (Quantity, Size, etc.)">Need to modify order (Quantity,
+                                Size, etc.)
+                            </option>
                             <option value="others">Others</option>
                         </select>
 
@@ -243,7 +256,7 @@
 
             if (denyReason.value === 'others') {
                 hiddenReason.value = otherReason.value;
-            }else{
+            } else {
                 hiddenReason.value = denyReason.value;
             }
 

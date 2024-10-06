@@ -118,10 +118,9 @@
                         Services
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {% for service in services %}
-                        <a class="text-light bg-white dropdown-item text-dark "
-                           href="/service/"></a>
-                        {% endfor %}
+                        @foreach($services as $service)
+                            <a class="text-light bg-white dropdown-item text-dark" href="/services/{{$service->id}}">{{$service->acronym}}</a>
+                        @endforeach
                     </div>
                 </div>
 

@@ -2,11 +2,12 @@
 
 @section('files')
     <script src="/js/InputOnChangeSubmit.js"></script>
+    <script src="/js/pristine.min.js"></script>
 @endsection
 
 @section('style')
     <style>
-        .orders{
+        .orders {
             color: var(--primary) !important;
             background: #FFFFFF !important;
             border-color: var(--primary) !important;
@@ -54,7 +55,7 @@
             @if($order->status == \App\Enums\OrderStatus::COMPLETED)
                 <div class="container-fluid mt-2">
                     <div class="alert alert-danger" role="alert">
-                        A simple danger alert—check it out!
+                        Transaction Completed
                     </div>
                 </div>
             @endif
@@ -68,14 +69,15 @@
                 </div>
             @endif
 
-
             <div class="row">
                 <div class="col-sm">
                     <h2>Order Details</h2>
                     <h5 class="card-title">Order ID: {{$order->id}}</h5>
                     <p class="card-text">Customer Name: {{$order->user->name}} {{$order->user->last_name}}</p>
                     <p class="card-text">Customer Email: {{$order->user->email}}</p>
-                    {{--                    <p class="card-text">Shipping Address: {{$order->user.getActiveAddress().getLocation()}}</p>--}}
+                    @if($order->address)
+                        <p class="card-text text-capitalize">Shipping Address: {{$order->address->address}}</p>
+                    @endif
                 </div>
 
                 @if($order->status == \App\Enums\OrderStatus::FAILED)
@@ -109,25 +111,29 @@
                     <tr>
                         <td>{{$item->product->name}}</td>
                         <td>{{$item->quantity}}</td>
-                        <td>{{$item->price}}</td>
-                        <td>{{$item->total}}</td>
+                        <td>{{\App\Helper\CurrencyHelper::currency($item->price)}}</td>
+                        <td>{{\App\Helper\CurrencyHelper::currency($item->total)}}</td>
                     </tr>
                 @endforeach
                 <tr>
                     <td colspan="3">Shipping Fee</td>
-                    <td>100</td>
+                    @if($order->address)
+                        <td>{{\App\Helper\CurrencyHelper::currency($order->address->shipping_fee)}}</td>
+                    @else
+                        <td></td>
+                    @endif
                 </tr>
                 </tbody>
                 <tfoot>
                 <tr>
                     <td colspan="3">Total</td>
-                    <td>{{$order->total}}</td>
+                    <td>{{\App\Helper\CurrencyHelper::currency($total)}}</td>
                 </tr>
                 </tfoot>
             </table>
 
             <div class="row">
-                <form class="col-sm p-2 bg-light" id="deliveryForm" method="POST" action="/admin/order/delivery">
+                <form  class="col-sm p-2 bg-light" id="deliveryForm" method="POST" action="/admin/order/delivery">
                     @csrf
                     <h2>Delivery Information</h2>
                     <input name="order_id" type="hidden" class="d-none" value="{{$order->id}}" required>
@@ -135,9 +141,11 @@
                         <label for="logisticCompany">Logistic Company</label>
 
                         @if($order->delivery && $order->delivery->logistic)
-                            <input type="text" class="form-control" id="logisticCompany" name="logistic" placeholder="Enter Logistic Company" value="{{$order->delivery->logistic}}" required>
+                            <input type="text" class="form-control" id="logisticCompany" name="logistic"
+                                   placeholder="Enter Logistic Company" value="{{$order->delivery->logistic}}" required>
                         @else
-                            <input type="text" class="form-control" id="logisticCompany" name="logistic" placeholder="Enter Logistic Company" required>
+                            <input type="text" class="form-control" id="logisticCompany" name="logistic"
+                                   placeholder="Enter Logistic Company" required>
                         @endif
 
 
@@ -146,9 +154,10 @@
                         <label for="trackingNumber">Tracking Number</label>
 
                         @if($order->delivery && $order->delivery->logistic)
-                            <input type="text" class="form-control" id="trackingNumber" name="tracking" placeholder="Enter Tracking Number" value="{{$order->delivery->tracking}}" required>
+                            <input maxlength="100" data-pristine-required-message="logistic company is required" type="text" class="form-control" id="trackingNumber" name="tracking"
+                                   placeholder="Enter Tracking Number" value="{{$order->delivery->tracking}}" required>
                         @else
-                            <input type="text" class="form-control" id="trackingNumber" name="tracking" placeholder="Enter Tracking Number" required>
+                            <input maxlength="100" data-pristine-pattern-message="invalid input" data-pristine-required-message="tracking number is required" pattern="/^[a-z0-9]+$/i" type="text" class="form-control" id="trackingNumber" name="tracking" placeholder="Enter Tracking Number" required>
                         @endif
 
                     </div>
@@ -174,7 +183,8 @@
 
                                 @if($order->payment->message)
                                     <label class="mt-2">message</label>
-                                    <textarea class="form-control text-dark" readonly>{{$order->payment->message}}</textarea>
+                                    <textarea class="form-control text-dark"
+                                              readonly>{{$order->payment->message}}</textarea>
                                 @endif
 
                             </div>
@@ -194,22 +204,11 @@
             </div>
 
             <div class="mt-2 d-flex gap-2">
-
-                @if($order->status == \App\Enums\OrderStatus::DELIVERY)
-                    <form class="confirmation" data-message="Are you sure you want to mark this order as completed?"
-                          method="POST" action="/order-complete/{$order->id}}">
-                        @csrf
-                        <button class="btn btn-success" type="submit">Mark as Completed</button>
-                    </form>
-                @endif
-
                 @if($order->status == \App\Enums\OrderStatus::PENDING || $order->status == \App\Enums\OrderStatus::DELIVERY)
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Mark as Denied
                     </button>
                 @endif
-
-
             </div>
         </div>
     </div>
@@ -270,7 +269,7 @@
 
             if (denyReason.value === 'others') {
                 hiddenReason.value = otherReason.value;
-            }else{
+            } else {
                 hiddenReason.value = denyReason.value;
             }
 
@@ -285,5 +284,21 @@
             }
         })
 
+        window.onload = function () {
+
+            const form = document.getElementById("deliveryForm");
+
+            // create the pristine instance
+            const pristine = new Pristine(form);
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                if (pristine.validate()) {
+                    form.submit();
+                }
+
+            });
+        };
     </script>
 @endsection

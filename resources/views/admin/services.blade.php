@@ -34,15 +34,15 @@
                     <div class="modal-body">
                         <div class="form-group mb-2">
                             <label>Video</label>
-                            <input class="form-control" type="file" accept="video/mp4" name="video">
+                            <input class="form-control" type="file" accept="video/mp4" name="video" required>
                         </div>
                         <div class="form-group mb-2">
                             <label for="title">Title</label>
-                            <input id="title" class="form-control" type="text" name="title">
+                            <input id="title" class="form-control" type="text" name="title" required>
                         </div>
                         <div class="form-group mb-2">
                             <label for="acronym">Acronym</label>
-                            <input id="acronym" class="form-control" type="text" name="acronym">
+                            <input id="acronym" class="form-control" type="text" name="acronym" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -74,11 +74,11 @@
                         </div>
                         <div class="form-group mb-2">
                             <label for="editTitle">Title</label>
-                            <input id="editTitle" class="form-control" type="text" name="title">
+                            <input id="editTitle" class="form-control" type="text" name="title" required>
                         </div>
                         <div class="form-group mb-2">
                             <label for="editAcronym">Acronym</label>
-                            <input id="editAcronym" class="form-control" type="text" name="acronym">
+                            <input id="editAcronym" class="form-control" type="text" name="acronym" required>
                         </div>
                     </div>
                     <div class="modal-footer">

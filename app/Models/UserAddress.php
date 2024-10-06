@@ -19,7 +19,6 @@ class UserAddress extends Model implements AddressInterface
         'postal',
         'property',
         'active',
-        'shipping_fee',
     ];
 
     protected $casts = [
@@ -49,5 +48,10 @@ class UserAddress extends Model implements AddressInterface
     public function getBarangay(): int
     {
         return $this->barangay;
+    }
+
+    public function getProperty()
+    {
+        return $this-> property;
     }
 }

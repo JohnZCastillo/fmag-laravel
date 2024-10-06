@@ -124,7 +124,9 @@
                         Services
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="text-light bg-white dropdown-item text-dark"></a>
+                        @foreach($services as $service)
+                         <a class="text-light bg-white dropdown-item text-dark" href="/services/{{$service->id}}">{{$service->acronym}}</a>
+                        @endforeach
                     </div>
                 </div>
 
@@ -142,7 +144,7 @@
 
                     <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown">
                         <img class="rounded-circle me-lg-2 bg-white"
-                             src="/assetss/default-profile.svg" alt=""
+                             src="/assets/default-profile.svg" alt=""
                              style="width: 40px; height: 40px;">
                     </a>
 

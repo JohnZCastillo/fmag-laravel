@@ -11,19 +11,13 @@
             background: #FFFFFF !important;
             border-color: var(--primary) !important;
         }
-    </style>
-@endsection
-
-
-@section('style')
-    <style>
 
         .pending {
             background-color: var(--bs-secondary);
         }
 
         .completed {
-            background-color: var(--bs-primary);
+            background-color: var(--bs-success);
         }
 
         .failed {
@@ -93,7 +87,9 @@
                         <li class="list-group-item">
                             <span class="font-weight-bold">Address:</span>
                             @if($order->address)
-                                <span class="float-right">{{\App\Helper\AddressParser::parseAddress($order->address)}}</span>
+                                <span class="float-right text-capitalize">
+                                    {{$order->address->address}}
+                                </span>
                             @endif
                         </li>
                         <li class="list-group-item">
@@ -131,13 +127,13 @@
             <tbody class="infScroll">
             @forelse($orders as $order)
                 <tr>
-                    <td>{{$order->reference}}</td>
-                    <td><span class="badge {{$order->status}}">{{$order->status->name}}</span>
+                    <td class="text-nowrap">{{$order->reference}}</td>
+                    <td><span class="badge {{strtolower($order->status->name)}}">{{$order->status->name}}</span>
                     </td>
                     <td>{{$order->user->name}}</td>
-                    <td>
+                    <td class="text-capitalize">
                         @if($order->address)
-                            {!! App\Helper\AddressParser::parseAddress($order->address) !!}
+                           {{$order->address->address}}
                         @endif
                     </td>
                     <td>

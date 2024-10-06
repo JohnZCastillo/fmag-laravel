@@ -133,9 +133,7 @@ class OrderController extends Controller
     public function order($orderID)
     {
 
-        $query = Order::query();
-
-        $query->with(
+        $order = Order::with(
                 [
                     'items' => function ($query) {
 
@@ -154,13 +152,14 @@ class OrderController extends Controller
                 ]
             )
             ->withSum('items as total',DB::raw('(quantity * price)'))
-            ->findOrFail($orderID);
+            ->where('id',$orderID)
+            ->firstOrFail();
 
-        $total = 0;
+        $totalCost = $order->total + ($order->address->shipping_fee ?? 0);
 
         return view('user.order', [
-            'order' => $query->first(),
-            'total' => $total,
+            'order' => $order,
+            'total' => $totalCost,
         ]);
 
     }

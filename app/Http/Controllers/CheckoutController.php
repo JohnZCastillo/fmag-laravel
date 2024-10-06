@@ -6,6 +6,7 @@ use App\Actions\ShippingFee;
 use App\Enums\CheckoutType;
 use App\Enums\OrderState;
 use App\Enums\PaymentMethod;
+use App\Helper\AddressParser;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Order;
@@ -129,6 +130,8 @@ class CheckoutController extends Controller
 
             $address = UserAddress::findOrFail($validated['address_id']);
 
+            $stringAddress = AddressParser::parseAddress($address);
+
             $fee = $shippingFee->handle($address->province_id);
 
             OrderAddress::create([
@@ -138,6 +141,7 @@ class CheckoutController extends Controller
                 'barangay' => $address->barangay,
                 'order_id' => $order->id,
                 'shipping_fee' => $fee,
+                'address' => $stringAddress,
                 ]);
 
             $this->orderCreatedNotification->handle($order);

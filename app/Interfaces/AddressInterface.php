@@ -12,4 +12,6 @@ interface AddressInterface
     public function getCity(): int;
 
     public function getBarangay(): int;
+    public function getProperty();
+
 }

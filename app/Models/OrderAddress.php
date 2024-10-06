@@ -16,6 +16,9 @@ class OrderAddress extends Model implements AddressInterface
         'province',
         'city',
         'barangay',
+        'order_id',
+        'shipping_fee',
+        'address'
     ];
 
     public function order(): BelongsTo
@@ -41,5 +44,11 @@ class OrderAddress extends Model implements AddressInterface
     public function getBarangay(): int
     {
         return $this->barangay;
+    }
+
+
+    public function getProperty()
+    {
+      return '123';
     }
 }

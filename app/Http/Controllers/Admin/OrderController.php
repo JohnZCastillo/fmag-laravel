@@ -20,9 +20,33 @@ class OrderController extends Controller
             $qb->where('status', OrderStatus::valueOf($request->input('status'))->value);
         });
 
+        $query->when($request->input('search'), function ($qb) use ($request) {
+            $qb->where(function ($qb) use ($request){
+                $qb->whereLike('reference', '%'.$request->input('search').'%');
+
+                $qb->orWhereHas('user', function ($query) use ($request){
+                    $query->whereLike('name','%'.$request->input('search').'%');
+                });
+
+                $qb->orWhereHas('address', function ($query) use ($request){
+                    $query->whereLike('address','%'.$request->input('search').'%');
+                });
+
+                $qb->orWhereHas('address', function ($query) use ($request){
+                    $query->whereLike('address','%'.$request->input('search').'%');
+                });
+
+                $qb->orWhereHas('payment', function ($query) use ($request){
+                    $query->whereLike('payment_method',$request->input('search').'%');
+                });
+            });
+        });
+
         $query->with(['user', 'payment']);
 
-        $orders = $query->paginate();
+        $query->orderBy('updated_at','DESC');
+
+        $orders = $query->paginate(8)->appends($request->except('page'));
 
         return view('admin.orders', [
             'orders' => $orders,
@@ -43,13 +67,18 @@ class OrderController extends Controller
                     $query->groupBy('order_id', 'product_id', 'quantity', 'price');
                 },
                 'user',
-                'payment'
+                'payment',
+                'address'
                 ])
-            ->findOrFail($orderID);
+            ->where('id',$orderID)
+            ->firstOrFail();
 
+        $totalCost = $order->total + ($order->address->shipping_fee ?? 0);
 
         return view('admin.order', [
             'order' => $order,
+            'total' => $totalCost
         ]);
+
     }
 }

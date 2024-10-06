@@ -67,12 +67,12 @@ class AddressParser
 
     public static function parseAddress(AddressInterface $address): string
     {
-        $location = '';
 
-        $location .= self::parseRegion($address->getRegion()) . ' ';
-        $location .= self::parseProvince($address->getProvince()) . ' ';
+        $location = $address->getProperty() . ', ';
+        $location .= self::parseBarangay($address->getBarangay()) . ', ';
         $location .= self::parseCity($address->getCity()) . ' ';
-        $location .= self::parseBarangay($address->getBarangay()) . ' ';
+        $location .= self::parseProvince($address->getProvince()) . ', ';
+        $location .= self::parseRegion($address->getRegion());
 
         return strtolower($location);
     }
