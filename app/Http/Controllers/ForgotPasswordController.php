@@ -52,7 +52,8 @@ class ForgotPasswordController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withErrors(['message' => 'something went wrong!']);
+            return redirect()->back()->withErrors(['message' => $e->getMessage()]);
+//            return redirect()->back()->withErrors(['message' => 'something went wrong!']);
         }
     }
 
