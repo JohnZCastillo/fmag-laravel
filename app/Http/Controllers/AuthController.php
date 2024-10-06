@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\SendVerificationEmail;
+use App\Enums\UserRole;
 use App\Models\Cart;
 use App\Models\User;
 use App\Models\UserAddress;
@@ -160,6 +161,7 @@ class AuthController extends Controller
             User::create([
                 'email' => $credentials['email'],
                 'password' => bcrypt($credentials['password']),
+                'role' => UserRole::USER->value
             ]);
 
             DB::commit();
