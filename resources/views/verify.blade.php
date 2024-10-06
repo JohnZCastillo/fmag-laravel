@@ -32,6 +32,7 @@
             <div class="d-flex gap-2">
 
                 <form method="POST" action="/logout">
+                    @csrf
                     <button type="submit" class="link-btn text-secondary">
                         logout
                     </button>
