@@ -29,7 +29,7 @@ class MyTestEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'My Test Email',
+            subject: 'Account Verification',
         );
     }
 
