@@ -16,7 +16,7 @@ class ProductCategorySeeder extends Seeder
 
         DB::table('product_categories')->insert([
             [
-                'name' => 'new arrival',
+                'name' => 'new products',
             ],
             [
                 'name' => 'first aid supplies',
