@@ -1,4 +1,4 @@
-@if($message)
+@if(isset($message))
     <div class="modal fade" id="successModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="errorModalLabel" aria-hidden="true">
         <div class="modal-dialog">
