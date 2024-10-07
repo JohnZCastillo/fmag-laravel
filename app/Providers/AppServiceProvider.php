@@ -38,9 +38,9 @@ class AppServiceProvider extends ServiceProvider
                 ->get();
 
             view()->share([
-                'services' => $services,
+                'services' => $services ?? [],
                 'settings' => $settings,
-                'topProducts' => $products,
+                'topProducts' => $products ?? [],
             ]);
         } catch (\Exception $e) {
             report($e);
