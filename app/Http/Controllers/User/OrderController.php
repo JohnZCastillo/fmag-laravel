@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Enums\OrderState;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
+use App\Events\OrderCancelled;
+use App\Events\OrderRejected;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -71,7 +73,7 @@ class OrderController extends Controller
                 'reason' => 'required|string',
             ]);
 
-            $order = Order::findOrFail($orderID);
+            $order = Order::with(['user'])->findOrFail($orderID);
             $order->status = OrderStatus::FAILED;
             $order->reason = $validated['reason'];
 
@@ -82,15 +84,15 @@ class OrderController extends Controller
 
             $order->save();
 
-            $this->orderFailedNotification->handle($order);
-
             DB::commit();
 
-            return redirect()->back()->with(['message' => 'order updated']);
+            OrderRejected::dispatch($order);
+
+            return redirect()->back()->with(['message' => 'order rejected']);
 
         } catch (\Exception $exception) {
             DB::rollBack();
-            return redirect()->back()->withErrors(['message' => 'order update failed!']);
+            return redirect()->back()->withErrors(['message' => 'order rejection failed!']);
         }
     }
 
@@ -105,7 +107,10 @@ class OrderController extends Controller
                 'reason' => 'required|string',
             ]);
 
-            $order = Order::findOrFail($orderID);
+            $order = Order::with([
+                'user'
+            ])->findOrFail($orderID);
+
             $order->status = OrderStatus::CANCELLED;
             $order->reason = $validated['reason'];
 
@@ -115,18 +120,15 @@ class OrderController extends Controller
 
             $order->save();
 
-            $this->orderCancelledNotification->handle($order);
-
             DB::commit();
 
-            return redirect()->back()->with(['message' => 'order updated']);
+            OrderCancelled::dispatch($order);
+
+            return redirect()->back()->with(['message' => 'order cancelled']);
 
         } catch (\Exception $exception) {
             DB::rollBack();
-            return  $request->all();
-
-//            return  $exception->getMessage();
-//            return redirect()->back()->withErrors(['message' => 'order update failed!']);
+            return redirect()->back()->withErrors(['message' => 'order cancellation failed!']);
         }
     }
 

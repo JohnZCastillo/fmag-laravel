@@ -115,7 +115,6 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
 
     });
 
-
     Route::post('/cart', [CartController::class, 'addCartItem']);
 
     Route::post('/order-cancel/{orderID}', [OrderController::class, 'cancelOrder']);

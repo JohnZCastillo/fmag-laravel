@@ -6,6 +6,7 @@ use App\Actions\ShippingFee;
 use App\Enums\CheckoutType;
 use App\Enums\OrderState;
 use App\Enums\PaymentMethod;
+use App\Events\OrderCreated;
 use App\Helper\AddressParser;
 use App\Models\Cart;
 use App\Models\CartItem;
@@ -149,6 +150,8 @@ class CheckoutController extends Controller
             if ($order->state === OrderState::PAYMENT) {
                 return redirect()->route('gcash', ['orderID' => $order->id]);
             }
+
+            OrderCreated::dispatch(Order::with(['user'])->findOrFail($order->id));
 
             return redirect('/shop')->with('message', 'Order Completed');
 

@@ -27,13 +27,13 @@ class DeliveryController extends Controller
                 'tracking' => $validated['tracking'],
             ]);
 
-            $order = Order::findOrFail($validated['order_id']);
+            $order = Order::with(['user'])->findOrFail($validated['order_id']);
             $order->status = OrderStatus::DELIVERY;
             $order->save();
 
-            $this->orderDeliveryNotification->handle($order);
-
             DB::commit();
+
+            \App\Events\OrderDelivery::dispatch($order);
 
             return redirect()->back()->with(['message' => 'delivery information updated!']);
         }catch (\Exception $e){
