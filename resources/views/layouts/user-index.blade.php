@@ -121,10 +121,6 @@
 
 <div>
 
-    @if($errors->any())
-        {{$errors->first()}}
-    @endif
-
     <!-- Spinner Start -->
     <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
@@ -270,6 +266,9 @@
     </footer>
 </div>
 
+@include('partials.error');
+@include('partials.success');
+
 <!-- JavaScript Libraries -->
 <script src="/js/jquery-3.4.1.min.js"></script>
 <script src="/js/bootstrap.bundle.min.js"></script>
@@ -277,8 +276,6 @@
 <script src="/lib/owlcarousel/owl.carousel.js"></script>
 <script src="/js/just-validate.js"></script>
 
-{{--{% include '/partials/error-modal.html' %}--}}
-{{--{% include '/partials/success-modal.html' %}--}}
 
 <script>
 

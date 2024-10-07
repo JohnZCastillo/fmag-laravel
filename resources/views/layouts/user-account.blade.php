@@ -186,9 +186,9 @@
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script src="/js/main.js"></script>
 
-{{--{% include '/partials/error-modal.html' %}--}}
-{{--{% include '/partials/success-modal.html' %}--}}
-{{--{% include '/partials/image-modal.html' %}--}}
+@include('partials.error');
+@include('partials.success');
+
 
 <script>
     function back() {

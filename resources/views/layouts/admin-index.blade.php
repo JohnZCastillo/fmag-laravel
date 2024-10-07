@@ -186,16 +186,13 @@
 </div>
 
 @include('partials.confirmation-modal')
+@include('partials.error');
+@include('partials.success');
 
 <script src="/js/jquery-3.4.1.min.js"></script>
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script src="/lib/chart/chart.min.js"></script>
 <script src="/js/main.js"></script>
-
-{{--{% include '/partials/error-modal.html' %}--}}
-{{--{% include '/partials/success-modal.html' %}--}}
-{{--{% include '/partials/confirmation-modal.html' %}--}}
-{{--{% include '/partials/image-modal.html' %}--}}
 
 
 @yield('script')
