@@ -75,6 +75,7 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
         Route::get('/address', [UserAddressController::class, 'index']);
         Route::get('/messages', [ChatController::class, 'userChat']);
         Route::get('/notifications', [UserNotification::class, 'index']);
+        Route::post('/cart', [CartController::class, 'addCartItem']);
     });
 
     Route::middleware([\App\Http\Middleware\Admin::class])->group(function () {
@@ -142,7 +143,6 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::post('/default-address/{userAddress}', [UserAddressController::class, 'setDefaultAddress']);
 
 
-    Route::post('/cart', [CartController::class, 'addCartItem']);
     Route::delete('/cart-item/{item}', [CartItemController::class, 'removeItem']);
 
     Route::get('/product/{productID}', [ProductController::class, 'viewProduct'])
