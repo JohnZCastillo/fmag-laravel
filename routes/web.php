@@ -75,8 +75,9 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
         Route::get('/address', [UserAddressController::class, 'index']);
         Route::get('/messages', [ChatController::class, 'userChat']);
         Route::get('/notifications', [UserNotification::class, 'index']);
-        Route::post('/cart', [CartController::class, 'addCartItem']);
+        Route::get('/cart', [CartController::class, 'index']);
     });
+
 
     Route::middleware([\App\Http\Middleware\Admin::class])->group(function () {
         Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index']);
@@ -115,6 +116,8 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     });
 
 
+    Route::post('/cart', [CartController::class, 'addCartItem']);
+
     Route::post('/order-cancel/{orderID}', [OrderController::class, 'cancelOrder']);
     Route::post('/inquire/{service}', [InquiryController::class, 'inquire']);
 
@@ -134,7 +137,6 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::get('/payments/gcash/{orderID}', [PaymentController::class, 'index'])->name('gcash');
     Route::post('/payments/gcash/{order}', [PaymentController::class, 'confirm']);
 
-    Route::get('/cart', [CartController::class, 'index']);
 
 
     Route::post('/profile', [UserAccountController::class, 'update']);
