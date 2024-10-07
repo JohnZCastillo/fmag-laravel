@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
             $services = Service::select(['id', 'acronym', 'title'])
                 ->get();
 
-            $settings = GeneralSetting::findOrFail(1);
+            $settings = GeneralSetting::find(1);
 
             $products = Product::select(['id', 'name'])
                 ->where('archived', false)
@@ -39,9 +39,10 @@ class AppServiceProvider extends ServiceProvider
 
             view()->share([
                 'services' => $services ?? [],
-                'settings' => $settings,
+                'settings' => $settings ?? new GeneralSetting(),
                 'topProducts' => $products ?? [],
             ]);
+
         } catch (\Exception $e) {
             report($e);
         }
