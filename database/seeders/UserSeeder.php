@@ -16,9 +16,10 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
+                'id' => 1,
                 'name' => 'User',
                 'email' => 'admin@fmag.shop',
-                'password' => bcrypt('password123'),
+                'password' => bcrypt('admin'),
                 'email_verified_at' => Carbon::now()->format('Y-m-d H:m'),
                 'completed' => true,
                 'verified' => true,
@@ -26,7 +27,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'User',
                 'email' => 'user@fmag.shop',
-                'password' => bcrypt('password123'),
+                'password' => bcrypt('user'),
                 'email_verified_at' => Carbon::now()->format('Y-m-d H:m'),
                 'completed' => true,
                 'verified' => true,
