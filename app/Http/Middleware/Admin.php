@@ -21,9 +21,9 @@ class Admin
 
         try {
 
-            User::where('user_role',UserRole::ADMIN->value)
-            ->where('user_id',Auth::id())
-            ->firstOrFail();
+            if (Auth::user()->role != UserRole::ADMIN) {
+                throw new \Exception('Not an admin');
+            }
 
             return $next($request);
 

@@ -149,9 +149,9 @@
                         Services
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-{{--                        {% for service in services %}--}}
-{{--                        <a class="bg-white dropdown-item text-dark {{isActivePage('services','active')}}" href="/service/{{service.id}}">{{service.acronym}}</a>--}}
-{{--                        {% endfor %}--}}
+                        @foreach($services as $service)
+                            <a class="bg-white dropdown-item text-dark" href="/services/{{$service->id}}">{{$service->acronym}}</a>
+                        @endforeach
                     </div>
                 </div>
                 <div class="nav-item">
@@ -174,7 +174,7 @@
         <a href="/home" class="nav-link">
 
             <div class="d-flex gap-1 align-items-center">
-{{--                 <img style="width: 35px; height: 35px" src="/uploads/{{settings.logo}}">--}}
+                 <img style="width: 35px; height: 35px" src="{{\Illuminate\Support\Facades\Storage::url($settings->logo)}}">
                 <h2 class="mb-0 text-logo text-light">FMAG</h2>
             </div>
 

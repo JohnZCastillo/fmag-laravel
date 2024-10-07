@@ -59,14 +59,17 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::post('/order-cancel/{orderID}', [OrderController::class, 'cancelOrder']);
 
     Route::post('/logout', [AuthController::class, 'logout'])
-        ->withoutMiddleware(['auth',VerifiedUser::class,ProfileComplete::class]);
+        ->withoutMiddleware(['auth', VerifiedUser::class, ProfileComplete::class]);
 
     Route::post('/api/cart-item/{cartItem}', [CartController::class, 'updateItemQuantity']);
     Route::get('/api/shipping-fee', [\App\Http\Controllers\ShippingFeeController::class, 'getShippingFee']);
 
     Route::get('/profile', [ProfileController::class, 'index']);
 
-    Route::get('/services/{service}', [UserServiceController::class, 'index']);
+    Route::get('/services/{service}', [UserServiceController::class, 'index'])
+    ->withoutMiddleware(['auth', VerifiedUser::class, ProfileComplete::class]);
+
+
     Route::post('/inquire/{service}', [InquiryController::class, 'inquire']);
 
     Route::get('/password', [PasswordController::class, 'index']);
@@ -91,9 +94,7 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
 
     Route::get('/cart', [CartController::class, 'index']);
 
-    Route::middleware([\App\Http\Middleware\User::class])->group(function () {
-        Route::get('/user/profile', [UserAccountController::class, 'index']);
-    });
+    Route::get('/user/profile', [UserAccountController::class, 'index']);
 
     Route::post('/profile', [UserAccountController::class, 'update']);
     Route::get('/address', [UserAddressController::class, 'index']);
@@ -107,7 +108,7 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::delete('/cart-item/{item}', [CartItemController::class, 'removeItem']);
 
     Route::get('/product/{productID}', [ProductController::class, 'viewProduct'])
-        ->withoutMiddleware(['auth',VerifiedUser::class,ProfileComplete::class]);
+        ->withoutMiddleware(['auth', VerifiedUser::class, ProfileComplete::class]);
 
     Route::get('/admin/products', [ProductController::class, 'index']);
     Route::get('/admin/product/{productID}', [ProductController::class, 'getProduct']);
@@ -123,26 +124,26 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
 
     Route::post('/product/feedback/{productID}', [FeedbackController::class, 'addComment']);
 
-    Route::post('/admin/report', [SalesController::class,'getSalesInRange']);
+    Route::post('/admin/report', [SalesController::class, 'getSalesInRange']);
 
-    Route::get('/admin/general-settings', [GeneralSettingController::class,'index']);
-    Route::post('/admin/general-settings', [GeneralSettingController::class,'update']);
+    Route::get('/admin/general-settings', [GeneralSettingController::class, 'index']);
+    Route::post('/admin/general-settings', [GeneralSettingController::class, 'update']);
 
-    Route::get('/admin/notifications', [AdminNotification::class,'index']);
+    Route::get('/admin/notifications', [AdminNotification::class, 'index']);
 
-    Route::get('/admin/services', [ServiceController::class,'index']);
-    Route::post('/admin/services', [ServiceController::class,'add']);
-    Route::patch('/admin/services', [ServiceController::class,'update']);
-    Route::get('/admin/services/{serviceID}', [ServiceController::class,'getService']);
-    Route::delete('/admin/services/{serviceID}', [ServiceController::class,'archived']);
+    Route::get('/admin/services', [ServiceController::class, 'index']);
+    Route::post('/admin/services', [ServiceController::class, 'add']);
+    Route::patch('/admin/services', [ServiceController::class, 'update']);
+    Route::get('/admin/services/{serviceID}', [ServiceController::class, 'getService']);
+    Route::delete('/admin/services/{serviceID}', [ServiceController::class, 'archived']);
 
-    Route::delete('/admin/inquiries/{serviceInquiry}', [InquiryController::class,'viewInquiry']);
+    Route::delete('/admin/inquiries/{serviceInquiry}', [InquiryController::class, 'viewInquiry']);
 
-    Route::get('/admin/inquiries', [InquiryController::class,'index']);
-    Route::get('/admin/messages', [\App\Http\Controllers\Admin\ChatController::class,'index']);
-    Route::get('/admin/messages/{userID}', [\App\Http\Controllers\Admin\ChatController::class,'userChat']);
+    Route::get('/admin/inquiries', [InquiryController::class, 'index']);
+    Route::get('/admin/messages', [\App\Http\Controllers\Admin\ChatController::class, 'index']);
+    Route::get('/admin/messages/{userID}', [\App\Http\Controllers\Admin\ChatController::class, 'userChat']);
 
-    Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\DashboardController::class,'index']);
+    Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index']);
 
     Route::post('/admin/order/delivery', [\App\Http\Controllers\DeliveryController::class, 'updateDelivery']);
 
@@ -151,37 +152,37 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
 
 
     Route::get('/api/regions', function () {
-        $regions = \App\Models\Address\Region::select(['region_name','region_code'])
+        $regions = \App\Models\Address\Region::select(['region_name', 'region_code'])
             ->get();
 
-        return  response()->json($regions);
+        return response()->json($regions);
     });
 
     Route::get('/api/provinces/{region}', function ($region) {
 
-        $provinces = \App\Models\Address\Province::select(['province_name','province_code'])
-            ->where('region_code',$region)
+        $provinces = \App\Models\Address\Province::select(['province_name', 'province_code'])
+            ->where('region_code', $region)
             ->get();
 
-        return  response()->json($provinces);
+        return response()->json($provinces);
     });
 
     Route::get('/api/cities/{province}', function ($province) {
 
-        $cities = \App\Models\Address\City::select(['city_name','city_code'])
-            ->where('province_code',$province)
+        $cities = \App\Models\Address\City::select(['city_name', 'city_code'])
+            ->where('province_code', $province)
             ->get();
 
-        return  response()->json($cities);
+        return response()->json($cities);
     });
 
     Route::get('/api/barangay/{city}', function ($city) {
 
-        $barangays = \App\Models\Address\Barangay::select(['brgy_name','brgy_code'])
-            ->where('city_code',$city)
+        $barangays = \App\Models\Address\Barangay::select(['brgy_name', 'brgy_code'])
+            ->where('city_code', $city)
             ->get();
 
-        return  response()->json($barangays);
+        return response()->json($barangays);
     });
 });
 

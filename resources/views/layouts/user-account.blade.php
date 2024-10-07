@@ -160,7 +160,7 @@
 
                 <div class="d-none d-md-block nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown">
-                        <img class="rounded-circle me-lg-2" src="/public/" alt=""
+                        <img class="rounded-circle me-lg-2" src="{{\Illuminate\Support\Facades\Storage::url(\Illuminate\Support\Facades\Auth::user()->profile)}}" alt=""
                              style="width: 40px; height: 40px;">
                         <span class="d-none d-lg-inline-flex"></span>
                     </a>

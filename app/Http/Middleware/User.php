@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Enums\UserRole;
-use App\Models\User as UserModel;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,9 +20,9 @@ class User
 
         try {
 
-            UserModel::where('user_role',UserRole::USER->value)
-            ->where('user_id',Auth::id())
-            ->firstOrFail();
+            if (Auth::user()->role != UserRole::USER) {
+                throw new \Exception('Not a user');
+            }
 
             return $next($request);
 
