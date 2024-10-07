@@ -26,20 +26,25 @@ class AppServiceProvider extends ServiceProvider
 
         Paginator::useBootstrapFive();
 
-        $services = Service::select(['id','acronym','title'])
-            ->get();
+        try {
+            $services = Service::select(['id', 'acronym', 'title'])
+                ->get();
 
-        $settings = GeneralSetting::findOrFail(1);
+            $settings = GeneralSetting::findOrFail(1);
 
-        $products = Product::select(['id','name'])
-            ->where('archived',false)
-            ->take(5)
-            ->get();
+            $products = Product::select(['id', 'name'])
+                ->where('archived', false)
+                ->take(5)
+                ->get();
 
-        view()->share([
-            'services' => $services,
-            'settings' => $settings,
-            'topProducts' => $products,
-        ]);
+            view()->share([
+                'services' => $services,
+                'settings' => $settings,
+                'topProducts' => $products,
+            ]);
+        } catch (\Exception $e) {
+            report($e);
+        }
+
     }
 }
