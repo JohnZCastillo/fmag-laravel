@@ -20,14 +20,16 @@ class User
 
         try {
 
-            if (Auth::user()->role != UserRole::USER) {
-                throw new \Exception('Not a user');
+            $user = \App\Models\User::findOrFail(Auth::id());
+
+            if ($user->role == UserRole::ADMIN) {
+                return redirect('/admin/dashboard');
             }
 
             return $next($request);
 
         } catch (\Exception $e) {
-            return redirect('/admin/dashboard');
+            return redirect('/');
         }
     }
 }

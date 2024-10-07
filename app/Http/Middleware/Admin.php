@@ -21,14 +21,16 @@ class Admin
 
         try {
 
-            if (Auth::user()->role != UserRole::ADMIN) {
-                throw new \Exception('Not an admin');
+            $user = \App\Models\User::findOrFail(Auth::id());
+
+            if ($user->role == UserRole::USER) {
+                return redirect('/user/profile');
             }
 
             return $next($request);
 
         } catch (\Exception $e) {
-            return redirect('/account');
+            return redirect('/');
         }
     }
 }

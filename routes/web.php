@@ -56,7 +56,6 @@ Route::post('/complete-profile', [AuthController::class, 'completeProfile']);
 
 Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(function () {
 
-    Route::post('/order-cancel/{orderID}', [OrderController::class, 'cancelOrder']);
 
     Route::post('/logout', [AuthController::class, 'logout'])
         ->withoutMiddleware(['auth', VerifiedUser::class, ProfileComplete::class]);
@@ -69,16 +68,58 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::get('/services/{service}', [UserServiceController::class, 'index'])
     ->withoutMiddleware(['auth', VerifiedUser::class, ProfileComplete::class]);
 
+    Route::middleware([\App\Http\Middleware\User::class])->group(function () {
+        Route::get('/orders', [OrderController::class, 'orders']);
+        Route::get('/user/profile', [UserAccountController::class, 'index']);
+        Route::get('/password', [PasswordController::class, 'index']);
+        Route::get('/address', [UserAddressController::class, 'index']);
+        Route::get('/messages', [ChatController::class, 'userChat']);
+        Route::get('/notifications', [UserNotification::class, 'index']);
+    });
 
+    Route::middleware([\App\Http\Middleware\Admin::class])->group(function () {
+        Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index']);
+        Route::get('/admin/sales', [SalesController::class, 'index']);
+        Route::get('/admin/products', [ProductController::class, 'index']);
+        Route::get('/admin/orders', [AdminOrderController::class, 'orders']);
+        Route::get('/admin/orders/{orderID}', [AdminOrderController::class, 'order']);
+        Route::get('/admin/product/{productID}', [ProductController::class, 'getProduct']);
+        Route::patch('/admin/product/{product}', [ProductController::class, 'updateProduct']);
+        Route::delete('/admin/product/{productID}', [ProductController::class, 'archiveProduct']);
+        Route::post('/admin/product', [ProductController::class, 'addProduct']);
+        Route::post('/admin/report', [SalesController::class, 'getSalesInRange']);
+
+        Route::get('/admin/general-settings', [GeneralSettingController::class, 'index']);
+        Route::post('/admin/general-settings', [GeneralSettingController::class, 'update']);
+
+        Route::get('/admin/notifications', [AdminNotification::class, 'index']);
+
+        Route::get('/admin/services', [ServiceController::class, 'index']);
+        Route::post('/admin/services', [ServiceController::class, 'add']);
+        Route::patch('/admin/services', [ServiceController::class, 'update']);
+        Route::get('/admin/services/{serviceID}', [ServiceController::class, 'getService']);
+        Route::delete('/admin/services/{serviceID}', [ServiceController::class, 'archived']);
+
+        Route::delete('/admin/inquiries/{serviceInquiry}', [InquiryController::class, 'viewInquiry']);
+
+        Route::get('/admin/inquiries', [InquiryController::class, 'index']);
+        Route::get('/admin/messages', [\App\Http\Controllers\Admin\ChatController::class, 'index']);
+        Route::get('/admin/messages/{userID}', [\App\Http\Controllers\Admin\ChatController::class, 'userChat']);
+
+        Route::post('/admin/order/delivery', [\App\Http\Controllers\DeliveryController::class, 'updateDelivery']);
+
+        Route::get('/admin/api/messages/{userID}', [\App\Http\Controllers\Admin\ChatController::class, 'messages']);
+        Route::post('/admin/api/messages/{userID}', [\App\Http\Controllers\Admin\ChatController::class, 'addMessage']);
+
+    });
+
+
+    Route::post('/order-cancel/{orderID}', [OrderController::class, 'cancelOrder']);
     Route::post('/inquire/{service}', [InquiryController::class, 'inquire']);
 
-    Route::get('/password', [PasswordController::class, 'index']);
     Route::post('/password', [PasswordController::class, 'changePassword']);
 
-    Route::get('/orders', [OrderController::class, 'orders']);
-    Route::get('/admin/orders', [AdminOrderController::class, 'orders']);
-    Route::get('/admin/orders/{orderID}', [AdminOrderController::class, 'order']);
-    Route::get('/admin/sales', [SalesController::class, 'index']);
+
     Route::get('/order/{orderID}', [OrderController::class, 'order']);
 
     Route::post('/order-complete/{orderID}', [OrderController::class, 'orderComplete']);
@@ -94,15 +135,12 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
 
     Route::get('/cart', [CartController::class, 'index']);
 
-    Route::get('/user/profile', [UserAccountController::class, 'index']);
 
     Route::post('/profile', [UserAccountController::class, 'update']);
-    Route::get('/address', [UserAddressController::class, 'index']);
     Route::get('/new-address', [UserAddressController::class, 'newAddressForm']);
     Route::post('/new-address', [UserAddressController::class, 'registerAddress']);
     Route::post('/default-address/{userAddress}', [UserAddressController::class, 'setDefaultAddress']);
 
-    Route::get('/notifications', [UserNotification::class, 'index']);
 
     Route::post('/cart', [CartController::class, 'addCartItem']);
     Route::delete('/cart-item/{item}', [CartItemController::class, 'removeItem']);
@@ -110,45 +148,13 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::get('/product/{productID}', [ProductController::class, 'viewProduct'])
         ->withoutMiddleware(['auth', VerifiedUser::class, ProfileComplete::class]);
 
-    Route::get('/admin/products', [ProductController::class, 'index']);
-    Route::get('/admin/product/{productID}', [ProductController::class, 'getProduct']);
-    Route::patch('/admin/product/{product}', [ProductController::class, 'updateProduct']);
-    Route::delete('/admin/product/{productID}', [ProductController::class, 'archiveProduct']);
-    Route::post('/admin/product', [ProductController::class, 'addProduct']);
 
-    Route::get('/messages', [ChatController::class, 'userChat']);
 
     Route::post('/api/message/admin', [ChatController::class, 'sendToAdmin']);
     Route::get('/api/messages/{userID}', [ChatController::class, 'getMessages']);
     Route::post('/api/messages/{userID}', [ChatController::class, 'addMessage']);
 
     Route::post('/product/feedback/{productID}', [FeedbackController::class, 'addComment']);
-
-    Route::post('/admin/report', [SalesController::class, 'getSalesInRange']);
-
-    Route::get('/admin/general-settings', [GeneralSettingController::class, 'index']);
-    Route::post('/admin/general-settings', [GeneralSettingController::class, 'update']);
-
-    Route::get('/admin/notifications', [AdminNotification::class, 'index']);
-
-    Route::get('/admin/services', [ServiceController::class, 'index']);
-    Route::post('/admin/services', [ServiceController::class, 'add']);
-    Route::patch('/admin/services', [ServiceController::class, 'update']);
-    Route::get('/admin/services/{serviceID}', [ServiceController::class, 'getService']);
-    Route::delete('/admin/services/{serviceID}', [ServiceController::class, 'archived']);
-
-    Route::delete('/admin/inquiries/{serviceInquiry}', [InquiryController::class, 'viewInquiry']);
-
-    Route::get('/admin/inquiries', [InquiryController::class, 'index']);
-    Route::get('/admin/messages', [\App\Http\Controllers\Admin\ChatController::class, 'index']);
-    Route::get('/admin/messages/{userID}', [\App\Http\Controllers\Admin\ChatController::class, 'userChat']);
-
-    Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index']);
-
-    Route::post('/admin/order/delivery', [\App\Http\Controllers\DeliveryController::class, 'updateDelivery']);
-
-    Route::get('/admin/api/messages/{userID}', [\App\Http\Controllers\Admin\ChatController::class, 'messages']);
-    Route::post('/admin/api/messages/{userID}', [\App\Http\Controllers\Admin\ChatController::class, 'addMessage']);
 
 
     Route::get('/api/regions', function () {

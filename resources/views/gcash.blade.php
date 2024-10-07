@@ -9,7 +9,7 @@
 
             <div class="row">
                 <div class="col-12 col-md-6 text-center">
-                    <img src="/resources/qr.jpg" class="img-fluid d-block mx-auto"
+                    <img src="/assets/qr.jpg" class="img-fluid d-block mx-auto"
                          style="width: 300px; height: 300px" alt="GCash QR Code">
                 </div>
                 <form  class="col-12 col-md-6" enctype="multipart/form-data" id="gcashReceiptForm" method="POST"
