@@ -138,7 +138,6 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::post('/payments/gcash/{order}', [PaymentController::class, 'confirm']);
 
 
-
     Route::post('/profile', [UserAccountController::class, 'update']);
     Route::get('/new-address', [UserAddressController::class, 'newAddressForm']);
     Route::post('/new-address', [UserAddressController::class, 'registerAddress']);

@@ -266,8 +266,7 @@
     </footer>
 </div>
 
-@include('partials.error');
-@include('partials.success');
+
 
 <!-- JavaScript Libraries -->
 <script src="/js/jquery-3.4.1.min.js"></script>
@@ -276,6 +275,8 @@
 <script src="/lib/owlcarousel/owl.carousel.js"></script>
 <script src="/js/just-validate.js"></script>
 
+@include('partials.error');
+@include('partials.success');
 
 <script>
 

@@ -4,6 +4,8 @@
 
 @section('files')
     <script src="/js/quantity.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.js" integrity="sha512-EC3CQ+2OkM+ZKsM1dbFAB6OGEPKRxi6EDRnZW9ys8LghQRAq6cXPUgXCCujmDrXdodGXX9bqaaCRtwj4h4wgSQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.css" integrity="sha512-eG8C/4QWvW9MQKJNw2Xzr0KW7IcfBSxljko82RuSs613uOAg/jHEeuez4dfFgto1u6SRI/nXmTr9YPCjs1ozBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endsection
 
 @section('style')
@@ -84,8 +86,9 @@
             <div class="mb-3">
                 <div class="row g-0">
                     <div class="col-md-5 dot">
-                        <img src="{{\Illuminate\Support\Facades\Storage::url($product->image)}}"
-                             class="w-100 h-100 rounded-start">
+                        <div class="images">
+                            <img src="{{\Illuminate\Support\Facades\Storage::url($product->image)}}" class="w-100 h-100 rounded-start">
+                        </div>
                     </div>
                     <div class="col-md-7">
                         <div class="card-body">
@@ -249,6 +252,15 @@
             alert('You can only upload a maximum of 5 files.');
             attachment.value = null;
         })
+
+
+        const images = document.querySelectorAll('.images');
+
+        images.forEach(image =>{
+            const viewer = new Viewer(image);
+        });
+
+
 
         // const addToCartUrl = "/cart/add";
         // const productCheckoutUrl = "/product-checkout";

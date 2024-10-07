@@ -83,6 +83,7 @@
                         class="bi bi-gear-fill"></i>Settings</a>
 
                 <form class="d-block d-md-none" method="POST" action="/logout" style="padding-inline: 25px">
+                  @csrf
                     <button type="submit" class="bg-transparent border-0 d-flex align-items-center gap-3">
                         <i class="bi bi-box-arrow-left"></i>
                         Log out
@@ -185,14 +186,14 @@
 
 </div>
 
-@include('partials.confirmation-modal')
-@include('partials.error');
-@include('partials.success');
-
 <script src="/js/jquery-3.4.1.min.js"></script>
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script src="/lib/chart/chart.min.js"></script>
 <script src="/js/main.js"></script>
+
+@include('partials.confirmation-modal')
+@include('partials.error');
+@include('partials.success');
 
 
 @yield('script')
