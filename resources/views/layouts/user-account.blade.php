@@ -147,7 +147,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         @foreach($services as $service)
                             <a class="text-light bg-white dropdown-item text-dark"
-                               href="/service/{{$service->id}}">{{$service->title}}</a>
+                               href="/services/{{$service->id}}">{{$service->title}}</a>
                         @endforeach
                     </div>
                 </div>
