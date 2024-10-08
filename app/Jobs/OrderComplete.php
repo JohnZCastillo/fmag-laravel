@@ -7,6 +7,7 @@ use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\DB;
 
 class OrderComplete implements ShouldQueue
 {
@@ -25,15 +26,12 @@ class OrderComplete implements ShouldQueue
      */
     public function handle(): void
     {
-
-
-//        $now = Carbon::now()->subDays(7);
+        $now = Carbon::now()->subDays(7);
 
         Order::where('status',OrderStatus::DELIVERY->value)
-//            ->where('updated_at','>=', $now->format('Y-m-d H:i'))
+            ->where('updated_at','>=', $now->format('Y-m-d H:i'))
             ->update([
                 'status' => OrderStatus::COMPLETED->value
             ]);
-
     }
 }

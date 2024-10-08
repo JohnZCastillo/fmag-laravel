@@ -52,5 +52,9 @@
                 </li>
             @endforelse
         </ol>
+
+        <div class="mt-2 container-fluid">
+            {{$notifications->links()}}
+        </div>
     </section>
 @endsection

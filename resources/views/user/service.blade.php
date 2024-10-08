@@ -9,6 +9,7 @@
                 <div class="row g-0">
                     <div class="card-body">
                         <h5 class="card-title text-uppercase mx-2">{{$service->title}}</h5>
+                        <p>{{$service->description}}</p>
                         <video width="100%" height="450" controls autoplay muted>
                             <source src="{{\Illuminate\Support\Facades\Storage::url($service->video)}}"
                                     type="video/mp4">

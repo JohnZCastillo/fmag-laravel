@@ -11,6 +11,10 @@
     </style>
 @endsection
 
+@section('files')
+    <script src="/js/pristine.min.js"></script>
+@endsection
+
 @section('body')
 
     <h4>Services</h4>
@@ -24,7 +28,7 @@
     <!-- Modal -->
     <div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="/admin/services" enctype="multipart/form-data">
+            <form id="addForm" method="POST" action="/admin/services" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -39,6 +43,10 @@
                         <div class="form-group mb-2">
                             <label for="title">Title</label>
                             <input id="title" class="form-control" type="text" name="title" required>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="description">Description</label>
+                            <textarea minlength="20" maxlength="300" class="form-control" id="description" name="description"></textarea>
                         </div>
                         <div class="form-group mb-2">
                             <label for="acronym">Acronym</label>
@@ -57,7 +65,7 @@
     <!-- Edit Service Modal -->
     <div class="modal fade" id="editServiceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="/admin/services" enctype="multipart/form-data">
+            <form id="editForm" method="POST" action="/admin/services" enctype="multipart/form-data">
                 @csrf
                 @method('PATCH')
                 <input id="editID" type="hidden" name="id" class="d-none">
@@ -75,6 +83,10 @@
                         <div class="form-group mb-2">
                             <label for="editTitle">Title</label>
                             <input id="editTitle" class="form-control" type="text" name="title" required>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="editDescription">Description</label>
+                            <textarea  minlength="20" maxlength="300"  class="form-control" id="editDescription" name="description"></textarea>
                         </div>
                         <div class="form-group mb-2">
                             <label for="editAcronym">Acronym</label>
@@ -169,6 +181,7 @@
                 document.querySelector('#editID').value = service.id
                 document.querySelector('#editTitle').value = service.title
                 document.querySelector('#editAcronym').value = service.acronym
+                document.querySelector('#editDescription').innerText = service.description
 
                 editServiceModal.show();
 
@@ -177,6 +190,30 @@
                 console.log(err.message)
             }
         }
+    </script>
 
+    <script>
+        window.onload = function () {
+
+            const editForm = document.getElementById("editForm");
+            const addForm = document.getElementById("addForm");
+
+            function validate(form){
+                const pristine = new Pristine(form);
+
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    if(pristine.validate()){
+                        form.submit();
+                    }
+
+                });
+            }
+
+            validate(editForm);
+            validate(addForm);
+
+        };
     </script>
 @endsection

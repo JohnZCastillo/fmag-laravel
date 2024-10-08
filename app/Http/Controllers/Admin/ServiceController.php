@@ -32,11 +32,13 @@ class ServiceController extends Controller
                 'acronym' => 'required',
                 'title' => 'required',
                 'video' => 'required|mimes:mp4',
+                'description' => 'required|min:20|max:300'
             ]);
 
             $service = new Service();
 
             if ($request->hasFile('video')) {
+
                 $filename = $request->file('video')->store('public');
 
                 if (!$filename) {
@@ -48,6 +50,7 @@ class ServiceController extends Controller
 
             $service->title = $validated['title'];
             $service->acronym = $validated['acronym'];
+            $service->description = $validated['description'];
 
             $service->save();
 
@@ -73,6 +76,7 @@ class ServiceController extends Controller
                 'acronym' => 'required',
                 'title' => 'required',
                 'video' => 'nullable|mimes:mp4',
+                'description' => 'required|min:20|max:300'
             ]);
 
             $service = Service::findOrFail($validated['id']);
@@ -89,6 +93,7 @@ class ServiceController extends Controller
 
             $service->title = $validated['title'];
             $service->acronym = $validated['acronym'];
+            $service->description = $validated['description'];
 
             $service->save();
 

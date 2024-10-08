@@ -15,7 +15,8 @@ class NotificationController extends Controller
         $ADMIN_ID = 1;
 
         $notifications = Notification::where('user_id',$ADMIN_ID)
-            ->paginate(20);
+            ->orderBy('created_at','DESC')
+            ->paginate(10);
 
         return view('admin.notifications', [
             'notifications' => $notifications

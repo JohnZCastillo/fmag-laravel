@@ -12,7 +12,8 @@ class Service extends Model
     protected  $fillable = [
         'title',
         'acronym',
-        'video'
+        'video',
+        'description',
     ];
 
 }
