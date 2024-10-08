@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -22,21 +23,27 @@ class ChatController extends Controller
         try {
 
             $chats = Chat::with('user')
-                ->where(function ($qb) use ($userID) {
-                    $qb->where('sender_id', $userID);
-                    $qb->orWhere('receiver_id', $userID);
-                })->get();
+                ->where(function ($query) use ($userID) {
+                    $query->where('sender_id', $userID)
+                        ->where('receiver_id', UserRole::ADMIN_ID);
+                })
+                ->orWhere(function ($query) use ($userID) {
+                    $query->where('sender_id', UserRole::ADMIN_ID)
+                        ->where('receiver_id', $userID);
+                })
+                ->get();
 
             return view('partials.messages', [
                 'chat' => $chats
             ]);
+
 
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()]);
         }
     }
 
-    public function addMessage(Request $request, $recieverID)
+    public function addMessage(Request $request, $userID)
     {
         try {
 
@@ -49,7 +56,7 @@ class ChatController extends Controller
             Chat::create([
                 'content' => $validated['content'],
                 'sender_id' => Auth::id(),
-                'receiver_id' => $recieverID,
+                'receiver_id' => $userID,
             ]);
 
             DB::commit();

@@ -8,7 +8,7 @@
             box-shadow: none !important;
         }
 
-        .messages{
+        .messages {
             color: var(--primary) !important;
             background: #FFFFFF !important;
             border-color: var(--primary) !important;
@@ -33,10 +33,10 @@
             </form>
 
             <ul class="list-group">
-                @forelse($users as $user)
+                @forelse($users as $loopUser)
                     <li class="list-group-item">
-                        <a class="text-secondary" href="/admin/messages/{{$user->id}}">
-                            {{$user->name}}
+                        <a class="text-secondary text-capitalize" href="/admin/messages/{{$loopUser->id}}">
+                             {{strtolower( $loopUser->name .' '. $loopUser->last_name)}}
                         </a>
                     </li>
                 @empty
@@ -71,7 +71,6 @@
                 </form>
             </div>
         </div>
-
     </div>
 @endsection
 
@@ -88,6 +87,10 @@
 
             let formData = new FormData();
             let message = document.querySelector('#inputMessage');
+
+            if (!message.value.length) {
+                return
+            }
 
             formData.append('content', message.value)
 

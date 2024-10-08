@@ -67,8 +67,8 @@
                    class="nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-card-checklist h4 mb-0"></i>Orders</a>
                 <a href="/messages"
-                   class="nav-item nav-link d-flex align-items-center"><i
-                        class="bi bi-envelope h4 mb-0"></i>Inbox</a>
+                   class="messages nav-item nav-link d-flex align-items-center"><i
+                        class="messages bi bi-envelope h4 mb-0"></i>Inbox</a>
                 <a href="/notifications"
                    class="nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-bell h4 mb-0"></i>Notifications

@@ -40,7 +40,7 @@ class CheckoutController extends Controller
                             $query->select(['id', 'product_id', 'order_id', 'quantity', 'price', DB::raw('SUM(quantity * price) as total')]);
 
                             $query->with('product', function ($query) {
-                                $query->select(['id', 'name', 'image']);
+                                $query->select(['id', 'name', 'image','price','description']);
                             });
 
                             $query->groupBy('id', 'product_id', 'order_id', 'quantity', 'price');

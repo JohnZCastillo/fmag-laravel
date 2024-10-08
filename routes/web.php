@@ -149,7 +149,6 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
         ->withoutMiddleware(['auth', VerifiedUser::class, ProfileComplete::class]);
 
 
-
     Route::post('/api/message/admin', [ChatController::class, 'sendToAdmin']);
     Route::get('/api/messages/{userID}', [ChatController::class, 'getMessages']);
     Route::post('/api/messages/{userID}', [ChatController::class, 'addMessage']);

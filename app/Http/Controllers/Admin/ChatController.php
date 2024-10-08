@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\Admin;
 use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -29,7 +31,7 @@ class ChatController extends Controller
 
         $user = User::findOrFail($userID);
 
-        $users = User::select(['id', 'name'])
+        $users = User::select(['id', 'name','last_name'])
             ->whereNotIn('id', [Auth::id()])
             ->get();
 
@@ -65,8 +67,16 @@ class ChatController extends Controller
 
     public function messages($userID)
     {
-        $chat = Chat::where('sender_id',$userID)
-            ->orWhere('receiver_id',$userID)
+
+        $chat = Chat::with('user')
+            ->where(function ($query) use ($userID) {
+                $query->where('sender_id', $userID)
+                    ->where('receiver_id', UserRole::ADMIN_ID);
+            })
+            ->orWhere(function ($query) use ($userID) {
+                $query->where('sender_id', UserRole::ADMIN_ID)
+                    ->where('receiver_id', $userID);
+            })
             ->get();
 
         return view('partials.messages', ['chat' => $chat]);
