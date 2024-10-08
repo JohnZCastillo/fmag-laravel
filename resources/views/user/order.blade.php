@@ -185,8 +185,9 @@
                     </button>
                 @endif
 
-                @if($order->refund)
-                    <p class="text-secondary mt-1">
+                @if($order->refunded)
+                    <hr>
+                    <p class="small text-dark mt-1">
                         Your refund will be processed as soon as possible, and you will receive an e-mail notification
                         once
                         it

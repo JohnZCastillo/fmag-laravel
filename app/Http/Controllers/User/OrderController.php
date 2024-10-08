@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function orders()
+    public function orders(Request $request)
     {
         $query = Order::query();
 
@@ -28,9 +28,10 @@ class OrderController extends Controller
                 OrderState::PROCESSING->value,
                 OrderState::COMPLETED->value,
                 OrderState::PAYMENT->value,
-            ]);
+            ])
+        ->orderBy('created_at','DESC');
 
-        $orders = $query->paginate();
+        $orders = $query->paginate(8)->appends($request->except('page'));
 
         return view('user.orders', [
             'orders' => $orders,
@@ -76,7 +77,6 @@ class OrderController extends Controller
             $order = Order::with(['user'])->findOrFail($orderID);
             $order->status = OrderStatus::FAILED;
             $order->reason = $validated['reason'];
-
 
             if($order->payment->payment_method == PaymentMethod::GCASH){
                 $order->refunded = true;

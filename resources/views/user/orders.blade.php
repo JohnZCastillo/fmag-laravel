@@ -73,5 +73,9 @@
                 </div>
             @endforelse
         </section>
+
+        <div class="container-fluid">
+            {{$orders->links()}}
+        </div>
     </div>
 @endsection
