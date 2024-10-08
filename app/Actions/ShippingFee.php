@@ -10,6 +10,6 @@ class ShippingFee
 
     public function handle($provinceID): float
     {
-        return $provinceID == '0421' ? 100 : 150;
+        return $provinceID == '0421' ? 50 : 150;
     }
 }
