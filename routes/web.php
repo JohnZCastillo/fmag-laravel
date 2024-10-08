@@ -181,13 +181,19 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
         return response()->json($cities);
     });
 
-    Route::get('/api/barangay/{city}', function ($city) {
+    Route::get('/api/barangays/{city}', function ($city) {
 
-        $barangays = \App\Models\Address\Barangay::select(['brgy_name', 'brgy_code'])
-            ->where('city_code', $city)
-            ->get();
+        try {
+            $barangays = \App\Models\Address\Barangay::select(['brgy_name', 'brgy_code'])
+                ->where('city_code', $city)
+                ->get();
 
-        return response()->json($barangays);
+            return response()->json($barangays);
+
+
+        }catch (Exception $e){
+            return response()->json(['message' => $e->getMessage()]);
+        }
     });
 });
 
