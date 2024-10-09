@@ -57,6 +57,14 @@
                                    value="{{$product->stock}}" min="0" data-pristine-min-message="Stock must be greater than or equal to 0"  required>
                         </div>
                         <div class="form-group">
+                            <label for="refundable">Refund</label>
+                            <select id="refundable" class="form-select" name="refundable" required>
+                                <option value="1" @selected($product->refundable)>Refundable</option>
+                                <option value="0"  @selected(!$product->refundable)>Non Refundable</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <label for="category">Category</label>
                             <select name="category_id" id="category" class="form-select text-uppercase">
                                 @foreach($categories as $category)

@@ -25,7 +25,8 @@
                                             <div class="mt-1 row ">
                                                 <div class="col-sm">
                                                     <label>Quantity:</label>
-                                                    <input readonly type="number" class="form-control quantity" value="{{$item->quantity}}">
+                                                    <input readonly type="number" class="form-control quantity"
+                                                           value="{{$item->quantity}}">
                                                 </div>
                                                 <div class="col-sm">
                                                     <label for="subTotal">Sub total:</label>
@@ -35,6 +36,9 @@
                                                            readonly>
                                                 </div>
                                             </div>
+                                            @if(!$product->refundable)
+                                                <span>Product is non refundable</span>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -49,14 +53,16 @@
 
                         <div class="form-group">
                             <label for="name">Name:</label>
-                            <input type="text" class="form-control" id="name" name="name" required value="{{$user->name}}" readonly>
+                            <input type="text" class="form-control" id="name" name="name" required
+                                   value="{{$user->name}}" readonly>
                         </div>
 
                         <div class="form-group">
                             <label for="address">Address:</label>
-                            <select  class="form-control text-capitalize" id="address" name="address_id">
+                            <select class="form-control text-capitalize" id="address" name="address_id">
                                 @foreach($user->addresses as $address)
-                                    <option name="address_id" class="text-capitalize" value="{{$address->id}}">{{ \App\Helper\AddressParser::parseAddress($address) }}</option>
+                                    <option name="address_id" class="text-capitalize"
+                                            value="{{$address->id}}">{{ \App\Helper\AddressParser::parseAddress($address) }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -72,7 +78,8 @@
 
                         <div class="mt-2 form-group">
                             <label for="shippingFee">Shipping Fee:</label>
-                            <input value="{{$shipping}}" name="shippingFee" id="shippingFee" readonly class="form-control">
+                            <input value="{{$shipping}}" name="shippingFee" id="shippingFee" readonly
+                                   class="form-control">
                         </div>
 
                         <div class="mt-2 form-group">
@@ -153,14 +160,14 @@
             checkoutForm.submit();
         }
 
-        addressSelection.addEventListener('change',async ()=>{
+        addressSelection.addEventListener('change', async () => {
 
             const address_id = addressSelection.value;
 
             const response = await fetch(`/api/shipping-fee?address_id=${address_id}`);
             const data = await response.json();
 
-            if(!response.ok){
+            if (!response.ok) {
 
                 console.log(data);
 

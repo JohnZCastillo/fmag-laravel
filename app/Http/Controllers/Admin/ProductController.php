@@ -100,6 +100,7 @@ class ProductController extends Controller
                 'stock' => 'required|numeric',
                 'category_id' => 'required|numeric',
                 'image' => 'nullable|image|mimes:jpg,jpeg,png',
+                'refundable' => 'required|boolean',
             ]);
 
             $product->update($validated);
@@ -121,7 +122,7 @@ class ProductController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return $e->getMessage();
+            dd($request);
 //            return redirect()->back()->withErrors(['message' => 'Product update failed!']);
         }
     }

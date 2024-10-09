@@ -19,10 +19,12 @@ class Product extends Model
         'image',
         'category_id',
         'archived',
+        'refundable',
     ];
 
     protected $casts = [
-        'archived' => 'boolean'
+        'archived' => 'boolean',
+        'refundable' => 'boolean'
     ];
 
     public function category(): BelongsTo
