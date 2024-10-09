@@ -2,6 +2,7 @@
 
 @section('files')
     <script src="/js/pristine.min.js"></script>
+    <script src="/js/InputOnChangeSubmit.js"></script>
 @endsection
 
 @section('style')
@@ -24,7 +25,8 @@
             <button data-bs-toggle="modal" data-bs-target="#addProduct" type="button" class="btn btn-primary">Add
             </button>
 
-            <form class="form w-100 autoSubmitForm" id="searchForm" style="max-width: 400px">
+            <form class="flex-fill d-flex gap-2 form autoSubmitForm" id="searchForm" style="max-width: 400px">
+
                 <div class="bg-dark p-2 gap-1 rounded-2">
                     <input value="{{$app->request->search}}"
                            name="search"
@@ -35,7 +37,17 @@
                            placeholder="Search Product"
                     >
                 </div>
+
+                <div class="col-5 form-group d-flex gap-2 align-items-center">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" class="form-select">
+                        <option value="active" @selected($app->request->status == 'active')>Active</option>
+                        <option value="inactive" @selected($app->request->status == 'inactive')>Inactive</option>
+                    </select>
+                </div>
             </form>
+
+
         </div>
 
         <section class="d-block d-md-none">
@@ -86,14 +98,22 @@
                         <td>
                             <div class="d-flex gap-2 align-items-center">
                                 <a class="btn btn-primary" href="/admin/product/{{$product->id}}">EDIT</a>
+                                @if($product->archived)
+                                    <form method="POST" action="/admin/unarchived-product/{{ $product->id }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-secondary">Unarchived</button>
+                                    </form>
+                                @else
+                                    <form class="confirmation"
+                                          data-message="Are you sure you want to archive {{$product->name}} ?"
+                                          method="POST"
+                                          action="/admin/product/{{ $product->id }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-secondary">Archive</button>
+                                    </form>
 
-                                <form class="confirmation"
-                                      data-message="Are you sure you want to archive {{$product->name}} ?" method="POST"
-                                      action="/admin/product/{{ $product->id }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-secondary">Archive</button>
-                                </form>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -191,12 +211,17 @@
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
 
-                if(pristine.validate()){
+                if (pristine.validate()) {
                     form.submit();
                 }
 
             });
+
+            handleInputsChange('#searchForm', 'change', '#status');
+            handleInputChange('#searchForm', 'input', '#searchBox', (search) => !search.length);
         };
+
+
     </script>
 @endsection
 

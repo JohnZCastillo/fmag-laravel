@@ -88,6 +88,8 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
         Route::get('/admin/product/{productID}', [ProductController::class, 'getProduct']);
         Route::patch('/admin/product/{product}', [ProductController::class, 'updateProduct']);
         Route::delete('/admin/product/{productID}', [ProductController::class, 'archiveProduct']);
+        Route::post('/admin/unarchived-product/{productID}', [ProductController::class, 'unarchivedProduct']);
+
         Route::post('/admin/product', [ProductController::class, 'addProduct']);
         Route::post('/admin/report', [SalesController::class, 'getSalesInRange']);
 

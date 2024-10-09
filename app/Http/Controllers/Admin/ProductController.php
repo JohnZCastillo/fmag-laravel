@@ -34,8 +34,11 @@ class ProductController extends Controller
             });
         });
 
-
-        $query->where('archived', false);
+        $query->when($request->input('status'), function ($query) use ($request) {
+            $query->where('archived', $request->input('status') == 'inactive');
+        }, function ($query) use ($request) {
+            $query->where('archived', false);
+        });
 
         $products = $query->paginate(8)->appends($request->except('page'));
 
@@ -178,6 +181,26 @@ class ProductController extends Controller
             DB::rollBack();
             return redirect()->back()->withErrors([
                 'message' => 'product deletion failed!'
+            ]);
+        }
+    }
+
+    public function unarchivedProduct($productID)
+    {
+        try {
+
+            DB::beginTransaction();
+
+            Product::where('id', $productID)->update([
+                'archived' => false
+            ]);
+
+            DB::commit();
+            return redirect()->back();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return redirect()->back()->withErrors([
+                'message' => 'product unarchived failed!'
             ]);
         }
     }

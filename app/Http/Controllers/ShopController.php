@@ -9,10 +9,13 @@ class ShopController extends Controller
 {
     public function index()
     {
-        $categories = ProductCategory::select(['id','name'])
-            ->with('products')->get();
+        $categories = ProductCategory::select(['id', 'name'])
+            ->with(['products' => function ($query) {
+                $query->where('archived', false);
+            }])
+            ->get();
 
-        return view('shop',[
+        return view('shop', [
             'categories' => $categories,
         ]);
 
