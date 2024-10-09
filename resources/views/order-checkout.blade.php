@@ -36,7 +36,7 @@
                                                            readonly>
                                                 </div>
                                             </div>
-                                            @if(!$product->refundable)
+                                            @if(!$item->product->refundable)
                                                 <span>Product is non refundable</span>
                                             @endif
                                         </div>
