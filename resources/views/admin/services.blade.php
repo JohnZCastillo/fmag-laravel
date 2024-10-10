@@ -49,6 +49,10 @@
                             <textarea minlength="20" maxlength="300" class="form-control" id="description" name="description"></textarea>
                         </div>
                         <div class="form-group mb-2">
+                            <label for="price">Price</label>
+                            <input type="number" min="0" class="form-control" id="price" name="price" required>
+                        </div>
+                        <div class="form-group mb-2">
                             <label for="acronym">Acronym</label>
                             <input id="acronym" class="form-control" type="text" name="acronym" required>
                         </div>
@@ -87,6 +91,10 @@
                         <div class="form-group mb-2">
                             <label for="editDescription">Description</label>
                             <textarea  minlength="20" maxlength="300"  class="form-control" id="editDescription" name="description"></textarea>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="editPrice">Price</label>
+                            <input type="number" min="0" class="form-control" id="editPrice" name="price" required>
                         </div>
                         <div class="form-group mb-2">
                             <label for="editAcronym">Acronym</label>
@@ -178,10 +186,11 @@
                 const response = await fetch(`/admin/services/${serviceID}`);
                 const service = await response.json();
 
-                document.querySelector('#editID').value = service.id
-                document.querySelector('#editTitle').value = service.title
-                document.querySelector('#editAcronym').value = service.acronym
-                document.querySelector('#editDescription').innerText = service.description
+                document.querySelector('#editID').value = service.id;
+                document.querySelector('#editTitle').value = service.title;
+                document.querySelector('#editAcronym').value = service.acronym;
+                document.querySelector('#editDescription').innerText = service.description;
+                document.querySelector('#editPrice').value = service.price;
 
                 editServiceModal.show();
 

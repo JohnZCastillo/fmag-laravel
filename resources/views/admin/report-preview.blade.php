@@ -1,5 +1,5 @@
-<div class="table-responsive">
-    <table class="table table-bordered text-dark">
+<div class="table-responsive mt-2">
+    <table class="table table-bordered text-dark border-dark">
         <thead>
         <tr>
             <th>Item Name</th>

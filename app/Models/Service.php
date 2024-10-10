@@ -14,6 +14,7 @@ class Service extends Model
         'acronym',
         'video',
         'description',
+        'price'
     ];
 
 }

@@ -1,12 +1,14 @@
 @extends('layouts.admin-index')
 
+@section('title','Sales')
+
 @section('files')
     <script src="/js/html2pdf.js"></script>
 @endsection
 
 @section('style')
     <style>
-        .sales{
+        .sales {
             color: var(--primary) !important;
             background: #FFFFFF !important;
             border-color: var(--primary) !important;
@@ -181,16 +183,25 @@
             }
         }
 
-        function downloadPdf() {
-            var opt = {
+        async  function downloadPdf() {
+
+            const response = await fetch('/report');
+
+            if (!response.ok) {
+                alert('An error occurred while generating pdf');
+                return;
+            }
+            const content = await  response.text();
+
+            const opt = {
                 margin: 0,
-                filename: 'report.pdf',
                 image: {type: 'jpeg', quality: 0.98},
                 html2canvas: {scale: 2},
                 jsPDF: {unit: 'in', format: 'A4', orientation: 'portrait'}
             };
 
-            html2pdf().set(opt).from(reportContent).save();
+            html2pdf().set(opt).from(content, 'string').save();
+
         }
 
     </script>

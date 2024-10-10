@@ -67,15 +67,28 @@ class SalesController extends Controller
                 ->where('orders.status', OrderStatus::COMPLETED->value)
                 ->value('total_sales');
 
-            return view('admin.report-preview', [
+            $coverage = '';
+
+            if($request->input('from')){
+                $coverage .= $request->input('from');
+            }
+
+            if($request->input('to')){
+                $coverage .= ' - ' . $request->input('to');
+            }
+
+            $reportData = [
                 'items' => $items,
                 'total' => $total,
-            ]);
+                'coverage' => $coverage
+            ];
+
+            session(['reportData' => $reportData]);
+
+            return view('admin.report-preview', $reportData);
 
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
-
     }
-
 }

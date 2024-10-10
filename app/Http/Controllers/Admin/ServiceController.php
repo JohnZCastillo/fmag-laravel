@@ -32,7 +32,8 @@ class ServiceController extends Controller
                 'acronym' => 'required',
                 'title' => 'required',
                 'video' => 'required|mimes:mp4',
-                'description' => 'required|min:20|max:300'
+                'description' => 'required|min:20|max:300',
+                'price' => 'required|numeric|min:0'
             ]);
 
             $service = new Service();
@@ -51,6 +52,7 @@ class ServiceController extends Controller
             $service->title = $validated['title'];
             $service->acronym = $validated['acronym'];
             $service->description = $validated['description'];
+            $service->price = $validated['price'];
 
             $service->save();
 
@@ -76,7 +78,8 @@ class ServiceController extends Controller
                 'acronym' => 'required',
                 'title' => 'required',
                 'video' => 'nullable|mimes:mp4',
-                'description' => 'required|min:20|max:300'
+                'description' => 'required|min:20|max:300',
+                'price' => 'required|numeric|min:0'
             ]);
 
             $service = Service::findOrFail($validated['id']);
@@ -94,6 +97,7 @@ class ServiceController extends Controller
             $service->title = $validated['title'];
             $service->acronym = $validated['acronym'];
             $service->description = $validated['description'];
+            $service->price = $validated['price'];
 
             $service->save();
 

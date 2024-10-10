@@ -213,3 +213,15 @@ Route::post('/verify-pin', [
     \App\Http\Controllers\ForgotPasswordController::class,
     'verifyPin'
 ]);
+
+
+Route::get('/report', function (Illuminate\Http\Request $request){
+
+    $reportData = session('reportData', [
+        'items' => [],
+        'total' => 0,
+        'coverage' => 'All'
+    ]);
+
+    return view('admin.report-download', $reportData)->render();
+});
