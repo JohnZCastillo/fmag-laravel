@@ -93,6 +93,7 @@
             </form>
 
             <form class="mt-2" method="POST" action="/logout">
+                @csrf
                 <button type="submit" class="btn btn-secondary">Exit</button>
             </form>
 
