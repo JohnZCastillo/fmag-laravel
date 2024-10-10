@@ -92,4 +92,35 @@ class ForgotPasswordController extends Controller
             return redirect()->back()->withErrors(['message' => 'something went wrong!']);
         }
     }
+
+    public function resendPin(Request $request)
+    {
+
+        try {
+
+            DB::beginTransaction();
+
+            $user = \App\Models\User::findOrFail(Auth::id());
+
+            $code = fake()->numberBetween(111111, 999999);
+
+            $verification = Verification::create([
+                'user_id' => $user->id,
+                'session_id' => Session::getId(),
+                'code' => $code,
+                'expiration' => Carbon::now()->addMinutes(5)->format('Y-m-d H:i')
+            ]);
+
+            DB::commit();
+
+            ForgotPassword::dispatch($verification,$user);
+
+            return view('verify-pin', ['email' => $user->email]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['message' => $e->getMessage()]);
+        }
+    }
+
 }

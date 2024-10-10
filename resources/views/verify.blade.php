@@ -37,8 +37,8 @@
                         logout
                     </button>
                 </form>
-
                 <form id="resendCodeForm" method="POST" action="/resend-verification">
+                   @csrf
                     <button id="resendLink" disabled type="submit" class="link-btn text-secondary">
                         <p>You can resend the code in <span id="timer">300</span> seconds.</p>
                     </button>

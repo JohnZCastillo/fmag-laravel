@@ -214,6 +214,11 @@ Route::post('/verify-pin', [
     'verifyPin'
 ]);
 
+Route::post('/resend-verification', [
+AuthController::class,
+    'verifyPage'
+]);
+
 Route::get('/policy', function (){
     return view('terms-and-condition');
 });
