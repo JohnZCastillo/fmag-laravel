@@ -8,6 +8,12 @@
             cursor: pointer;
         }
 
+        .account {
+            color: var(--primary) !important;
+            background: #FFFFFF !important;
+            border-color: var(--primary) !important;
+        }
+
     </style>
 @endsection
 
@@ -64,14 +70,16 @@
                         </div>
                         <div class="form-group column align-items-center">
                             <label for="email" class="col-2">Email:</label>
-                            <input name="email" type="email" class="col form-control" id="email" value="{{auth()->user()->email}}">
+                            <input name="email" type="email" class="col form-control" id="email"
+                                   value="{{auth()->user()->email}}">
                         </div>
 
                         <div class="row mt-2">
 
                             <div class="col-4 form-group column align-items-center">
                                 <label for="name">First Name:</label>
-                                <input name="name" value="{{auth()->user()->name}}" type="text" class="col form-control" id="name" required>
+                                <input name="name" value="{{auth()->user()->name}}" type="text" class="col form-control"
+                                       id="name" required>
                             </div>
 
                             <div class="col-4 form-group column align-items-center">
@@ -112,7 +120,7 @@
 
     <script>
 
-        $('#updateProfile').find('#mobile').on('input', function() {
+        $('#updateProfile').find('#mobile').on('input', function () {
             let value = $(this).val();
             value = value.replace(/[^0-9()+\-\s]/g, '');
             const plusIndex = value.lastIndexOf('+');

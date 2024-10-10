@@ -55,22 +55,22 @@
             </a>
             <div class="navbar-nav w-100" style="height: calc(100vh - 100px)">
                 <a href="/profile"
-                   class="nav-item nav-link d-flex align-items-center"><i
+                   class="account nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-person-circle h4 mb-0"></i>Profile</a>
                 <a href="/password"
-                   class="nav-item nav-link d-flex align-items-center"><i
+                   class="password nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-shield h4 mb-0"></i>Password</a>
                 <a href="/address"
-                   class="nav-item nav-link d-flex align-items-center"><i
+                   class="address nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-signpost h4 mb-0"></i>Address</a>
                 <a href="/orders"
-                   class="nav-item nav-link d-flex align-items-center"><i
+                   class="orders nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-card-checklist h4 mb-0"></i>Orders</a>
                 <a href="/messages"
                    class="messages nav-item nav-link d-flex align-items-center"><i
                         class="messages bi bi-envelope h4 mb-0"></i>Inbox</a>
                 <a href="/notifications"
-                   class="nav-item nav-link d-flex align-items-center"><i
+                   class="notifications nav-item nav-link d-flex align-items-center"><i
                         class="bi bi-bell h4 mb-0"></i>Notifications
                     <span class="message ms-1 px-2 bg-danger rounded-circle text-light" id="notificationCounter">
                     </span>

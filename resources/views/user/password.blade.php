@@ -1,5 +1,15 @@
 @extends('layouts.user-account')
 
+@section('styles')
+<style>
+    .password {
+        color: var(--primary) !important;
+        background: #FFFFFF !important;
+        border-color: var(--primary) !important;
+    }
+</style>
+@endsection
+
 @section('body')
     <div>
         <h4>Change Password</h4>

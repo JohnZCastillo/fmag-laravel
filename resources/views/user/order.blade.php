@@ -1,9 +1,14 @@
 @extends('layouts.user-account')
 
-
-
 @section('styles')
     <style>
+
+        .orders {
+            color: var(--primary) !important;
+            background: #FFFFFF !important;
+            border-color: var(--primary) !important;
+        }
+
         .admin-content {
             flex-basis: 80%;
         }

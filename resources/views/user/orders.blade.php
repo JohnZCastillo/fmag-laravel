@@ -1,5 +1,17 @@
 @extends('layouts.user-account')
 
+@section('styles')
+    <style>
+        .orders {
+            color: var(--primary) !important;
+            background: #FFFFFF !important;
+            border-color: var(--primary) !important;
+        }
+
+    </style>
+@endsection
+
+
 @section('body')
     <div>
         <section class="d-none d-md-block">
