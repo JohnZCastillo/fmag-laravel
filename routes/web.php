@@ -214,6 +214,10 @@ Route::post('/verify-pin', [
     'verifyPin'
 ]);
 
+Route::get('/policy', function (){
+    return view('terms-and-condition');
+});
+
 
 Route::get('/report', function (Illuminate\Http\Request $request){
 
