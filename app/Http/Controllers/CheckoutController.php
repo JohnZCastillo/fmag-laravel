@@ -40,7 +40,7 @@ class CheckoutController extends Controller
                             $query->select(['id', 'product_id', 'order_id', 'quantity', 'price', DB::raw('SUM(quantity * price) as total')]);
 
                             $query->with('product', function ($query) {
-                                $query->select(['id', 'name', 'image','price','description','refundable']);
+                                $query->select(['id', 'name', 'image','price','description','refundable','stock']);
                             });
 
                             $query->groupBy('id', 'product_id', 'order_id', 'quantity', 'price');
@@ -71,7 +71,7 @@ class CheckoutController extends Controller
                 'total' => $total,
                 'order' => $order,
                 'user' => Auth::user(),
-                'shipping' => 150
+                'shipping' => $shipping
             ]);
 
         } catch (\Exception $e) {

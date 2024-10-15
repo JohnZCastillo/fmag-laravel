@@ -16,6 +16,7 @@ class ProductFeedback extends Model
         'product_id',
         'comment',
         'rating',
+        'order_id'
     ];
 
     public function user(): BelongsTo
@@ -26,6 +27,11 @@ class ProductFeedback extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class);
     }
 
     public function attachments(): HasMany

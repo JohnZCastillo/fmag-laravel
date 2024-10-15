@@ -84,7 +84,7 @@
 
                         <div class="mt-2 form-group">
                             <label for="total">Total Amount:</label>
-                            <input name="total" id="total" readonly value="{{$total}}" class="form-control">
+                            <input name="total" id="total" readonly value="{{$total + $shipping}}" class="form-control">
                         </div>
 
                         <div class="d-flex align-items-center gap-2 mt-2 ">
@@ -155,6 +155,8 @@
         const orderConfirmationModal = new bootstrap.Modal(document.getElementById('confirmOrderModal'));
         const checkoutForm = document.querySelector('#checkoutForm');
         const addressSelection = document.querySelector('#address');
+        const shippingFee = document.querySelector('#shippingFee');
+        const total = document.querySelector('#total');
 
         function confirmOrder() {
             checkoutForm.submit();
@@ -174,8 +176,8 @@
                 return;
             }
 
-
-            console.log(data);
+            shippingFee.value = data.shipping;
+            total.value = parseFloat('{{$total}}') + parseFloat(shippingFee.value);
         })
 
         {{--const shippingFeeField = document.querySelector('#shippingFee');--}}

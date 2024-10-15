@@ -15,7 +15,7 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected  $fillable = [
+    protected $fillable = [
         'status',
         'state',
         'checkout_type',
@@ -33,7 +33,7 @@ class Order extends Model
     protected static function booted()
     {
         static::created(function ($request) {
-            $request->reference = 'ORDR'. '-' . str_pad($request->id, 3, "0", STR_PAD_LEFT);;
+            $request->reference = 'ORDR' . '-' . str_pad($request->id, 3, "0", STR_PAD_LEFT);;
             $request->save();
         });
     }
@@ -61,6 +61,16 @@ class Order extends Model
     public function delivery(): HasOne
     {
         return $this->hasOne(OrderDelivery::class);
+    }
+
+    public function feedbacks(): HasMany
+    {
+        return $this->hasMany(ProductFeedback::class, 'order_id', 'id');
+    }
+
+    public function canReview($productID)
+    {
+        return !$this->feedbacks->contains('product_id', $productID);
     }
 
 }

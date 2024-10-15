@@ -46,7 +46,7 @@ class SalesController extends Controller
                     $query->where('orders.created_at', '>=', $from);
                 })
                 ->when($request->input('to'), function ($query) use ($request) {
-                    $to = Carbon::parse($request->input('to'))->startOfDay()->format('Y-m-d H:i');
+                    $to = Carbon::parse($request->input('to'))->endOfDay()->format('Y-m-d H:i');
                     $query->where('orders.created_at', '<=', $to);
                 })
                 ->where('orders.status', OrderStatus::COMPLETED->value)
@@ -61,7 +61,7 @@ class SalesController extends Controller
                     $query->where('orders.created_at', '>=', $from);
                 })
                 ->when($request->input('to'), function ($query) use ($request) {
-                    $to = Carbon::parse($request->input('to'))->startOfDay()->format('Y-m-d H:i');
+                    $to = Carbon::parse($request->input('to'))->endOfDay()->format('Y-m-d H:i');
                     $query->where('orders.created_at', '<=', $to);
                 })
                 ->where('orders.status', OrderStatus::COMPLETED->value)

@@ -15,7 +15,7 @@
 
                     <div class="input-group">
                         <button class="btn btn-outline-secondary" type="button" onclick="updateInputValue('#quantityInput{{$id}}',false)">-</button>
-                        <input readonly name="quantity" type="number" id="quantityInput{{$id}}" class="form-control bg-white border-dark text-dark" placeholder="Quantity" min="{{$min}}" max="{{$max}}" value="1">
+                        <input step="1" name="quantity" type="number" id="quantityInput{{$id}}" class="form-control bg-white border-dark text-dark" placeholder="Quantity" min="{{$min}}" max="{{$max}}" value="1">
                         <button class="btn btn-outline-secondary" type="button" onclick="updateInputValue('#quantityInput{{$id}}')">+</button>
                     </div>
                     <p id="remainingStockText">Remaining Stock:

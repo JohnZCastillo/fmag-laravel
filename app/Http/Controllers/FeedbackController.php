@@ -27,20 +27,39 @@ class FeedbackController extends Controller
 
             $orderTotal = Order::select([DB::raw('count(id) as total')])
                 ->where('status', OrderStatus::COMPLETED->value)
-                ->where('user_id',Auth::id())
+                ->where('user_id', Auth::id())
+                ->with(['items'])
                 ->whereHas(
                     'items', function ($query) use ($productID) {
-                        $query->where('id', $productID);
-                    }
+                    $query->where('product_id', $productID);
+                }
                 )->value('total');
 
             $commentTotal = ProductFeedback::select([DB::raw('count(id) as total')])
-                ->where('product_id',$productID)
-                ->where('user_id',Auth::id())
+                ->where('product_id', $productID)
+                ->where('user_id', Auth::id())
                 ->value('total');
 
-            if($commentTotal >= $orderTotal){
+            if ($commentTotal >= $orderTotal) {
                 throw new \Exception('you haven\'t bought this item, please order first to comment');
+            }
+
+
+            if (!session('order_feedback_id')) {
+
+                $feedbackOrderIDs = ProductFeedback::where('user_id', Auth::id())
+                    ->pluck('order_id')
+                    ->toArray();
+
+                $orderID = Order::select(['id'])
+                    ->where('user_id', Auth::id())
+                    ->where('status', OrderStatus::COMPLETED->value)
+                    ->whereNotIn('id', array_values($feedbackOrderIDs))
+                    ->pluck('id')
+                    ->first();
+
+                session(['order_feedback_id' => $orderID]);
+
             }
 
             $feedback = ProductFeedback::create([
@@ -48,9 +67,10 @@ class FeedbackController extends Controller
                 'user_id' => Auth::id(),
                 'rating' => $validated['rating'],
                 'comment' => $validated['content'],
+                'order_id' => session()->get('order_feedback_id'),
             ]);
 
-            if($request->hasFile('files')){
+            if ($request->hasFile('files')) {
                 foreach ($request->file('files') as $file) {
                     $filename = $file->store('public');
 
@@ -69,11 +89,13 @@ class FeedbackController extends Controller
 
             DB::commit();
 
+            session()->forget('order_feedback_id');
+
             return redirect()->back();
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withErrors(['message' => 'something went wrong while submitting feedback']);
+            return redirect()->back()->withErrors(['message' => $e->getMessage()]);
         }
     }
 }

@@ -61,6 +61,7 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
         ->withoutMiddleware(['auth', VerifiedUser::class, ProfileComplete::class]);
 
     Route::post('/api/cart-item/{cartItem}', [CartController::class, 'updateItemQuantity']);
+
     Route::get('/api/shipping-fee', [\App\Http\Controllers\ShippingFeeController::class, 'getShippingFee']);
 
     Route::get('/profile', [ProfileController::class, 'index']);
@@ -138,25 +139,23 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::get('/payments/gcash/{orderID}', [PaymentController::class, 'index'])->name('gcash');
     Route::post('/payments/gcash/{order}', [PaymentController::class, 'confirm']);
 
-
     Route::post('/profile', [UserAccountController::class, 'update']);
     Route::get('/new-address', [UserAddressController::class, 'newAddressForm']);
+    Route::get('/address/{userAddress}', [UserAddressController::class, 'viewAddress']);
     Route::post('/new-address', [UserAddressController::class, 'registerAddress']);
+    Route::patch('/address/{userAddress}', [UserAddressController::class, 'editAddress']);
     Route::post('/default-address/{userAddress}', [UserAddressController::class, 'setDefaultAddress']);
-
 
     Route::delete('/cart-item/{item}', [CartItemController::class, 'removeItem']);
 
     Route::get('/product/{productID}', [ProductController::class, 'viewProduct'])
         ->withoutMiddleware(['auth', VerifiedUser::class, ProfileComplete::class]);
 
-
     Route::post('/api/message/admin', [ChatController::class, 'sendToAdmin']);
     Route::get('/api/messages/{userID}', [ChatController::class, 'getMessages']);
     Route::post('/api/messages/{userID}', [ChatController::class, 'addMessage']);
 
     Route::post('/product/feedback/{productID}', [FeedbackController::class, 'addComment']);
-
 
     Route::get('/api/regions', function () {
         $regions = \App\Models\Address\Region::select(['region_name', 'region_code'])
@@ -197,6 +196,13 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
             return response()->json(['message' => $e->getMessage()]);
         }
     });
+
+    Route::get('review/{orderID}/{productID}', function ($orderID,$productID) {
+            session(['order_feedback_id' => $orderID]);
+            return redirect('/product/' . $productID );
+    });
+
+
 });
 
 Route::get('/forgot-password', [

@@ -24,11 +24,15 @@
             color: var(--bs-danger);
             font-size: 14px;
         }
+
+        *{
+            color: black !important;
+        }
+
     </style>
 
     @yield('style')
     @yield('styles')
-
 </head>
 
 <body>

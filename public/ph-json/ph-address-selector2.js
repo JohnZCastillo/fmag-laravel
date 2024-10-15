@@ -70,7 +70,7 @@ var my_handlers = {
         var url = '/ph-json/province.json';
         $.getJSON(url, function(data) {
             var result = data.filter(function(value) {
-                return value.region_code == region_code;
+                return parseInt( value.region_code) === parseInt( region_code);
             });
 
             result.sort(function(a, b) {
@@ -111,8 +111,9 @@ var my_handlers = {
         // filter & fill
         var url = '/ph-json/city.json';
         $.getJSON(url, function(data) {
+
             var result = data.filter(function(value) {
-                return value.province_code == province_code;
+                return parseInt(value.province_code) === parseInt( province_code);
             });
 
             result.sort(function(a, b) {
@@ -128,7 +129,9 @@ var my_handlers = {
     // fill barangay
     fill_barangays: function() {
         // selected barangay
+
         var city_code = $(this).val();
+
 
         // set selected text to input
         var city_text = $(this).find("option:selected").text();
@@ -148,8 +151,9 @@ var my_handlers = {
 
 
         $.getJSON(url, function(data) {
+
             var result = data.filter(function(value) {
-                return value.city_code == city_code;
+                return parseInt( value.city_code) === parseInt(city_code);
             });
 
             result.sort(function(a, b) {
@@ -162,14 +166,6 @@ var my_handlers = {
 
         });
     },
-
-    onchange_barangay: function() {
-        // set selected text to input
-        var barangay_text = $(this).find("option:selected").text();
-        let barangay_input = $('#barangay-text');
-        barangay_input.val(barangay_text);
-    },
-
 };
 
 
@@ -178,19 +174,4 @@ $(function() {
     $('#region').on('change', my_handlers.fill_provinces);
     $('#province').on('change', my_handlers.fill_cities);
     $('#city').on('change', my_handlers.fill_barangays);
-    $('#barangay').on('change', my_handlers.onchange_barangay);
-
-    // load region
-    let dropdown = $('#region');
-    dropdown.empty();
-    dropdown.append('<option selected="true" disabled>Choose Region</option>');
-    dropdown.prop('selectedIndex', 0);
-    const url = '/ph-json/region.json';
-    // Populate dropdown with list of regions
-    $.getJSON(url, function(data) {
-        $.each(data, function(key, entry) {
-            dropdown.append($('<option></option>').attr('value', entry.region_code).text(entry.region_name));
-        })
-    });
-
 });

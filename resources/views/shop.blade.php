@@ -174,21 +174,22 @@
                                         <div class="card-body" style="height: 150px;">
                                             <a href="/product/{{$product->id}}">
                                                 <h5 class="card-title text-truncate" style="max-width: 20ch">{{$product->name}}</h5>
+                                                <span class="small text-dark">Remaining Stock: {{$product->stock}}</span>
                                             </a>
                                             <p class="card-text">{{\App\Helper\CurrencyHelper::currency($product->price) }}</p>
+
                                             @if($product->stock > 0)
                                                 <div class="d-flex gap-2">
                                                     <button data-bs-toggle="modal" data-bs-target="#inputModal{{$product->id}}" type="button" class="btn btn-success">Buy</button>
                                                     <button data-bs-toggle="modal" data-bs-target="#inputCartModal{{$product->id}}" type="button" class="btn btn-primary">Cart</button>
                                                 </div>
                                             @else
-                                                <span class="small">Product out of stock</span>
                                                 <div class="d-flex gap-2">
                                                     <button disabled type="button" class="btn btn-success">Buy</button>
                                                     <button disabled type="button" class="btn btn-primary">Cart</button>
                                                 </div>
+                                                <span class="small text-dark">Product out of stock</span>
                                             @endif
-
                                         </div>
                                     </div>
                                 </div>

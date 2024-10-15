@@ -275,8 +275,8 @@
 <script src="/lib/owlcarousel/owl.carousel.js"></script>
 <script src="/js/just-validate.js"></script>
 
-@include('partials.error');
-@include('partials.success');
+@include('partials.error')
+@include('partials.success')
 
 <script>
 
@@ -303,6 +303,38 @@
                 document.getElementById('nav-header').classList.add('nav-transparent');
             }
         });
+    });
+
+    const minMaxInputs = document.querySelectorAll('[type="number"]');
+
+    minMaxInputs.forEach(input =>{
+        input.addEventListener('keyup', function (e){
+            const min = parseInt(e.target.min);
+            const max = parseInt(e.target.max);
+            const value = parseInt(e.target.value);
+
+            if( value > max){
+                e.target.value = max;
+            }
+
+            if(value < min){
+                e.target.value = min;
+            }
+        })
+
+        input.addEventListener('keydown', function (e){
+            const min = parseInt(e.target.min);
+            const max = parseInt(e.target.max);
+            const value = parseInt(e.target.value);
+
+            if( value > max){
+                e.target.value = max;
+            }
+
+            if(value < min){
+                e.target.value = min;
+            }
+        })
     });
 
 </script>

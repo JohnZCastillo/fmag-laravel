@@ -38,11 +38,15 @@
                         <td>
                             <div>
                                 <a role="button" href="/order/{{$order->id}}" class="btn btn-primary">view</a>
-                                {{--                                                            {% for orderProduct in order.content %}--}}
-                                {{--                                                            {% if (canReview(order,orderProduct.product)) %}--}}
-                                {{--                                                            <a class="btn btn-secondary" href="/product/{{orderProduct.product.id}}">Review</a>--}}
-                                {{--                                                            {% endif %}--}}
-                                {{--                                                            {% endfor %}--}}
+
+                                @if($order->status == \App\Enums\OrderStatus::COMPLETED)
+                                    @foreach($order->items as $loopItem)
+                                        @if($order->canReview($loopItem->product_id))
+                                            <a class="btn btn-secondary"
+                                               href="/review/{{$order->id}}/{{$loopItem->product_id}}">Review</a>
+                                        @endif
+                                    @endforeach
+                                @endif
                             </div>
                         </td>
                     </tr>

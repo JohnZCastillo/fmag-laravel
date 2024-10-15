@@ -23,6 +23,7 @@ class OrderController extends Controller
         $query->where('user_id', Auth::id())
             ->with([
                 'payment',
+                'feedbacks'
             ])
             ->whereIn('state', [
                 OrderState::PROCESSING->value,

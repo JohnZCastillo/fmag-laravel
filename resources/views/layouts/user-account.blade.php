@@ -30,10 +30,10 @@
             font-family: 'bootstrap-icons', serif;
             content: "\F229";
         }
+
     </style>
 
     @yield('styles')
-
 </head>
 
 <body>

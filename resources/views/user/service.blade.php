@@ -4,7 +4,7 @@
 
 @section('body')
 
-<section class="stack-bg">
+<section class="stack-bg text-dark">
     <div class="container mx-auto">
         <div class="card mb-3">
             <div class="row g-0">
@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-md-7">
                     <div class="card-body">
-                        <h5 class="card-title">{{$service->title}}    <span class="text-secondary">({{$service->acronym}})</span></h5>
+                        <h5 class="card-title">{{$service->title}}    <span class="text-dark">({{$service->acronym}})</span></h5>
 
                         <p>Estimated Price: {{\App\Helper\CurrencyHelper::currency($service->price)}}</p>
                         <p class="card-text">{{$service->description}}</p>
