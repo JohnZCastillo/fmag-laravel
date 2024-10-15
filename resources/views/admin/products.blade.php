@@ -134,7 +134,7 @@
     <!-- Modal -->
     <div class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form id="productForm" action="/admin/product/" method="POST" enctype="multipart/form-data">
+            <form id="productForm" action="/admin/product" method="POST" enctype="multipart/form-data">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">New Product</h5>

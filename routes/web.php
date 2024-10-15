@@ -81,18 +81,20 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
 
 
     Route::middleware([\App\Http\Middleware\Admin::class])->group(function () {
+
         Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index']);
         Route::get('/admin/sales', [SalesController::class, 'index']);
         Route::get('/admin/products', [ProductController::class, 'index']);
         Route::get('/admin/orders', [AdminOrderController::class, 'orders']);
         Route::get('/admin/orders/{orderID}', [AdminOrderController::class, 'order']);
-        Route::get('/admin/product/{productID}', [ProductController::class, 'getProduct']);
-        Route::patch('/admin/product/{product}', [ProductController::class, 'updateProduct']);
-        Route::delete('/admin/product/{productID}', [ProductController::class, 'archiveProduct']);
-        Route::post('/admin/unarchived-product/{productID}', [ProductController::class, 'unarchivedProduct']);
+
+        Route::post('/admin/report', [SalesController::class, 'getSalesInRange']);
 
         Route::post('/admin/product', [ProductController::class, 'addProduct']);
-        Route::post('/admin/report', [SalesController::class, 'getSalesInRange']);
+        Route::patch('/admin/product/{product}', [ProductController::class, 'updateProduct']);
+        Route::delete('/admin/product/{productID}', [ProductController::class, 'archiveProduct']);
+        Route::get('/admin/product/{productID}', [ProductController::class, 'getProduct']);
+        Route::post('/admin/unarchived-product/{productID}', [ProductController::class, 'unarchivedProduct']);
 
         Route::get('/admin/general-settings', [GeneralSettingController::class, 'index']);
         Route::post('/admin/general-settings', [GeneralSettingController::class, 'update']);
