@@ -32,7 +32,7 @@
 </head>
 
 <body>
-<div class="container-xxl position-relative bg-white d-flex p-0">
+<div class="position-relative bg-white d-flex p-0">
     <!-- Spinner Start -->
     <div id="spinner"
          class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -44,7 +44,7 @@
 
 
     <!-- Sidebar Start -->
-    <div class="sidebar pe-4" style="background-color: white;">
+    <div class="sidebar pe-4 shadow" style="background-color: white;">
         <nav class="navbar bg-light navbar-light">
             <a href="/" class="navbar-brand mx-4 mb-3">
                 <h3 class="text-primary">FMAG</h3>
