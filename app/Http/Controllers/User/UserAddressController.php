@@ -156,7 +156,7 @@ class UserAddressController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withErrors(['message', $e->getMessage()]);
+            return redirect()->back()->withErrors(['error', $e->getMessage()]);
         }
     }
 
@@ -179,7 +179,7 @@ class UserAddressController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withErrors(['message', $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
 
