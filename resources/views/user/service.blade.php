@@ -22,14 +22,15 @@
                         <p>Estimated Price: {{\App\Helper\CurrencyHelper::currency($service->price)}}</p>
                         <p class="card-text">{{$service->description}}</p>
 
-                        <form method="POST" action="/inquire/{{$service->id}}">
-                            @csrf
+                        @if($available)
+                            <form method="POST" action="/inquire/{{$service->id}}">
+                                @csrf
 
-                            @if($available)
-                                <button type="submit" class="rounded-pill btn btn-primary">Inquire</button>
-                            @endif
-
-                        </form>
+                                    <button type="submit" class="rounded-pill btn btn-primary">Inquire</button>
+                            </form>
+                        @else
+                            <button disabled type="button" class="rounded-pill btn btn-primary">Inquire</button>
+                        @endif
 
                         <hr>
                         <div class="row">
