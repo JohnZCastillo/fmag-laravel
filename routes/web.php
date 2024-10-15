@@ -144,6 +144,7 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
     Route::get('/address/{userAddress}', [UserAddressController::class, 'viewAddress']);
     Route::post('/new-address', [UserAddressController::class, 'registerAddress']);
     Route::patch('/address/{userAddress}', [UserAddressController::class, 'editAddress']);
+    Route::delete('/address/{userAddress}', [UserAddressController::class, 'deleteAddress']);
     Route::post('/default-address/{userAddress}', [UserAddressController::class, 'setDefaultAddress']);
 
     Route::delete('/cart-item/{item}', [CartItemController::class, 'removeItem']);

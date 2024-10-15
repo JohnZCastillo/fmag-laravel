@@ -58,8 +58,8 @@ class CartController extends Controller
             $product = Product::select(['id', 'stock'])
                 ->findOrFail($validated['product_id']);
 
-            $item = CartItem::where('product_id',$validated['product_id'])
-                ->where('cart_id',$cart->id)
+            $item = CartItem::where('product_id', $validated['product_id'])
+                ->where('cart_id', $cart->id)
                 ->first();
 
             if ($item) {
@@ -73,7 +73,7 @@ class CartController extends Controller
             }
 
             if ($item->quantity > $product->stock) {
-                $item->quantity = $product->stock;
+                throw new \Exception('Product stock has reached its maximum limit');
             }
 
             $item->save();
@@ -101,7 +101,7 @@ class CartController extends Controller
 
             $product = $cartItem->product;
 
-            if($validated['quantity'] > $product->stock ) {
+            if ($validated['quantity'] > $product->stock) {
                 throw new \Exception('insufficient stock');
             }
 
@@ -109,7 +109,7 @@ class CartController extends Controller
 
             $cartItem->save();
 
-            $total  = CartItem::select([DB::raw('SUM(cart_items.quantity * products.price) as total')])
+            $total = CartItem::select([DB::raw('SUM(cart_items.quantity * products.price) as total')])
                 ->join('products', 'products.id', '=', 'cart_items.product_id')
                 ->where('cart_id', $cartItem->cart_id)
                 ->value('total');
@@ -127,7 +127,7 @@ class CartController extends Controller
                 [
                     'message' => $exception->getMessage(),
                     'quantity' => $cartItem->quantity,
-                ],500);
+                ], 500);
         }
     }
 

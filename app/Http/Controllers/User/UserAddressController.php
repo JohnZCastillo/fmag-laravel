@@ -160,4 +160,27 @@ class UserAddressController extends Controller
         }
     }
 
+    public function deleteAddress(UserAddress $userAddress)
+    {
+        try {
+
+            DB::beginTransaction();
+
+            if ($userAddress->active) {
+                throw new \Exception('Cannot Delete Active Address');
+            }
+
+            $userAddress->delete();
+
+
+            DB::commit();
+
+            return redirect()->back()->with(['message' => 'Address Deleted']);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['message', $e->getMessage()]);
+        }
+    }
+
 }
