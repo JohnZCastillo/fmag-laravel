@@ -119,7 +119,7 @@
         }
 
         .product-image{
-            width: 300px !important;
+            width: 100%;
             height: 300px !important;
             object-position: center;
             object-fit: cover;
@@ -138,13 +138,14 @@
                 @if(count($category->products))
                     <section class="products">
                         <h3 class="text-capitalize">{{$category->name}}</h3>
-                        <div class="row align-items-stretch">
+                        <div class="row align-items-stretch justify-content-center justify-content-md-start">
                             @foreach($category->products as $product)
-                                <div class="col-sm-6 col-md-4 col-lg-3 py-2" id="2">
+
+                                <div class="col-10 col-md-4 col-lg-3 py-2" id="2">
                                     <div class="card mb-4 pb-2 h-100 text-dark" data-stock="0">
                                         <div class="wrapper">
                                             <div class="images pointer">
-                                                <img src="{{\Illuminate\Support\Facades\Storage::url($product->image)}}" class="card-img-top product-image">
+                                                <img src="{{\Illuminate\Support\Facades\Storage::url($product->image)}}" class="card-img-top product-image img-fluid">
                                             </div>
                                             <div class="inside">
                                                 <div class="icon">Info</div>
