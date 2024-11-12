@@ -13,7 +13,7 @@ class HomeController extends Controller
 
         $arrivals = Product::with(['image'])
             ->whereHas('category', function ($qb) {
-                $qb->where('name', 'New Arrivals');
+                $qb->where('name', 'new products');
             })
             ->take(10)
             ->get();
