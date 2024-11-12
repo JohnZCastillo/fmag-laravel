@@ -94,8 +94,8 @@
                             <div style="height: 300px">
                                 @if($product->image)
 
-                                <img src="{{\Illuminate\Support\Facades\Storage::url($product->image->path)}}"
-                                     class="w-100 h-100 rounded-start">
+                                    <img src="{{\Illuminate\Support\Facades\Storage::url($product->image->path)}}"
+                                         class="w-100 h-100 rounded-start">
                                 @else
                                     <img src="/assets/product.png"
                                          class="w-100 h-100 rounded-start">
@@ -105,8 +105,9 @@
                             <div class="d-flex gap-1 align-items-center py-2">
                                 @foreach($product->images as $image)
                                     <div style="width: 100px; height: 100px">
-                                        <img src="{{\Illuminate\Support\Facades\Storage::url($image->path)}}"
-                                             class="w-100 h-100 rounded-start">
+                                        @if($image)
+                                            <img src="{{\Illuminate\Support\Facades\Storage::url($image->path)}}"
+                                                 class="w-100 h-100 rounded-start">
                                         @else
                                             <img src="/assets/product.png"
                                                  class="w-100 h-100 rounded-start">
