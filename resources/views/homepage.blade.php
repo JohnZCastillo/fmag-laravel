@@ -32,9 +32,12 @@
                     <div class="owl-carousel owl-theme">
                         @foreach($arrivals as $product)
                             <div class="item">
-                                <a class="product-item" href="/product/{{$product->id}}">
-                                    <img style="max-height: 240px" src="{{\Illuminate\Support\Facades\Storage::url($product->image->path)}}"
-                                         class="img-fluid product-thumbnail">
+
+                                    @if($product->image)
+                                        <img src="{{\Illuminate\Support\Facades\Storage::url($product->image->path)}}" class="img-fluid product-thumbnail">
+                                    @else
+                                        <img src="/assets/product.png" class="img-fluid product-thumbnail">
+                                    @endif
                                     <h3 class="product-title text-capitalize">{{$product->name}}</h3>
                                     <strong class="product-price">{{$product->price}}</strong>
                                 </a>
@@ -45,8 +48,11 @@
                     @foreach($arrivals as $product)
                         <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
                             <a class="product-item" href="/product/{{$product->id}}">
-                                <img style="max-height: 240px" src="/uploads/{{$product->image->path}}"
-                                     class="img-fluid product-thumbnail">
+                                @if($product->image)
+                                    <img src="{{\Illuminate\Support\Facades\Storage::url($product->image->path)}}" class="img-fluid product-thumbnail">
+                                @else
+                                    <img src="/assets/product.png" class="img-fluid product-thumbnail">
+                                @endif
                                 <h3 class="product-title text-capitalize">{{$product->name}}</h3>
                                 <strong class="product-price">{{$product->price}}</strong>
                             </a>

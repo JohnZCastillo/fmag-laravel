@@ -13,8 +13,13 @@
                             @foreach($order->items as $item)
                                 <div class="row g-0 mb-2">
                                     <div class="col-md-4">
-                                        <img src="{{\Illuminate\Support\Facades\Storage::url($item->product->image->path)}}"
-                                             class="img-fluid">
+
+                                        @if($product->image)
+                                            <img src="{{\Illuminate\Support\Facades\Storage::url($item->product->image->path)}}" class="img-fluid">
+                                        @else
+                                            <img src="/assets/product.png" class="img-fluid">
+                                        @endif
+
                                     </div>
                                     <div class="col-md-8">
                                         <div class="card-body ">
