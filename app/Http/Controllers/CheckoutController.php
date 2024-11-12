@@ -40,7 +40,7 @@ class CheckoutController extends Controller
                             $query->select(['id', 'product_id', 'order_id', 'quantity', 'price', DB::raw('SUM(quantity * price) as total')]);
 
                             $query->with('product', function ($query) {
-                                $query->select(['id', 'name', 'image','price','description','refundable','stock']);
+                                $query->select(['id', 'name','price','description','refundable','stock']);
                             });
 
                             $query->groupBy('id', 'product_id', 'order_id', 'quantity', 'price');
@@ -75,7 +75,9 @@ class CheckoutController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            return redirect('/')->withErrors(['message' => 'Order unavailable']);
+            return redirect('/shop')->withErrors(['message' => $e->getMessage()]);
+
+//            return redirect('/')->withErrors(['message' => 'Order unavailable']);
         }
     }
 

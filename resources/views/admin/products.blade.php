@@ -143,10 +143,10 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="editImage">Image URL</label>
-                            <input type="file" class="form-control" id="editImage"
-                                   name="image" accept="image/png, image/jpg, image/jpeg"
-                                   placeholder="Upload Image">
+                            <label for="attachment">Image URL</label>
+                            <input type="file" class="form-control" id="attachment"
+                                   name="images[]" accept="image/png, image/jpg, image/jpeg"
+                                   placeholder="Upload Image" multiple>
                         </div>
                         <div class="form-group">
                             <label for="name">Name</label>
@@ -204,12 +204,24 @@
         window.onload = function () {
 
             const form = document.getElementById("productForm");
-
-            // create the pristine instance
+            const attachment = document.getElementById("attachment");
             const pristine = new Pristine(form);
 
+            attachment.addEventListener('change', (e) => {
+
+                if (attachment.files.length <= 3) {
+                    return
+                }
+
+                alert('You can only upload a maximum of 3 files.');
+
+                attachment.value = null;
+            })
+
             form.addEventListener('submit', function (e) {
+
                 e.preventDefault();
+
 
                 if (pristine.validate()) {
                     form.submit();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\ProductImages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -91,6 +92,7 @@ class ProductController extends Controller
     {
 
         try {
+
             DB::beginTransaction();
 
             $validated = $request->validate([
@@ -99,22 +101,10 @@ class ProductController extends Controller
                 'price' => 'required|numeric',
                 'stock' => 'required|numeric',
                 'category_id' => 'required|numeric',
-                'image' => 'nullable|image|mimes:jpg,jpeg,png',
                 'refundable' => 'required|boolean',
             ]);
 
             $product->update($validated);
-
-            if ($request->file('image') && $request->file('image')->isValid()) {
-
-                if (Storage::exists($product->image)) {
-                    Storage::delete($product->image);
-                }
-
-                $product->image = $request->file('image')->store('public');
-            }
-
-            $product->save();
 
             DB::commit();
 
@@ -122,8 +112,7 @@ class ProductController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($request);
-//            return redirect()->back()->withErrors(['message' => 'Product update failed!']);
+            return redirect()->back()->withErrors(['message' => 'Product update failed!']);
         }
     }
 
@@ -139,22 +128,26 @@ class ProductController extends Controller
                 'price' => 'required|numeric',
                 'stock' => 'required|numeric',
                 'category_id' => 'required|numeric',
-                'image' => 'required|mimes:jpg,jpeg,png|mimetypes:image/jpeg,image/png',
+                'images' => 'required|array|max:3',
+                'images.*' => 'file|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
 
-            $product = new Product();
+            $product = Product::create($validated);
 
-            $product->fill($validated);
+            foreach ($request->file('images') as $image) {
 
-            $filename = $request->file('image')->store('public');
+                $filename = $image->store('public');
 
-            if (!$filename) {
-                throw new \Exception('Unable to upload product image');
+                if (!$filename) {
+                    throw new \Exception('Upload image failed');
+                }
+
+                ProductImages::create([
+                    'product_id' => $product->id,
+                    'path' => $filename,
+                ]);
+
             }
-
-            $product->image = $filename;
-
-            $product->save();
 
             DB::commit();
 
@@ -162,7 +155,8 @@ class ProductController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withErrors(['message' => 'Product add failed!']);
+            return redirect()->back()->withErrors(['message' => $e->getMessage()]);
+//            return redirect()->back()->withErrors(['message' => 'Something went wrong while adding product!']);
         }
     }
 

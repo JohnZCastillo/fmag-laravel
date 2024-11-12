@@ -11,12 +11,10 @@ class HomeController extends Controller
     public function index()
     {
 
-        $arrivals = Product::select(['id','name','image','category_id'])
-            ->with(['category' => function ($query) {
-            $query->where(function ($query) {
-                $query->where('name', 'new arrivals');
-            });
-        }])
+        $arrivals = Product::with(['image'])
+            ->whereHas('category', function ($qb) {
+                $qb->where('name', 'New Arrivals');
+            })
             ->take(10)
             ->get();
 

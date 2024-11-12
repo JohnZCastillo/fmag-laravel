@@ -145,7 +145,7 @@
                                     <div class="card mb-4 pb-2 h-100 text-dark" data-stock="0">
                                         <div class="wrapper">
                                             <div class="images pointer">
-                                                <img src="{{\Illuminate\Support\Facades\Storage::url($product->image)}}" class="card-img-top product-image img-fluid">
+                                                <img src="{{\Illuminate\Support\Facades\Storage::url($product->image->path)}}" class="card-img-top product-image img-fluid">
                                             </div>
                                             <div class="inside">
                                                 <div class="icon">Info</div>

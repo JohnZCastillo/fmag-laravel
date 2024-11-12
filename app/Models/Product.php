@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
@@ -16,7 +17,6 @@ class Product extends Model
         'description',
         'stock',
         'price',
-        'image',
         'category_id',
         'archived',
         'refundable',
@@ -41,4 +41,15 @@ class Product extends Model
     {
         return $this->feedbacks->avg('rating');
     }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImages::class);
+    }
+
+    public function image(): HasOne
+    {
+        return $this->hasOne(ProductImages::class);
+    }
+
 }

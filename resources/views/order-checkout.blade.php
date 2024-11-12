@@ -13,7 +13,7 @@
                             @foreach($order->items as $item)
                                 <div class="row g-0 mb-2">
                                     <div class="col-md-4">
-                                        <img src="{{\Illuminate\Support\Facades\Storage::url($item->product->image)}}"
+                                        <img src="{{\Illuminate\Support\Facades\Storage::url($item->product->image->path)}}"
                                              class="img-fluid">
                                     </div>
                                     <div class="col-md-8">

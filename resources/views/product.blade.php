@@ -4,8 +4,12 @@
 
 @section('files')
     <script src="/js/quantity.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.js" integrity="sha512-EC3CQ+2OkM+ZKsM1dbFAB6OGEPKRxi6EDRnZW9ys8LghQRAq6cXPUgXCCujmDrXdodGXX9bqaaCRtwj4h4wgSQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.css" integrity="sha512-eG8C/4QWvW9MQKJNw2Xzr0KW7IcfBSxljko82RuSs613uOAg/jHEeuez4dfFgto1u6SRI/nXmTr9YPCjs1ozBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.js"
+            integrity="sha512-EC3CQ+2OkM+ZKsM1dbFAB6OGEPKRxi6EDRnZW9ys8LghQRAq6cXPUgXCCujmDrXdodGXX9bqaaCRtwj4h4wgSQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.css"
+          integrity="sha512-eG8C/4QWvW9MQKJNw2Xzr0KW7IcfBSxljko82RuSs613uOAg/jHEeuez4dfFgto1u6SRI/nXmTr9YPCjs1ozBg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 @endsection
 
 @section('style')
@@ -87,7 +91,20 @@
                 <div class="row g-0">
                     <div class="col-md-5 dot">
                         <div class="images">
-                            <img src="{{\Illuminate\Support\Facades\Storage::url($product->image)}}" class="w-100 h-100 rounded-start">
+                            <div style="height: 300px">
+                                <img src="{{\Illuminate\Support\Facades\Storage::url($product->image->path)}}"
+                                     class="w-100 h-100 rounded-start">
+                            </div>
+
+                            <div class="d-flex gap-1 align-items-center py-2">
+                                @foreach($product->images as $image)
+                                    <div style="width: 100px; height: 100px">
+                                        <img src="{{\Illuminate\Support\Facades\Storage::url($image->path)}}"
+                                             class="w-100 h-100 rounded-start">
+                                    </div>
+                                @endforeach
+                            </div>
+
                         </div>
                     </div>
                     <div class="col-md-7">
@@ -105,8 +122,12 @@
 
                             @if($product->stock)
                                 <div class="d-flex gap-2">
-                                    <button data-bs-toggle="modal" data-bs-target="#inputModal{{$product->id}}" type="button" class="btn btn-success">Buy</button>
-                                    <button data-bs-toggle="modal" data-bs-target="#inputCartModal{{$product->id}}" type="button" class="btn btn-primary">Cart</button>
+                                    <button data-bs-toggle="modal" data-bs-target="#inputModal{{$product->id}}"
+                                            type="button" class="btn btn-success">Buy
+                                    </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#inputCartModal{{$product->id}}"
+                                            type="button" class="btn btn-primary">Cart
+                                    </button>
                                 </div>
                             @else
                                 <div class="d-flex gap-2">
@@ -196,7 +217,8 @@
                         </section>
                         <div class="form-group mb-2">
                             <label for="message">Content</label>
-                            <textarea minlength="10" maxlength="100" required name="content" id="message" rows="3" class="form-control"
+                            <textarea minlength="10" maxlength="100" required name="content" id="message" rows="3"
+                                      class="form-control"
                                       style="resize: none;"></textarea>
                             <small id="contentLength">0/100</small>
                         </div>
@@ -221,10 +243,10 @@
     </section>
 
     <!-- Modal -->
-    <x-input-quantity :id="$product->id" :max="$product->stock" :stock="$product->stock" />
+    <x-input-quantity :id="$product->id" :max="$product->stock" :stock="$product->stock"/>
 
     <!-- cart -->
-    <x-input-cart :id="$product->id" :max="$product->stock" :stock="$product->stock" />
+    <x-input-cart :id="$product->id" :max="$product->stock" :stock="$product->stock"/>
 
 @endsection
 
@@ -237,8 +259,8 @@
 
         console.log('yawa');
 
-        message.addEventListener('input',()=>{
-        console.log('yawa');
+        message.addEventListener('input', () => {
+            console.log('yawa');
             const length = message.value.length ?? 0;
             contentLength.innerText = `${length}/100`;
         })
@@ -256,10 +278,9 @@
 
         const images = document.querySelectorAll('.images');
 
-        images.forEach(image =>{
+        images.forEach(image => {
             const viewer = new Viewer(image);
         });
-
 
 
         // const addToCartUrl = "/cart/add";

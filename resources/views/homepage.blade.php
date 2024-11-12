@@ -33,7 +33,7 @@
                         @foreach($arrivals as $product)
                             <div class="item">
                                 <a class="product-item" href="/product/{{$product->id}}">
-                                    <img style="max-height: 240px" src="{{\Illuminate\Support\Facades\Storage::url($product->image)}}"
+                                    <img style="max-height: 240px" src="{{\Illuminate\Support\Facades\Storage::url($product->image->path)}}"
                                          class="img-fluid product-thumbnail">
                                     <h3 class="product-title text-capitalize">{{$product->name}}</h3>
                                     <strong class="product-price">{{$product->price}}</strong>
@@ -45,7 +45,7 @@
                     @foreach($arrivals as $product)
                         <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
                             <a class="product-item" href="/product/{{$product->id}}">
-                                <img style="max-height: 240px" src="/uploads/{{$product->image}}"
+                                <img style="max-height: 240px" src="/uploads/{{$product->image->path}}"
                                      class="img-fluid product-thumbnail">
                                 <h3 class="product-title text-capitalize">{{$product->name}}</h3>
                                 <strong class="product-price">{{$product->price}}</strong>
@@ -53,34 +53,6 @@
                         </div>
                     @endforeach
                 @endif
-
-                {{--                {% if latestArrivals|length  > 3 %}--}}
-                {{--                <div class="owl-carousel owl-theme">--}}
-                {{--                    {% for product in latestArrivals %}--}}
-                {{--                    <div class="item">--}}
-                {{--                        <a class="product-item" href="/product/{{product.id}}">--}}
-                {{--                            <img style="max-height: 240px" src="/uploads/{{product.image}}"--}}
-                {{--                                 class="img-fluid product-thumbnail">--}}
-                {{--                            <h3 class="product-title">{{product.name|title}}</h3>--}}
-                {{--                            <strong class="product-price">{{product.price|format_currency('PHP')}}</strong>--}}
-                {{--                        </a>--}}
-                {{--                    </div>--}}
-                {{--                    {% endfor %}--}}
-                {{--                </div>--}}
-                {{--                {% else %}--}}
-
-                {{--                {% for product in latestArrivals %}--}}
-                {{--                <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">--}}
-                {{--                    <a class="product-item" href="/product/{{product.id}}">--}}
-                {{--                        <img style="max-height: 240px" src="/uploads/{{product.image}}"--}}
-                {{--                             class="img-fluid product-thumbnail">--}}
-                {{--                        <h3 class="product-title">{{product.name|title}}</h3>--}}
-                {{--                        <strong class="product-price">{{product.price|format_currency('PHP')}}</strong>--}}
-                {{--                    </a>--}}
-                {{--                </div>--}}
-                {{--                {% endfor %}--}}
-                {{--                {% endif %}--}}
-
             </div>
         </div>
     </div>

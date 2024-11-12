@@ -12,6 +12,7 @@ class ShopController extends Controller
         $categories = ProductCategory::select(['id', 'name'])
             ->with(['products' => function ($query) {
                 $query->where('archived', false);
+                $query->with(['image']);
             }])
             ->get();
 

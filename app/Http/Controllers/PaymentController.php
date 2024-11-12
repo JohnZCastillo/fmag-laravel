@@ -27,7 +27,8 @@ class PaymentController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            return redirect('/shop')->withErrors(['message' => 'Order unavailable']);
+            return redirect('/shop')->withErrors(['message' => $e->getMessage()]);
+//            return redirect('/shop')->withErrors(['message' => 'Order unavailable']);
         }
     }
 

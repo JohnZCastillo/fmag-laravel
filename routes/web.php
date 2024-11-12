@@ -88,6 +88,10 @@ Route::middleware(['auth', VerifiedUser::class, ProfileComplete::class])->group(
         Route::get('/admin/orders', [AdminOrderController::class, 'orders']);
         Route::get('/admin/orders/{orderID}', [AdminOrderController::class, 'order']);
 
+        Route::post('/admin/product-image/{product}', [\App\Http\Controllers\Admin\ProductImageController::class, 'addImage']);
+        Route::patch('/admin/product-image/{productImages}', [\App\Http\Controllers\Admin\ProductImageController::class, 'updateImage']);
+        Route::delete('/admin/product-image/{productImages}', [\App\Http\Controllers\Admin\ProductImageController::class, 'deleteImage']);
+
         Route::post('/admin/report', [SalesController::class, 'getSalesInRange']);
 
         Route::post('/admin/product', [ProductController::class, 'addProduct']);
