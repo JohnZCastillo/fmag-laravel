@@ -135,8 +135,12 @@
                                 @forelse($cart->items as $item)
                                     <tr id="product{{$item->product->id}}">
                                         <td>
-                                            <img class="product-img"
-                                                 src="{{\Illuminate\Support\Facades\Storage::url($item->product->image)}}">
+
+                                            @if($item->product->image)
+                                                <img class="product-img" src="{{\Illuminate\Support\Facades\Storage::url($item->product->image->path)}}">
+                                            @else
+                                                <img class="product-img" src="/assets/product.png">
+                                            @endif
                                         </td>
                                         <td>
                                             {{$item->product->name}}
