@@ -92,8 +92,14 @@
                     <div class="col-md-5 dot">
                         <div class="images">
                             <div style="height: 300px">
+                                @if($product->image)
+
                                 <img src="{{\Illuminate\Support\Facades\Storage::url($product->image->path)}}"
                                      class="w-100 h-100 rounded-start">
+                                @else
+                                    <img src="/assets/product.png"
+                                         class="w-100 h-100 rounded-start">
+                                @endif
                             </div>
 
                             <div class="d-flex gap-1 align-items-center py-2">
@@ -101,6 +107,10 @@
                                     <div style="width: 100px; height: 100px">
                                         <img src="{{\Illuminate\Support\Facades\Storage::url($image->path)}}"
                                              class="w-100 h-100 rounded-start">
+                                        @else
+                                            <img src="/assets/product.png"
+                                                 class="w-100 h-100 rounded-start">
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>
