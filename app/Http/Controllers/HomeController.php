@@ -14,6 +14,7 @@ class HomeController extends Controller
         $arrivals = Product::with(['image'])
             ->whereHas('category', function ($qb) {
                 $qb->where('name', 'new products');
+                $qb->where('archived',false);
             })
             ->take(10)
             ->get();
